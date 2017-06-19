@@ -1,12 +1,11 @@
 <template>
-
   <div id="app">
-    <keep-alive>
-      <router-view></router-view>
-    </keep-alive>
-    <nav class="nav-bottom" >
+
+        <router-view></router-view>
+
+    <nav class="nav-bottom">
       <router-link :to="{path: item.link}" v-for="(item, index) in tabs" >
-        <span class="nav-icon" :class="'nav-icon-' + item.icon" @click="toggle(index)"></span>
+        <span class="nav-icon" :class="'nav-icon-' + item.icon + item.current" @click="toggle(index)"></span>
       </router-link>
     </nav>
 
@@ -16,36 +15,43 @@
 <script>
 export default {
   name: 'app',
-  data() {
+  data () {
       return {
           tabs: [
             {
               link: '/',
-              icon: 'index'
+              icon: 'index',
+              current: ''
             },
             {
               link: '/',
-              icon: 'shop'
+              icon: 'shop',
+              current: ''
             },
             {
               link: '/',
-              icon: 'world'
+              icon: 'world',
+              current: ''
             },
             {
               link: '/',
-              icon: 'cart'
+              icon: 'cart',
+              current: ''
             },
             {
               link: '/',
-              icon: 'myCenter'
+              icon: 'myCenter',
+              current: ''
             }
           ]
       }
   },
   methods: {
-    toggle(i) {
-      alert(this.tabs[i].icon)
-      this.tabs[i].icon = this.tabs.icon[i] + '-current'
+    toggle(index){
+        for(let i=0;i<5;i++ ){
+          this.tabs[i].current = ''
+        }
+      this.tabs[index].current = '-current'
     }
   }
 }
@@ -255,4 +261,17 @@ export default {
   .nav-icon-myCenter-current{
     background-image: url("assets/images/tabBar/987tea_myCenter_current.png");
   }
+  /*路由过渡动画*/
+
+
+  .slide-enter-active,.slide-leave-active {
+    transition: all .5s ;
+  }
+  .slide-enter,.slide-leave-active {
+    transform: translateX(-100%);
+    /*opacity: 0;*/
+  }
+  /*.slide-enter{*/
+    /*transform: translateX(100%);*/
+  /*}*/
 </style>
