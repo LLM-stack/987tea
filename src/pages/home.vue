@@ -194,7 +194,7 @@
 
 <style scoped >
   .container{
-    margin-bottom: 2.8rem;
+    margin-bottom: 2.4rem;
   }
   header {
     height: 2.2rem;

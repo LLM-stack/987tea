@@ -21,7 +21,7 @@ export default {
             {
               link: '/',
               icon: 'index',
-              current: ''
+              current: '-current'
             },
             {
               link: '/',
