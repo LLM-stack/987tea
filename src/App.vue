@@ -1,7 +1,8 @@
 <template>
   <div id="app">
-
+      <transition name="slide" mode="out-in">
         <router-view></router-view>
+      </transition>
 
     <nav class="nav-bottom">
       <router-link :to="{path: item.link}" v-for="(item, index) in tabs" >
