@@ -156,7 +156,7 @@
   </div>
 </template>
 
-<script >
+<script>
   export default {
     name: 'index',
     data() {
@@ -192,16 +192,18 @@
   }
 </script>
 
-<style scoped >
-  .container{
+<style scoped>
+  .container {
     margin-bottom: 2.4rem;
   }
+
   header {
     height: 2.2rem;
     padding: 0 0.5rem;
     justify-content: space-between;
     background-color: #B4282D;
   }
+
   .logo {
     width: 5.4rem;
     height: 1.3rem;
@@ -461,10 +463,12 @@
     background-color: #F4F4F4;
     width: 49%;
   }
-  .mode-list .mode-img{
+
+  .mode-list .mode-img {
     width: 100%;
     height: 8.5rem;
   }
+
   .mode-list .mode-dp {
     padding: 0.2rem 0.3rem;
     color: #8F7747;
@@ -479,13 +483,14 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0.3rem ;
+    padding: 0.3rem;
   }
-  .mode-list .mode-btn{
+
+  .mode-list .mode-btn {
     padding: 0.1rem;
     color: #B22328;
     font-size: 0.55rem;
     border-radius: 0.2rem;
-    border: 1px  solid #B22328;
+    border: 1px solid #B22328;
   }
 </style>
