@@ -2,15 +2,15 @@
   <div class="container">
     <header class="flex-alig-center">
       <div class="logo">
-        <img src="../assets/images/987tea_logo_03.png" alt="logo">
+        <img src="../assets/images/home/987tea_logo_03.png" alt="logo">
       </div>
       <div class="search flex-alig-center">
-        <img src="../assets/images/987tea_search.png" alt="搜索">
+        <img src="../assets/images/home/987tea_search.png" alt="搜索">
         <input type="text">
       </div>
       <div class="more">
         <router-link to="/Category">
-          <img src="../assets/images/987tea_033.png" alt="更多">
+          <img src="../assets/images/home/987tea_033.png" alt="更多">
         </router-link>
       </div>
     </header>
@@ -47,19 +47,19 @@
     </div>
     <div class="top-tabs">
       <div>
-        <img src="../assets/images/987tea_17.png" alt="">
+        <img src="../assets/images/home/987tea_17.png" alt="">
         <span>茶金币</span>
       </div>
       <div>
-        <img src="../assets/images/987tea_14.png" alt="">
+        <img src="../assets/images/home/987tea_14.png" alt="">
         <span>茶友圈</span>
       </div>
       <div>
-        <img src="../assets/images/987tea_07.png" alt="">
+        <img src="../assets/images/home/987tea_07.png" alt="">
         <span>物流信息</span>
       </div>
       <div>
-        <img src="../assets/images/987tea_11.png" alt="">
+        <img src="../assets/images/home/987tea_11.png" alt="">
         <span>联系客服</span>
       </div>
     </div>
@@ -105,7 +105,7 @@
           <div class="choice-text-title">这些茶，甜的让人念念不忘。</div>
           <div class="choice-text-p">在众多茶里，以甜占主导地位的，确实不多，幸运的是，小七有幸喝到这几款</div>
           <div class="choice-text-bottom flex-alig-center">
-            <div class="flex-alig-center lm-margin-r">
+            <div class="flex-alig-center lm-margin-r-lg">
               <span></span>
               77
             </div>
@@ -122,7 +122,7 @@
         自品好茶 <span></span>
       </div>
       <div class="mode-box">
-        <div class="mode-list" v-for="(item,index) in modeList" :class="{'mode-left' : index % 2 !== 0}">
+        <div class="mode-list" v-for="(item,index) in modeList" :class="{'mode-left': index % 2 !== 0}">
           <div class="mode-img">
             <img :src="item.imgSrc"/>
           </div>
@@ -251,7 +251,7 @@
     height: 0.7rem;
     margin-right: 0.1rem;
     background-size: 100% 100%;
-    background-image: url("../assets/images/987tea_077.png");
+    background-image: url("../assets/images/home/987tea_077.png");
   }
 
   .top-tabs {
@@ -308,7 +308,7 @@
     width: 0.9rem;
     height: 0.9rem;
     background-size: 100% 100%;
-    background-image: url("../assets/images/987tea_01_03.png");
+    background-image: url("../assets/images/home/987tea_01_03.png");
   }
 
   .hot-buy .box-block {
@@ -386,7 +386,7 @@
     height: 1rem;
     margin-right: 0.4rem;
     background-size: 100% 100%;
-    background-image: url("../assets/images/987tea_31.png");
+    background-image: url("../assets/images/home/987tea_31.png");
   }
 
   .choice .small-title {
@@ -427,11 +427,11 @@
   }
 
   .choice .choice-text-bottom > div:first-child span {
-    background-image: url("../assets/images/987tea_38.png");
+    background-image: url("../assets/images/home/987tea_38.png");
   }
 
   .choice .choice-text-bottom > div:last-child span {
-    background-image: url("../assets/images/987tea_35.png");
+    background-image: url("../assets/images/home/987tea_35.png");
   }
 
   /*为您精选结束*/
@@ -441,7 +441,7 @@
     width: 0.9rem;
     height: 0.9rem;
     background-size: 100% 100%;
-    background-image: url("../assets/images/987tea_01_03.png");
+    background-image: url("../assets/images/home/987tea_01_03.png");
   }
 
   .mode-box {

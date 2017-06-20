@@ -179,6 +179,9 @@ export default {
   .lm-margin-b-xs{
     margin-bottom: 0.2rem;
   }
+  .lm-margin-r-lg{
+    margin-right: 1rem;
+  }
   .lm-margin-r{
     margin-right: 0.6rem;
   }
@@ -187,6 +190,9 @@ export default {
   }
   .lm-margin-r-xs{
     margin-right: 0.2rem;
+  }
+  .lm-margin-l-lg{
+    margin-left: 1rem;
   }
   .lm-margin-l{
     margin-left: 0.6rem;
