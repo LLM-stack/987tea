@@ -1,8 +1,14 @@
 <template>
     <div>
-      <Mheader>
-        <div slot="title">购物车</div>
-      </Mheader>
+      <!--<Mheader>-->
+        <!--<div slot="title">购物车</div>-->
+      <!--</Mheader>-->
+      <mt-header title="购物车">
+        <router-link to="/" slot="left">
+          <mt-button icon="back"></mt-button>
+        </router-link>
+
+      </mt-header>
     </div>
 </template>
 
