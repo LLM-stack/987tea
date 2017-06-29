@@ -2,28 +2,28 @@
   <div class="container">
     <header class="flex-alig-center">
       <div class="logo">
-        <img src="../assets/images/home/987tea_logo_03.png" alt="logo">
+        <img src="../../assets/images/home/987tea_logo_03.png" alt="logo">
       </div>
       <div class="search flex-alig-center">
-        <img src="../assets/images/home/987tea_search.png" alt="搜索">
+        <img src="../../assets/images/home/987tea_search.png" alt="搜索">
         <input type="text">
       </div>
       <div class="more">
         <router-link to="/Category">
-          <img src="../assets/images/home/987tea_033.png" alt="更多">
+          <img src="../../assets/images/home/987tea_033.png" alt="更多">
         </router-link>
       </div>
     </header>
     <div class="banner">
       <mt-swipe :auto="3000">
         <mt-swipe-item>
-          <img src="../assets/images/banner/6-1-8684479.jpg" alt="">
+          <img src="../../assets/images/banner/6-1-8684479.jpg" alt="">
         </mt-swipe-item>
         <mt-swipe-item>
-          <img src="../assets/images/banner/6-1-8684497.jpg" alt="">
+          <img src="../../assets/images/banner/6-1-8684497.jpg" alt="">
         </mt-swipe-item>
         <mt-swipe-item>
-          <img src="../assets/images/banner/6-1-zrjm1580-250.jpg" alt="">
+          <img src="../../assets/images/banner/6-1-zrjm1580-250.jpg" alt="">
         </mt-swipe-item>
       </mt-swipe>
     </div>
@@ -47,19 +47,19 @@
     </div>
     <div class="top-tabs">
       <div>
-        <img src="../assets/images/home/987tea_17.png" alt="">
+        <img src="../../assets/images/home/987tea_17.png" alt="">
         <span>茶金币</span>
       </div>
       <div>
-        <img src="../assets/images/home/987tea_14.png" alt="">
+        <img src="../../assets/images/home/987tea_14.png" alt="">
         <span>茶友圈</span>
       </div>
       <div>
-        <img src="../assets/images/home/987tea_07.png" alt="">
+        <img src="../../assets/images/home/987tea_07.png" alt="">
         <span>物流信息</span>
       </div>
       <div>
-        <img src="../assets/images/home/987tea_11.png" alt="">
+        <img src="../../assets/images/home/987tea_11.png" alt="">
         <span>联系客服</span>
       </div>
     </div>
@@ -99,7 +99,7 @@
       </div>
       <div class="box-block flex-between">
         <div class="choice-img">
-          <img src="../assets/images/goods/987tea_16.png" alt="">
+          <img src="../../assets/images/goods/987tea_16.png" alt="">
         </div>
         <div class="choice-text">
           <div class="choice-text-title">这些茶，甜的让人念念不忘。</div>
@@ -166,25 +166,25 @@
             title: '正品碧螺春',
             dp: '2017新品上市',
             price: '99',
-            imgSrc: require('../assets/images/goods/987tea_20.png')
+            imgSrc: require('../../assets/images/goods/987tea_20.png')
           },
           {
             title: '正品金骏梅',
             dp: '尝鲜价 买一送一',
             price: '99',
-            imgSrc: require('../assets/images/goods/987tea_06.png')
+            imgSrc: require('../../assets/images/goods/987tea_06.png')
           },
           {
             title: '正品正山小种',
             dp: '经典味道 值得一试',
             price: '99',
-            imgSrc: require('../assets/images/goods/987tea_25.png')
+            imgSrc: require('../../assets/images/goods/987tea_25.png')
           },
           {
             title: '正品铁观音',
             dp: '好茶待寻知己',
             price: '99',
-            imgSrc: require('../assets/images/goods/987tea_27.png')
+            imgSrc: require('../../assets/images/goods/987tea_27.png')
           }
         ]
       }
@@ -253,7 +253,7 @@
     height: 0.7rem;
     margin-right: 0.1rem;
     background-size: 100% 100%;
-    background-image: url("../assets/images/home/987tea_077.png");
+    background-image: url("../../assets/images/home/987tea_077.png");
   }
 
   .top-tabs {
@@ -310,7 +310,7 @@
     width: 0.9rem;
     height: 0.9rem;
     background-size: 100% 100%;
-    background-image: url("../assets/images/home/987tea_01_03.png");
+    background-image: url("../../assets/images/home/987tea_01_03.png");
   }
 
   .hot-buy .box-block {
@@ -325,7 +325,7 @@
     margin-bottom: 0.8rem;
     width: 100%;
     height: 6rem;
-    background-image: url("../assets/images/goods/987tea_03.png");
+    background-image: url("../../assets/images/goods/987tea_03.png");
   }
 
   .box-block .box-block-title,
@@ -346,15 +346,15 @@
 
   .box-block-two {
     height: 10rem;
-    background-image: url("../assets/images/goods/987tea_06.png");
+    background-image: url("../../assets/images/goods/987tea_06.png");
   }
 
   .box-block-three {
-    background-image: url("../assets/images/goods/987tea_08.png");
+    background-image: url("../../assets/images/goods/987tea_08.png");
   }
 
   .box-block-five {
-    background-image: url("../assets/images/goods/987tea_12.png");
+    background-image: url("../../assets/images/goods/987tea_12.png");
   }
 
   .box-block-three,
@@ -388,7 +388,7 @@
     height: 1rem;
     margin-right: 0.4rem;
     background-size: 100% 100%;
-    background-image: url("../assets/images/home/987tea_31.png");
+    background-image: url("../../assets/images/home/987tea_31.png");
   }
 
   .choice .small-title {
@@ -429,11 +429,11 @@
   }
 
   .choice .choice-text-bottom > div:first-child span {
-    background-image: url("../assets/images/home/987tea_38.png");
+    background-image: url("../../assets/images/home/987tea_38.png");
   }
 
   .choice .choice-text-bottom > div:last-child span {
-    background-image: url("../assets/images/home/987tea_35.png");
+    background-image: url("../../assets/images/home/987tea_35.png");
   }
 
   /*为您精选结束*/
@@ -443,7 +443,7 @@
     width: 0.9rem;
     height: 0.9rem;
     background-size: 100% 100%;
-    background-image: url("../assets/images/home/987tea_01_03.png");
+    background-image: url("../../assets/images/home/987tea_01_03.png");
   }
 
   .mode-box {

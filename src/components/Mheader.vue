@@ -2,7 +2,9 @@
   <div>
     <header class="bar-nav">
       <a @click="backHistory" class="arrow" ></a>
-      <div class="title">{{ title }}</div>
+      <div class="title">
+        <slot name="title"></slot>
+      </div>
       <div v-if="show" class="info" @click="checkUrl">
         {{　info　}}
       </div>
@@ -34,10 +36,11 @@
 <style scoped>
   .bar-nav{
     position: relative;
-    background-color: #fff;
+    background-color: #B4282D;
     display: flex;
     align-items: center;
-    height: 2.2rem;
+    height: 2rem;
+    color: #fff;
   }
   .bar-nav .title{
     width: 100%;
@@ -49,16 +52,16 @@
     text-align: center;
   }
   .bar-nav .arrow{
-    left: 0.2rem;
+    left: 0.5rem;
     z-index: 99;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
     display: inline-block;
-    width: 1.6rem;
-    height: 1.6rem;
+    width: 1rem;
+    height: 1rem;
     background-size: 100% 100%;
-    background-image: url("../assets/images/back.png") ;
+    background-image: url("../assets/images/back22.png") ;
   }
   .bar-nav .info{
     right: 0.8rem;

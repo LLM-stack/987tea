@@ -1,7 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from '@/pages/home'
+// 首页
+import Home from '@/pages/indexPage/home'
 import Category from '@/pages/indexPage/category'
+// 购物车
+import Cart from '@/pages/cartPage/cart'
+
 
 Vue.use(Router)
 
@@ -16,6 +20,10 @@ export default new Router({
       path: '/Category',
       name: 'Category',
       component: Category
+    },{
+      path: '/Cart',
+      name: 'Cart',
+      component: Cart
     }
   ]
 })
