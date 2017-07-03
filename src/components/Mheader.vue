@@ -1,5 +1,4 @@
 <template>
-  <div>
     <header class="bar-nav">
       <a @click="backHistory" class="arrow" ></a>
       <div class="title">
@@ -9,11 +8,11 @@
         {{　info　}}
       </div>
     </header>
-  </div>
 </template>
 
 <script type="text/javascript">
   export default {
+    name: 'header',
     props: {
       title: '',
       show: {
@@ -39,12 +38,12 @@
     background-color: #B4282D;
     display: flex;
     align-items: center;
-    height: 2rem;
+    height: 1.8rem;
     color: #fff;
   }
   .bar-nav .title{
     width: 100%;
-    font-size: 0.85rem;
+    font-size: 0.75rem;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -52,19 +51,19 @@
     text-align: center;
   }
   .bar-nav .arrow{
-    left: 0.5rem;
+    left: 0.4rem;
     z-index: 99;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
     display: inline-block;
-    width: 1rem;
-    height: 1rem;
+    width: 0.9rem;
+    height: 0.9rem;
     background-size: 100% 100%;
     background-image: url("../assets/images/back22.png") ;
   }
   .bar-nav .info{
-    right: 0.8rem;
+    right: 0.7rem;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);

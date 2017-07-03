@@ -153,12 +153,18 @@
         </div>
       </div>
     </div>
+    <Mfooter :indexCurrent=true></Mfooter>
   </div>
 </template>
 
 <script>
+  import Mfooter from '../../components/Mfooter'
+
   export default {
     name: 'index',
+    components: {
+      Mfooter
+    },
     data() {
       return {
         modeList: [
@@ -194,19 +200,23 @@
 
 <style scoped>
   .container {
-    margin-bottom: 2.4rem;
+    margin-bottom: 2rem;
   }
 
   header {
-    height: 2.2rem;
-    padding: 0 0.5rem;
+    height: 1.8rem;
+    padding: 0 0.4rem;
     justify-content: space-between;
     background-color: #B4282D;
   }
 
+  header img{
+    display: block;
+  }
+
   .logo {
-    width: 5.4rem;
-    height: 1.3rem;
+    width: 4.2rem;
+    height: 1rem;
   }
 
   .search {
@@ -221,24 +231,25 @@
   }
 
   .search input {
+    width: 7.4rem;
     border: none;
   }
 
   .more {
-    width: 1.3rem;
-    height: 1.1rem;
+    width: 1rem;
+    height: 0.9rem;
   }
 
   .banner {
-    height: 8.6rem;
+    height: 7.7rem;
   }
 
   .promise {
     font-size: 0.5rem;
     color: #666666;
-    height: 1.2rem;
+    height: 1rem;
     background-color: #fff;
-    padding: 0 0.4rem;
+    padding: 0 0.3rem;
     justify-content: space-between;
   }
 
@@ -249,19 +260,19 @@
   }
 
   .promise > div > span {
-    width: 0.7rem;
-    height: 0.7rem;
+    width: 0.6rem;
+    height: 0.6rem;
     margin-right: 0.1rem;
     background-size: 100% 100%;
     background-image: url("../../assets/images/home/987tea_077.png");
   }
 
   .top-tabs {
-    height: 4rem;
-    margin: 0.8rem 0;
-    padding: 0 1.5rem 0.6rem;
+    height: 3.6rem;
+    margin: 0.4rem 0;
+    padding: 0 1rem 0.6rem;
     text-align: center;
-    font-size: 0.7rem;
+    font-size: 0.55rem;
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
@@ -275,25 +286,25 @@
   }
 
   .top-tabs > div:first-child img {
-    width: 1.4rem;
+    width: 1.2rem;
   }
 
   .top-tabs > div:nth-child(2) img {
-    width: 1.6rem;
+    width: 1.4rem;
   }
 
   .top-tabs > div:nth-child(3) img {
-    width: 2.2rem;
+    width: 2rem;
   }
 
   .top-tabs > div:last-child img {
-    width: 1.8rem;
+    width: 1.6rem;
   }
 
   .box {
-    padding: 0.5rem;
-    margin-bottom: 0.8rem;
-    font-size: 0.8rem;
+    padding: 0.4rem;
+    margin-bottom: 0.4rem;
+    font-size: 0.7rem;
     background-color: #fff;
   }
 
@@ -322,9 +333,9 @@
 
   .hot-buy .box-block-one {
     padding: 1rem;
-    margin-bottom: 0.8rem;
+    margin-bottom: 0.5rem;
     width: 100%;
-    height: 6rem;
+    height: 5.5rem;
     background-image: url("../../assets/images/goods/987tea_03.png");
   }
 
@@ -335,7 +346,7 @@
 
   .box-block .box-block-time > span {
     color: #fff;
-    padding: 0.2rem;
+    padding: 0.1rem;
     border-radius: 0.1rem;
     background-color: #B22328;
   }
@@ -368,7 +379,7 @@
 
   .box-block-four,
   .box-block-two {
-    width: 8.7rem;
+    width: 49%;
   }
 
   .box-block .xl-title {
@@ -393,14 +404,14 @@
 
   .choice .small-title {
     color: #9D9D9D;
-    margin-bottom: 1rem;
+    margin-bottom: 0.8rem;
     font-size: 0.55rem;
     text-align: center;
   }
 
   .choice .box-block {
-    padding: 0.6rem 0;
-    font-size: 0.65rem;
+    padding: 0.5rem 0;
+    font-size: 0.55rem;
     border-top: 1px solid #F5F5F5;
   }
 
@@ -421,8 +432,8 @@
   }
 
   .choice .choice-text-bottom > div > span {
-    width: 0.7rem;
-    height: 0.7rem;
+    width: 0.6rem;
+    height: 0.6rem;
     color: #717171;
     margin-right: 0.2rem;
     background-size: 100% 100%;
@@ -458,15 +469,15 @@
 
   .mode-list {
     margin-top: 0.26rem;
-    font-size: 0.7rem;
-    border-radius: 0.3rem;
+    font-size: 0.6rem;
+    border-radius: 0.2rem;
     background-color: #F4F4F4;
     width: 49%;
   }
 
   .mode-list .mode-img {
     width: 100%;
-    height: 8.5rem;
+    height: 8rem;
   }
 
   .mode-list .mode-dp {
