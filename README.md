@@ -1,6 +1,6 @@
 # 987茶网
 
-> A Vue2.0 project
+> A Vue.js project
 
 ## Build Setup
 
