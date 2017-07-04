@@ -1,22 +1,33 @@
 <template>
-    <div>
-      <Mheader>
-        <div slot="title">购物车</div>
-      </Mheader>
-      <Mfooter :cartCurrent=true></Mfooter>
+  <div>
+    <Mheader :show=true>
+      <div slot="title">购物车</div>
+    </Mheader>
+
+    <div class="cart-list">
+      <div class="goods">
+        <div class="select"></div>
+        <div class=""></div>
+        <div class=""></div>
+        <div class=""></div>
+      </div>
     </div>
+
+
+  </div>
 </template>
 
 <script type="text/javascript">
   import Mheader from '../../components/Mheader'
-  import Mfooter from '../../components/Mfooter'
 
-    export default {
-      components: {
-        Mheader,
-        Mfooter
-      }
+  export default {
+    components: {
+      Mheader
+    },
+    data() {
+      return {}
     }
+  }
 </script>
 
 <style>

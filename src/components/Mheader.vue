@@ -4,9 +4,7 @@
       <div class="title">
         <slot name="title"></slot>
       </div>
-      <div v-if="show" class="info" @click="checkUrl">
-        {{　info　}}
-      </div>
+      <a v-if="show"  class="home" href="/"></a>
     </header>
 </template>
 
@@ -62,12 +60,15 @@
     background-size: 100% 100%;
     background-image: url("../assets/images/back22.png") ;
   }
-  .bar-nav .info{
+  .bar-nav .home{
+    width: 1rem;
+    height: 0.95rem;
+    background-size: 100% 100%;
+    background-image: url("../assets/images/cart_03.png");
     right: 0.7rem;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
     z-index: 99;
-    color: #666;
   }
 </style>
