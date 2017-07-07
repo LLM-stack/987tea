@@ -6,10 +6,10 @@
       </div>
       <div class="search flex-alig-center">
         <img src="../../assets/images/home/987tea_search.png" alt="搜索">
-        <input type="text">
+        <router-link :to="{path:'/SearchPage'}"><input type="text"></router-link>
       </div>
       <div class="more">
-        <router-link to="/Category">
+        <router-link :to="{path:'/Category'}">
           <img src="../../assets/images/home/987tea_033.png" alt="更多">
         </router-link>
       </div>
@@ -47,19 +47,19 @@
     </div>
     <div class="top-tabs">
       <div>
-        <img src="../../assets/images/home/987tea_17.png" alt="">
+        <img src="../../assets/images/myInfo/icon.5.png" alt="">
         <span>茶金币</span>
       </div>
       <div>
-        <img src="../../assets/images/home/987tea_14.png" alt="">
+        <img src="../../assets/images/myInfo/icon.10.png" alt="">
         <span>茶友圈</span>
       </div>
       <div>
-        <img src="../../assets/images/home/987tea_07.png" alt="">
+        <img src="../../assets/images/myInfo/icon.3.png" alt="">
         <span>物流信息</span>
       </div>
       <div>
-        <img src="../../assets/images/home/987tea_11.png" alt="">
+        <img src="../../assets/images/myInfo/icon.11.png" alt="">
         <span>联系客服</span>
       </div>
     </div>
@@ -123,6 +123,7 @@
       </div>
       <div class="mode-box">
         <div class="mode-list" v-for="(item,index) in modeList" :class="{'mode-left': index % 2 !== 0}">
+          <router-link :to="{path:'/ProductDetails'}">
           <div class="mode-img">
             <img :src="item.imgSrc"/>
           </div>
@@ -132,6 +133,7 @@
             <span class="lm-text-red">￥{{ item.price }}元</span>
             <span class="mode-btn">立即购买</span>
           </div>
+          </router-link>
         </div>
       </div>
     </div>
@@ -199,9 +201,6 @@
 </script>
 
 <style scoped>
-  .container {
-    margin-bottom: 2rem;
-  }
 
   header {
     height: 1.8rem;
@@ -285,20 +284,11 @@
     align-items: center;
   }
 
-  .top-tabs > div:first-child img {
-    width: 1.2rem;
+  .top-tabs > div img {
+    width: 2.2rem;
   }
-
-  .top-tabs > div:nth-child(2) img {
-    width: 1.4rem;
-  }
-
-  .top-tabs > div:nth-child(3) img {
-    width: 2rem;
-  }
-
-  .top-tabs > div:last-child img {
-    width: 1.6rem;
+  .top-tabs > div span{
+    margin-top: -0.3rem;
   }
 
   .box {
@@ -457,51 +447,5 @@
     background-image: url("../../assets/images/home/987tea_01_03.png");
   }
 
-  .mode-box {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
 
-  .mode-box .mode-left {
-    margin-left: 2%;
-  }
-
-  .mode-list {
-    margin-top: 0.26rem;
-    font-size: 0.6rem;
-    border-radius: 0.2rem;
-    background-color: #F4F4F4;
-    width: 49%;
-  }
-
-  .mode-list .mode-img {
-    width: 100%;
-    height: 8rem;
-  }
-
-  .mode-list .mode-dp {
-    padding: 0.2rem 0.3rem;
-    color: #8F7747;
-    background-color: #F1ECE2;
-  }
-
-  .mode-list .mode-title {
-    padding: 0.3rem 0.3rem 0;
-  }
-
-  .mode-list .mode-price {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.3rem;
-  }
-
-  .mode-list .mode-btn {
-    padding: 0.1rem;
-    color: #B22328;
-    font-size: 0.55rem;
-    border-radius: 0.2rem;
-    border: 1px solid #B22328;
-  }
 </style>
