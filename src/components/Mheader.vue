@@ -4,7 +4,11 @@
       <div class="title">
         <slot name="title"></slot>
       </div>
-      <a v-if="show"  class="home" href="/"></a>
+      <div class="info">
+        <slot name="info"></slot>
+      </div>
+      <router-link :to="{path: '/'}" v-if="show"  class="home" >
+      </router-link>
     </header>
 </template>
 
@@ -16,14 +20,9 @@
       show: {
         type: Boolean,
         default: false
-      },
-      info: '',
-      url: ''
+      }
     },
     methods: {
-      checkUrl (){
-        return location.href= this.url
-      },
       backHistory(){
         window.history.go(-1)
       }
@@ -65,6 +64,13 @@
     height: 0.95rem;
     background-size: 100% 100%;
     background-image: url("../assets/images/cart_03.png");
+    right: 0.7rem;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 99;
+  }
+  .bar-nav .info{
     right: 0.7rem;
     position: absolute;
     top: 50%;

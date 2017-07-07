@@ -3,16 +3,16 @@
       <router-link :to="{path: '/'}">
         <span class="nav-icon nav-icon-index" :class="{ indexCurrent: indexCurrent }"></span>
       </router-link>
-      <router-link :to="{path: '/'}">
+      <router-link :to="{path:'/Category'}">
         <span class="nav-icon nav-icon-shop" :class="{ shopCurrent: shopCurrent }"></span>
       </router-link>
-      <router-link :to="{path: '/'}">
-        <span class="nav-icon nav-icon-world" :class="{ worldCurrent: worldCurrent }"></span>
-      </router-link>
-      <router-link :to="{path: '/cart'}">
+      <!--<router-link :to="{path: '/'}">-->
+        <!--<span class="nav-icon nav-icon-world" :class="{ worldCurrent: worldCurrent }"></span>-->
+      <!--</router-link>-->
+      <router-link :to="{path: '/Cart'}">
         <span class="nav-icon nav-icon-cart" :class="{ cartCurrent: cartCurrent }"></span>
       </router-link>
-      <router-link :to="{path: '/'}">
+      <router-link :to="{path: '/MyInfo'}">
         <span class="nav-icon nav-icon-myCenter" :class="{ myCenterCurrent: myCenterCurrent }"></span>
       </router-link>
     </nav>
@@ -48,13 +48,13 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    width: 20%;
+    width: 25%;
     height: 100%;
   }
 
   .nav-bottom .nav-icon {
-    width: 100%;
-    height: 100%;
+    width: 3.1rem;
+    height: 2rem;
     background-size: 100% 100%;
   }
 
