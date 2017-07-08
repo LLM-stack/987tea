@@ -16,22 +16,30 @@
     <div class="my-order">
       <div class="title">我的订单</div>
       <div class="order-control">
-        <div class="control-icon">
-          <img src="../../assets/images/myInfo/icon.1.png"/>
-          <div>待付款</div>
-        </div>
-        <div class="control-icon">
-          <img src="../../assets/images/myInfo/icon.2.png"/>
-          <div>待发货</div>
-        </div>
-        <div class="control-icon">
-          <img src="../../assets/images/myInfo/icon.3.png"/>
-          <div>待收货</div>
-        </div>
-        <div class="control-icon">
-          <img src="../../assets/images/myInfo/icon.4.png"/>
-          <div>待评价</div>
-        </div>
+        <router-link :to="{path: '/MyOrder/待付款'}">
+          <div class="control-icon">
+            <img src="../../assets/images/myInfo/icon.1.png"/>
+            <div>待付款</div>
+          </div>
+        </router-link>
+        <router-link :to="{path: '/MyOrder/待发货'}">
+          <div class="control-icon">
+            <img src="../../assets/images/myInfo/icon.2.png"/>
+            <div>待发货</div>
+          </div>
+        </router-link>
+        <router-link :to="{path: '/MyOrder/待收货'}">
+          <div class="control-icon">
+            <img src="../../assets/images/myInfo/icon.3.png"/>
+            <div>待收货</div>
+          </div>
+        </router-link>
+        <router-link :to="{path: '/MyOrder/待评价'}">
+          <div class="control-icon">
+            <img src="../../assets/images/myInfo/icon.4.png"/>
+            <div>待评价</div>
+          </div>
+        </router-link>
       </div>
     </div>
 
@@ -44,10 +52,12 @@
             <div>我的茶币</div>
           </div>
         </router-link>
-        <div class="control-icon">
-          <img src="../../assets/images/myInfo/icon.6.png"/>
-          <div>我的收藏</div>
-        </div>
+        <router-link :to="{path: '/MyCollection'}">
+          <div class="control-icon">
+            <img src="../../assets/images/myInfo/icon.6.png"/>
+            <div>我的收藏</div>
+          </div>
+        </router-link>
         <div class="control-icon">
           <img src="../../assets/images/myInfo/icon.7.png"/>
           <div>地址管理</div>
@@ -84,7 +94,7 @@
   </div>
 </template>
 
-<script type="text/javascript">
+<script>
   import Mheader from '../../components/Mheader'
   import Mfooter from '../../components/Mfooter'
 
@@ -152,7 +162,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 1rem 0.8rem 1rem;
+    padding: 0 1rem 0.6rem 1rem;
 
   }
 
@@ -179,7 +189,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0.6rem 1rem 1.4rem 1rem;
+    padding: 0.4rem 1rem 1.2rem 1rem;
   }
 
   .my-order .server-control:last-child {

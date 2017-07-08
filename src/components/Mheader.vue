@@ -12,11 +12,10 @@
     </header>
 </template>
 
-<script type="text/javascript">
+<script>
   export default {
     name: 'header',
     props: {
-      title: '',
       show: {
         type: Boolean,
         default: false

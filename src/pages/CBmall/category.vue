@@ -36,7 +36,7 @@
   </div>
 </template>
 
-<script type="text/javascript">
+<script>
   import Mfooter from '../../components/Mfooter'
 
   export default {

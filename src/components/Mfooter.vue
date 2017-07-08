@@ -3,7 +3,7 @@
       <router-link :to="{path: '/'}">
         <span class="nav-icon nav-icon-index" :class="{ indexCurrent: indexCurrent }"></span>
       </router-link>
-      <router-link :to="{path:'/Category'}">
+      <router-link :to="{path:'/CBmall'}">
         <span class="nav-icon nav-icon-shop" :class="{ shopCurrent: shopCurrent }"></span>
       </router-link>
       <!--<router-link :to="{path: '/'}">-->
@@ -18,7 +18,7 @@
     </nav>
 </template>
 
-<script type="text/javascript">
+<script>
   export default {
     name: 'footer',
     props: {

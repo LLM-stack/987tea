@@ -148,7 +148,7 @@
           </div>
           <div class="mode-dp">{{ item.dp }}</div>
           <div class="mode-title">{{ item.title }}</div>
-          <div class="mode-price ">
+          <div class="mode-price">
             <span class="lm-text-red">￥{{ item.price }}元</span>
             <span class="mode-btn">立即购买</span>
           </div>

@@ -34,7 +34,7 @@
   </div>
 </template>
 
-<script type="text/javascript">
+<script>
   import Mheader from '../../components/Mheader'
   import Mdialog from '../../components/Mdialog'
 
