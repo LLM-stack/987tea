@@ -13,7 +13,7 @@
         <div>
           <div>
             <div class="product-name">正宗铁观音</div>
-            <div class="product-delete"></div>
+            <div class="product-delete" @click="del()"></div>
           </div>
           <div class="product-price">
             <div>￥{{ item.price | formatMoney(item.num) }}</div>
@@ -28,7 +28,9 @@
     </div>
 
     <div class="settlement">
-
+      <div>全选</div>
+      <div>总金额{{ totalMoney }}</div>
+      <div>下单</div>
     </div>
 
 
@@ -44,6 +46,7 @@
     },
     data() {
       return {
+          totalMoney:0,
         price: 22,
         num: 1,
         testlist: [{
@@ -72,6 +75,7 @@
         }else{
           product.ischecked = !product.ischecked;
         }
+        this.calcTotalMoney();
       },
       changeNum(product,way) {
         if(way>0){
@@ -82,18 +86,23 @@
             product.num=1;
           }
         }
-//        this.calcTotalMoney();
+        this.calcTotalMoney();
+      },
+      calcTotalMoney() {
+        let totalMoney = 0;
+        this.testlist.forEach(function (item) {
+          if(item.ischecked){
+            totalMoney+=item.price*item.num;
+          }
+        });
+        this.totalMoney = totalMoney;
+      },
+      del(){
+
+      },
+      delProduct(){
+
       }
-//      ,
-//      calcTotalMoney() {
-//        let totalMoney = 0;
-//        this.productList.forEach(function (item) {
-//          if(item.checked){
-//            totalMoney+=item.productPrice*item.productQuentity;
-//          }
-//        });
-//        this.totalMoney = totalMoney;
-//      }
     }
   }
 </script>
@@ -181,5 +190,19 @@
     height: 1.2rem;
     padding: 0 0.4rem;
     font-size: 0.9rem;
+  }
+
+  .settlement{
+    color: #fff;
+    width: 100%;
+    bottom: 0;
+    position: fixed;
+    height: 2rem;
+    background-color: #B4282D;
+    display: flex;
+    align-items: center;
+  }
+  .settlement > div{
+    width: 33%;
   }
 </style>
