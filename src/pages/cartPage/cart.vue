@@ -28,9 +28,16 @@
     </div>
 
     <div class="settlement">
-      <div>全选</div>
-      <div>总金额{{ totalMoney }}</div>
-      <div>下单</div>
+      <div>
+        <div class="product-select"  @click="check(item)"></div>
+        <div>
+          <div>共选择 <span class="lm-text-red">{{ totalMoney  }}</span> 件商品</div>
+          <div>共计￥ <span class="lm-text-red">{{ totalMoney | formatMoney }}</span> 元</div>
+
+          </div>
+      </div>
+
+      <div class="tobuy">立即购买</div>
     </div>
 
 
@@ -65,7 +72,7 @@
     filters: {
       formatMoney: function (value, quentity) {
         if(!quentity)quentity=1;
-        return (value*quentity) +" 元";
+        return (value*quentity).toFixed(2) +" 元";
       }
     },
     methods: {
@@ -157,7 +164,7 @@
     border: 0.1rem solid #B4282D;
   }
 
-  .product .product-select {
+   .product-select {
     width: 0.8rem;
     height: 0.8rem;
     margin-right: 0.4rem;
@@ -193,16 +200,27 @@
   }
 
   .settlement{
-    color: #fff;
     width: 100%;
     bottom: 0;
     position: fixed;
-    height: 2rem;
-    background-color: #B4282D;
+    height: 2.4rem;
+    padding-left: 0.4rem;
+    border-top: 1px solid #eeeeee;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .settlement > div:first-child{
     display: flex;
     align-items: center;
   }
-  .settlement > div{
-    width: 33%;
+  .settlement .tobuy{
+    text-align: center;
+    line-height: 2.4rem;
+    color: #ffffff;
+    width: 4.5rem;
+    height: 100%;
+    background-color: #B4282D;
   }
 </style>
