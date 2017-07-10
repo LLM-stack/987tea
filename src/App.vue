@@ -45,7 +45,8 @@ export default {
   }
   body {
     color: #4C4C4C;
-    background-color:#EEEEEE;
+    background-color:#eee;
+    font-size: 0.65rem;
     font-family: "Microsoft YaHei",Roboto,Lato,sans-serif,"Helvetica Neue",Helvetica,Arial,"Hiragino Sans GB","Hiragino Sans GB W3","Microsoft YaHei UI","WenQuanYi Micro Hei",sans-serif;
   }
   ol, ul {
@@ -78,6 +79,9 @@ export default {
     height: 100%;
   }
   /*工具样式*/
+  .container {
+    margin-bottom: 2rem;
+  }
   .lm-text-grey{
     color: #999!important;
   }
@@ -91,7 +95,7 @@ export default {
     color: #bf7afc!important;
   }
   .lm-text-red{
-    color: #B22328!important;
+    color: #B4282D!important;
   }
   .lm-font-sm{
     font-size: 0.6rem;
@@ -118,7 +122,7 @@ export default {
     margin-bottom: 0.2rem;
   }
   .lm-margin-r-lg{
-    margin-right: 1rem;
+    margin-right: 0.8rem;
   }
   .lm-margin-r{
     margin-right: 0.6rem;
@@ -162,8 +166,97 @@ export default {
   .fade-enter,.fade-leave {
     opacity: 0;
   }
-  /*.fade-leave-active{*/
-    /*transform: translateX(100%);*/
+  /*商品列表模块*/
+  .mode-box {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
 
-  /*}*/
+  .mode-box .mode-left {
+    margin-left: 2%;
+  }
+
+  .mode-list {
+    margin-top: 0.26rem;
+    font-size: 0.6rem;
+    border-radius: 0.2rem;
+    background-color: #F4F4F4;
+    width: 49%;
+  }
+
+  .mode-list .mode-img {
+    width: 100%;
+    height: 8rem;
+  }
+
+  .mode-list .mode-dp {
+    padding: 0.2rem 0.3rem;
+    color: #8F7747;
+    background-color: #F1ECE2;
+  }
+
+  .mode-list .mode-title {
+    padding: 0.3rem 0.3rem 0;
+  }
+
+  .mode-list .mode-price {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.3rem;
+  }
+  .mode-list .mode-price .cb-price{
+    font-size: 0.5rem;
+  }
+
+  .mode-list .mode-btn {
+    padding:0.05rem 0.1rem;
+    color: #B4282D;
+    font-size: 0.5rem;
+    border-radius: 0.15rem;
+    transition: all 0.2s;
+    border: 1px solid #B4282D;
+  }
+  .mode-list .mode-btn:active{
+    color: #ffffff;
+    background-color: #B4282D;
+  }
+  /*组件样式覆盖*/
+  body .mint-field .mint-cell-wrapper,body  .mint-cell-wrapper{
+    font-size: 0.6rem;
+  }
+body .mint-switch-input:checked + .mint-switch-core{
+  border-color: #e20f0f;
+  background-color: #e20f0f;
+}
+  body .cont .mint-field .mint-cell-wrapper {
+    padding: 0;
+    background-image:none;
+    border: 1px solid #d9d9d9;
+    border-radius: 0.2rem;
+    margin-top: 0.8rem;
+    padding: 0 0.4rem;
+  }
+  .sex .mint-cell{
+    width: 5.5rem;
+    min-height: 1rem;
+    background-image: none;
+  }
+  .sex .mint-cell-wrapper{
+    background-image: none;
+  }
+  .sex .mint-radiolist{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  /*弹窗*/
+  .primary-btn{
+    color: #fff;
+    background-color: #B4282D;
+  }
+  .primary-btn:active{
+    color: #B4282D;
+  }
 </style>

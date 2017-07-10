@@ -1,13 +1,18 @@
 <template>
     <div>
       <Mheader>
-          <div slot="title">{{ this.$route.params.tabName }}</div>
+          <div slot="title" >{{ this.$route.params.title }}</div>
       </Mheader>
       <div class="tabs">
         <div class="tab" v-for="(item,index) in tabList" :class="{active:item.isactive}" @click="tabActive(index)">{{ item.tabName }}</div>
       </div>
 
-      <MorderBox></MorderBox>
+      <div>
+        <MorderBox :number="number" :price="price"></MorderBox>
+      </div>
+      <div>
+        <MorderBox :number="number" :price="price"></MorderBox>
+      </div>
 
       <Mfooter :myCenterCurrent=true></Mfooter>
     </div>
@@ -26,10 +31,13 @@
     },
     data() {
       return {
+      	number:12313,
+        price: 500,
+
         tabList: [
           {
             tabName: '全部',
-            isactive: true
+            isactive: false
           },
           {
             tabName: '待付款',
@@ -59,7 +67,8 @@
       }
     },
     created() {
-      this.$route.params.tabName
+    	let index = this.$route.params.tabNum
+    	this.tabList[index].isactive = true
     }
   }
 </script>

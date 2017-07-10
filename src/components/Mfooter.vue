@@ -3,7 +3,7 @@
       <router-link :to="{path: '/'}">
         <span class="nav-icon nav-icon-index" :class="{ indexCurrent: indexCurrent }"></span>
       </router-link>
-      <router-link :to="{path:'/CBmall'}">
+      <router-link :to="{path:'/mall'}">
         <span class="nav-icon nav-icon-shop" :class="{ shopCurrent: shopCurrent }"></span>
       </router-link>
       <!--<router-link :to="{path: '/'}">-->

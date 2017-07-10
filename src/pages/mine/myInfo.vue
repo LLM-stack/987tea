@@ -9,32 +9,36 @@
       </div>
       <div class="info ">
         <div class="name lm-margin-l-sm">嘛卖批</div>
-        <div class="cb lm-margin-t-xs"><i class="lm-margin-r-xs"></i>茶币：5</div>
+        <div class="cb lm-margin-t-xs">
+          <router-link :to="{path:'/MyCB'}">
+            <i class="lm-margin-r-xs"></i>茶币：5
+          </router-link>
+        </div>
       </div>
 
     </div>
     <div class="my-order">
       <div class="title">我的订单</div>
       <div class="order-control">
-        <router-link :to="{path: '/MyOrder/待付款'}">
-          <div class="control-icon">
+        <router-link :to="{path: '/MyOrder/待付款/1'}">
+          <div class="control-icon" >
             <img src="../../assets/images/myInfo/icon.1.png"/>
             <div>待付款</div>
           </div>
-        </router-link>
-        <router-link :to="{path: '/MyOrder/待发货'}">
+          </router-link>
+        <router-link :to="{path: '/MyOrder/待发货/2'}">
           <div class="control-icon">
             <img src="../../assets/images/myInfo/icon.2.png"/>
             <div>待发货</div>
           </div>
         </router-link>
-        <router-link :to="{path: '/MyOrder/待收货'}">
+        <router-link :to="{path: '/MyOrder/待收货/3'}">
           <div class="control-icon">
             <img src="../../assets/images/myInfo/icon.3.png"/>
             <div>待收货</div>
           </div>
         </router-link>
-        <router-link :to="{path: '/MyOrder/待评价'}">
+        <router-link :to="{path: '/MyOrder/待评价/4'}">
           <div class="control-icon">
             <img src="../../assets/images/myInfo/icon.4.png"/>
             <div>待评价</div>
@@ -46,10 +50,10 @@
     <div class="my-order">
       <div class="title">我的服务</div>
       <div class="server-control ">
-        <router-link :to="{path: '/MyCB'}">
+        <router-link :to="{path: '/CBmall'}">
           <div class="control-icon">
             <img src="../../assets/images/myInfo/icon.5.png"/>
-            <div>我的茶币</div>
+            <div>茶币商城</div>
           </div>
         </router-link>
         <router-link :to="{path: '/MyCollection'}">
@@ -58,23 +62,27 @@
             <div>我的收藏</div>
           </div>
         </router-link>
+        <router-link :to="{path: '/MyAddress'}">
         <div class="control-icon">
           <img src="../../assets/images/myInfo/icon.7.png"/>
           <div>地址管理</div>
         </div>
+        </router-link>
+        <router-link :to="{path: '/Coupon'}">
         <div class="control-icon">
           <img src="../../assets/images/myInfo/icon.8.png"/>
           <div>优惠券</div>
         </div>
+        </router-link>
       </div>
       <div class="server-control ">
-        <router-link :to="{path: '/'}">
+        <!--<router-link :to="{path: '/'}">-->
           <div class="control-icon">
             <img src="../../assets/images/myInfo/icon.9.png"/>
             <div>邀请好友</div>
           </div>
-        </router-link>
-        <div class="control-icon">
+        <!--</router-link>-->
+        <div class="control-icon" @click="">
           <img src="../../assets/images/myInfo/icon.10.png"/>
           <div>茶友圈</div>
         </div>
@@ -82,10 +90,12 @@
           <img src="../../assets/images/myInfo/icon.11.png"/>
           <div>我的客服</div>
         </div>
+        <router-link :to="{path: '/CommentsBox'}">
         <div class="control-icon">
           <img src="../../assets/images/myInfo/icon.12.png"/>
           <div>意见箱</div>
         </div>
+        </router-link>
       </div>
     </div>
 
@@ -97,11 +107,14 @@
 <script>
   import Mheader from '../../components/Mheader'
   import Mfooter from '../../components/Mfooter'
+  import Mdialog from '../../components/Mdialog'
 
   export default {
     components: {
       Mheader,
       Mfooter
+    },
+    methods: {
     }
   }
 </script>
@@ -129,7 +142,7 @@
     font-size: 0.75rem;
   }
 
-  .info .cb {
+  .info .cb a{
     display: flex;
     align-items: center;
     font-size: 0.6rem;
@@ -138,7 +151,7 @@
     background-color: #8E1C20;
   }
 
-  .info .cb > i {
+  .info .cb i {
     display: inline-block;
     width: 0.8rem;
     height: 0.8rem;
