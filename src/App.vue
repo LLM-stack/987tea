@@ -80,7 +80,7 @@ export default {
   }
   /*工具样式*/
   .container {
-    margin-bottom: 2rem;
+    margin-bottom: 2.4rem;
   }
   .lm-text-grey{
     color: #999!important;
