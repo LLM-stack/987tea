@@ -36,8 +36,9 @@
 
           </div>
       </div>
-
-      <div class="tobuy">立即购买</div>
+      <router-link :to="{path:'/Payment'}">
+        <div class="tobuy">立即购买</div>
+      </router-link>
     </div>
 
 

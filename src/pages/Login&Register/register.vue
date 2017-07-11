@@ -13,10 +13,10 @@
         <div class="code">
           <mt-field placeholder="请输入验证码" type="number" v-model="number">
           </mt-field>
-          <div class="seconds">59s后重新发送</div>
+          <div :class="fetchCodeMsg?'seconds':'seconding'"   @click="sendCode">{{timerCodeMsg}}</div>
         </div>
         <mt-field placeholder="请输入密码" type="password" v-model="password"></mt-field>
-        <div class="register-btn">注册</div>
+        <div class="register-btn" @click="sendRegister">注册</div>
         <div class=" lm-font-sm lm-margin-t-sm">注册即视为同意 <span class="tips lm-text-red" @click="open">《服务协议》</span></div>
       </div>
       <Mdialog :dialog="dialog">
@@ -135,6 +135,7 @@
 <script>
   import Mheader from '../../components/Mheader'
   import Mdialog from '../../components/Mdialog'
+  import { MessageBox } from 'mint-ui';
 
   export default {
     components: {
@@ -146,7 +147,9 @@
         phone: null,
         number: null,
         password: null,
-        dialog: null
+        dialog: null,
+        timerCodeMsg:'获取验证码',
+        fetchCodeMsg:false       
       }
     },
     methods: {
@@ -155,7 +158,85 @@
       },
       close() {
         this.dialog = false
+      },
+      sendCode(){//发送短信验证码  
+          if(!!!this.phone){
+            MessageBox('提示', '手机号不能为空');
+            return;
+          } 
+          if(!this.isPhoneNo(this.phone)){
+             MessageBox('提示', '手机号格式不正确');
+             return;
+          }      
+          this.axios.post(this.url+'/api/Login/SendSMSCode',{phone:this.phone}).then((res)=>{
+            this.timeOut();
+            console.log(res.data)
+            //if(res.data.)
+          }).catch((err)=>{
+             MessageBox('提示', '网络请求超时');
+          })
+      },      
+      isPhoneNo(phone) {  //手机号验证 
+        var pattern = /^1[34578]\d{9}$/; 
+        return pattern.test(phone); 
+      },
+      timeOut(){//倒计时
+        let self=this;
+        self.fetchCodeMsg = true
+        let sec =10;
+        for(let  i=0; i<=10; i++){
+          window.setTimeout(function(){
+              if (sec != 0) {                
+                self.timerCodeMsg = sec + "s后重新发送" ;
+                sec--;
+            } else {
+                sec = 60;//如果倒计时结束就让重新获取验证码显示出来
+                self.timerCodeMsg="重新获取验证码";
+                self.fetchCodeMsg = false
+            }
+          }, i * 1000)
+        }
+      },
+      sendRegister(){//注册
+          if(!!!this.phone){
+            MessageBox('提示', '手机号不能为空');
+            return;
+          } 
+          if(!this.isPhoneNo(this.phone)){
+            MessageBox('提示', '手机号格式不正确');
+            return;
+          }
+          if(!!!this.number){
+            MessageBox('提示', '验证码不能为空');
+            return;
+          }
+          if(this.number.length!=6){
+            MessageBox('提示', '验证码格式不正确');
+            return;
+          }
+          if(!!!this.password){
+            MessageBox('提示', '密码不能为空');
+            return;
+          }
+          if(this.password.length<6 || this.password.length>12){
+            MessageBox('提示', '密码的长度在6-12位之间');
+            return;
+          } 
+          if(!this.verifyPassword(this.password)){
+            MessageBox('提示', '密码的格式错误');
+            return;
+          } 
+          this.axios.post(this.url+'/api/Login/Register',{phone:this.phone,code:this.number,password:this.password}).then((res)=>{
+            console.log(res.data)
+          }).catch((err)=>{
+            MessageBox('提示', '网络请求超时');
+          }) 
+      },
+      verifyPassword(pwd){//密码验证
+          let pattern=/^[A-Za-z_0-9]{6,16}$/;
+          return pattern.test(pwd);
       }
+
     }
   }
 </script>
@@ -179,6 +260,17 @@
     border: 1px solid #d9d9d9;
     border-radius: 0.2rem;
     margin-top: 0.8rem;
+    pointer-events: none;
+  } 
+  .code .seconding{
+    height: 2.1rem;
+    width: 5.5rem;
+    color: #B4282D;
+    text-align: center;
+    line-height: 2.1rem;
+    border: 1px solid #B4282D;
+    border-radius: 0.2rem;
+    margin-top: 0.8rem;    
   }
   .code a{
 

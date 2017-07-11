@@ -47,7 +47,9 @@
     </div>
     <div class="top-tabs">
       <div>
-        <img src="../../assets/images/myInfo/icon.5.png" alt="">
+        <router-link :to="{path:'/MyCB'}">
+          <img src="../../assets/images/myInfo/icon.5.png" alt="">
+        </router-link>
         <span>茶金币</span>
       </div>
       <div>
@@ -55,7 +57,9 @@
         <span>茶友圈</span>
       </div>
       <div>
-        <img src="../../assets/images/myInfo/icon.3.png" alt="">
+        <router-link :to="{path:'/MyCB'}">
+          <img src="../../assets/images/myInfo/icon.3.png" alt="">
+        </router-link>
         <span>物流信息</span>
       </div>
       <div>
@@ -124,15 +128,15 @@
       <div class="mode-box">
         <div class="mode-list" v-for="(item,index) in modeList" :class="{'mode-left': index % 2 !== 0}">
           <router-link :to="{path:'/ProductDetails'}">
-          <div class="mode-img">
-            <img :src="item.imgSrc"/>
-          </div>
-          <div class="mode-dp">{{ item.dp }}</div>
-          <div class="mode-title">{{ item.title }}</div>
-          <div class="mode-price ">
-            <span class="lm-text-red">￥{{ item.price }}元</span>
-            <span class="mode-btn">立即购买</span>
-          </div>
+            <div class="mode-img">
+              <img :src="item.imgSrc"/>
+            </div>
+            <div class="mode-dp">{{ item.dp }}</div>
+            <div class="mode-title">{{ item.title }}</div>
+            <div class="mode-price ">
+              <span class="lm-text-red">￥{{ item.price }}元</span>
+              <span class="mode-btn">立即购买</span>
+            </div>
           </router-link>
         </div>
       </div>
@@ -209,7 +213,7 @@
     background-color: #B4282D;
   }
 
-  header img{
+  header img {
     display: block;
   }
 
@@ -286,8 +290,10 @@
 
   .top-tabs > div img {
     width: 2.2rem;
+    vertical-align: bottom;
   }
-  .top-tabs > div span{
+
+  .top-tabs > div span {
     margin-top: -0.3rem;
   }
 

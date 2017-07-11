@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-      <Mheader :show=true>
+      <Mheader>
         <div slot="title" id="t">优惠券</div>
       </Mheader>
       <div class="coupons">
