@@ -48,7 +48,7 @@
             isactive: false
           },
           {
-            tabName: '已发货',
+            tabName: '待收货',
             isactive: false
           },
           {

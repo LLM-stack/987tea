@@ -69,6 +69,7 @@
       openPicker() {
         this.$refs.picker.open();
       }
+
     }
   }
 </script>

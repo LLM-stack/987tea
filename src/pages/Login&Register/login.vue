@@ -10,7 +10,7 @@
       <div class="login-box">
         <mt-field placeholder="请输入手机号" type="tel" v-model="phone"></mt-field>
         <mt-field placeholder="请输入密码" type="password" v-model="password"></mt-field>
-        <div class="login-btn">登录</div>
+        <div class="login-btn" @click="login">登录</div>
         <div class="methods">
           <div class="m-msg">
             <router-link :to="{path:'/MsgLogin'}">
@@ -39,6 +39,8 @@
 <script>
   import Mheader from '../../components/Mheader'
   import Mdialog from '../../components/Mdialog'
+  //import { MessageBox } from 'mint-ui';
+  import { Toast } from 'mint-ui';
 
   export default {
     components: {
@@ -52,6 +54,52 @@
       }
     },
     methods: {
+        login(){//登录
+           if(!!!this.phone){
+           Toast('手机号不能为空');
+            return;
+          } 
+          if(!this.isPhoneNo(this.phone)){
+             Toast('手机号格式不正确');
+             return;
+          }  
+          if(!!!this.password){
+           Toast('密码不能为空');
+            return;
+          }
+          if(this.password.length<6 || this.password.length>12){
+            Toast('密码的长度在6-12位之间');
+            return;
+          } 
+          if(!this.verifyPassword(this.password)){
+            Toast('密码的格式错误');
+            return;
+          } 
+          this.axios.post(this.url+'/api/Login/LoginUp',{phone:this.phone,pwd:this.password}).then((res)=>{
+            if(res.status==200){
+              let instance = Toast(res.data.Data);
+              setTimeout(() => {
+                instance.close();
+                //TODO:登录跳转从那个页面来 回那个页面还没做
+                this.$router.push({ path: '/' })
+              }, 1000);
+            
+            }else{
+              Toast(res.data.Data);
+            }
+          }).catch((err)=>{            
+            Toast(err.message);
+          })    
+
+        },
+        isPhoneNo(phone) {  //手机号验证 
+          var pattern = /^1[34578]\d{9}$/; 
+          return pattern.test(phone); 
+        },
+        verifyPassword(pwd){//密码验证
+            let pattern=/^[A-Za-z_0-9]{6,16}$/;
+            return pattern.test(pwd);
+        }
 
     }
   }

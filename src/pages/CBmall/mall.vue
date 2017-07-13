@@ -152,6 +152,7 @@
   }
 
   .banner .tabs .active {
+    color: #B4282D;
     border-bottom: 3px solid #B4282D;
   }
 

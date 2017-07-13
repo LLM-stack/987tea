@@ -12,9 +12,9 @@
         <div class="code">
           <mt-field placeholder="请输入验证码" type="number" v-model="number">
           </mt-field>
-          <div class="seconds">59s后重新发送</div>
+          <div :class="fetchCodeMsg?'seconds':'seconding'"   @click="sendCode">{{timerCodeMsg}}</div>
         </div>
-        <div class="msg-login-btn">登录</div>
+        <div class="msg-login-btn" @click="smsLogin">登录</div>
         <div class="methods">
           <div class="m-pswd">
             <router-link :to="{path:'/login'}">
@@ -37,6 +37,8 @@
 <script>
   import Mheader from '../../components/Mheader'
   import Mdialog from '../../components/Mdialog'
+  //import { MessageBox } from 'mint-ui';
+   import { Toast } from 'mint-ui';
 
   export default {
     components: {
@@ -47,10 +49,89 @@
       return {
         phone: null,
         number: null,
-        password: null
+        timerCodeMsg:'获取验证码',
+        fetchCodeMsg:false 
       }
     },
     methods: {
+      sendCode(){//发送短信验证码  
+          if(!!!this.phone){
+           Toast('手机号不能为空');
+            return;
+          } 
+          if(!this.isPhoneNo(this.phone)){
+             Toast('手机号格式不正确');
+             return;
+          }      
+          this.axios.post(this.url+'/api/Login/SendSMSCode',{phone:this.phone}).then((res)=>{
+            this.timeOut();//发送成功开始倒计时
+            if(res.status==200){
+              Toast(res.data.Data);
+            }else{
+              Toast(res.data.Data);
+            }
+          }).catch((err)=>{
+             Toast('网络请求超时');
+          })
+      }, 
+      timeOut(){//倒计时
+        let self=this;
+        self.fetchCodeMsg = true
+        let sec =60;
+        for(let  i=0; i<=60; i++){
+          window.setTimeout(function(){
+              if (sec != 0) {                
+                self.timerCodeMsg = sec + "s后重新发送" ;
+                sec--;
+            } else {
+                sec = 60;//如果倒计时结束就让重新获取验证码显示出来
+                self.timerCodeMsg="重新获取验证码";
+                self.fetchCodeMsg = false
+            }
+          }, i * 1000)
+        }
+      },
+      verifyPassword(pwd){//密码验证
+          let pattern=/^[A-Za-z_0-9]{6,16}$/;
+          return pattern.test(pwd);
+      },
+      isPhoneNo(phone) {  //手机号验证 
+        var pattern = /^1[34578]\d{9}$/; 
+        return pattern.test(phone); 
+      },
+      smsLogin(){//短信登录
+          if(!!!this.phone){
+          Toast('手机号不能为空');
+          return;
+          } 
+          if(!this.isPhoneNo(this.phone)){
+              Toast('手机号格式不正确');
+              return;
+          }  
+          if(!!!this.number){
+            Toast('验证码不能为空');
+            return;
+          }
+          if(this.number.length !=6){
+            Toast('验证码格式不正确');
+            return;
+          }           
+          this.axios.post(this.url+'/api/Login/SMSLogin',{phone:this.phone,code:this.number}).then((res)=>{
+            if(res.status==200){
+              let instance = Toast(res.data.Data);
+              setTimeout(() => {
+                instance.close();
+                //TODO:登录跳转从那个页面来 回那个页面还没做
+                this.$router.push({ path: '/home' })
+              }, 1000);
+            
+            }else{
+              Toast(res.data.Data);
+            }
+          }).catch((err)=>{
+            Toast('网络请求超时');
+          })  
+      },
 
     }
   }
@@ -125,6 +206,17 @@
     border: 1px solid #d9d9d9;
     border-radius: 0.2rem;
     margin-top: 0.8rem;
+    pointer-events: none;
+  }
+   .code .seconding{
+    height: 2.1rem;
+    width: 5.5rem;
+    color: #B4282D;
+    text-align: center;
+    line-height: 2.1rem;
+    border: 1px solid #B4282D;
+    border-radius: 0.2rem;
+    margin-top: 0.8rem;    
   }
   .code a{
 

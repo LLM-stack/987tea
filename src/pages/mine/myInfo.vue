@@ -18,7 +18,7 @@
 
     </div>
     <div class="my-order">
-      <div class="title">我的订单</div>
+      <div class="title" @click="vuextest">我的订单</div>
       <div class="order-control">
         <router-link :to="{path: '/MyOrder/待付款/1'}">
           <div class="control-icon" >
@@ -114,7 +114,18 @@
       Mheader,
       Mfooter
     },
+    data(){
+    	return {
+        username:'新的'
+      }
+    },
     methods: {
+    	vuextest() {
+        alert(this.$store.state.user_name)
+        this.$store.state.user_name = this.username
+        alert(this.$store.state.user_name)
+        this.$store.commit("showUserName")
+      }
     }
   }
 </script>

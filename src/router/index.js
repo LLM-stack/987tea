@@ -5,6 +5,7 @@ import Router from 'vue-router'
 import Home from '@/pages/indexPage/home'
 import ProductDetails from '@/pages/indexPage/productDetails'
 import SearchPage from '@/pages/indexPage/searchPage'
+import Category from '@/pages/CBmall/category'
 
 // 购物车
 import Cart from '@/pages/cartPage/cart'
@@ -29,7 +30,6 @@ import EditAddress from '@/pages/mine/editAddress'
 import CommentsBox from '@/pages/mine/commentsBox'
 
 // 商城
-import Category from '@/pages/CBmall/category'
 import CBmall from '@/pages/CBmall/CBmall'
 import Mall from '@/pages/CBmall/mall'
 
@@ -39,6 +39,7 @@ export default new Router({
   mode: 'history',
   base: '/',
   routes: [
+    // 首页
     {
       path: '/',
       component: Home
@@ -51,28 +52,34 @@ export default new Router({
     }, {
       path: '/ProductDetails',
       component: ProductDetails
-    }, {
+    },
+    // 购物车
+    {
       path: '/Cart',
       component: Cart
     }, {
       path: '/Payment',
       component: Payment
     }, {
-      path: '/Register',
-      component: Register
-    }, {
       path: '/PaymentCompleted',
       component: PaymentCompleted
-    }, {
+    },
+    //登录注册
+    {
       path: '/Login',
       component: Login
     }, {
       path: '/MsgLogin',
       component: MsgLogin
     }, {
+      path: '/Register',
+      component: Register
+    }, {
       path: '/ResetPassword',
       component: ResetPassword
-    }, {
+    },
+    // 个人中心
+    {
       path: '/MyInfo',
       component: MyInfo
     }, {
@@ -99,7 +106,9 @@ export default new Router({
     }, {
       path: '/Coupon',
       component: Coupon
-    }, {
+    },
+    // 商城
+    {
       path: '/CBmall',
       component: CBmall
     }, {

@@ -3,7 +3,7 @@
       <Mheader>
         <div slot="title" id="t">优惠券</div>
       </Mheader>
-      <div class="coupons">
+      <div class="coupons" @click="">
         <div class="coupon">
           <div class="coupon-box">
             <div>
@@ -25,7 +25,7 @@
           </div>
 
         </div>
-        <div class="coupon">
+        <div class="coupon unable">
           <div class="coupon-box">
             <div>
               <div>
@@ -46,48 +46,8 @@
           </div>
 
         </div>
-        <div class="coupon">
-          <div class="coupon-box">
-            <div>
-              <div>
-                <span class="font-red">￥</span>
-                <span class="font-red coupon-num">15</span>
-              </div>
-              <div class="lm-margin-t-sm">
-                满49可用
-              </div>
-            </div>
-            <div>
-              <div class="coupon-name">现金抵用券</div>
-              <div class="coupon-range">范围：全场通用</div>
-              <div class="coupon-time">
-                有效期至：2016-10-10
-              </div>
-            </div>
-          </div>
 
-        </div>
-        <div class="coupon">
-          <div class="coupon-box">
-            <div>
-              <div>
-                <span class="font-red">￥</span>
-                <span class="font-red coupon-num">15</span>
-              </div>
-              <div class="lm-margin-t-sm">
-                满49可用
-              </div>
-            </div>
-            <div>
-              <div class="coupon-name">现金抵用券</div>
-              <div class="coupon-range">范围：全场通用</div>
-              <div class="coupon-time">
-                有效期至：2016-10-10
-              </div>
-            </div>
-          </div>
 
-        </div>
       </div>
 
 
@@ -157,5 +117,8 @@
     top: 3.8rem;
    color: #A4A4A4;
     position: absolute;
+  }
+  .coupon.unable .font-red{
+    color: #989898;
   }
 </style>

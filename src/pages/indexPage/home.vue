@@ -73,8 +73,8 @@
       </div>
       <div class="box-block box-block-one">
         <div class="box-block-title">折扣好茶推荐</div>
-        <div class="box-block-time"><span>01</span>：<span>01</span>：<span>01</span></div>
-        <div class="rmtime">距活动结束剩下1天1小时1分</div>
+        <div class="box-block-time"><span>{{hour}}</span>：<span>{{minute}}</span>：<span>{{second}}</span></div>
+        <!--<div class="rmtime">下一场19:00开始</div>-->
       </div>
       <div class="flex-between">
         <div class="box-block box-block-two">
@@ -94,6 +94,34 @@
         </div>
       </div>
     </div>
+    <!--<div class="box choice">-->
+      <!--<div class="title flex-alig-center">-->
+        <!--<span></span>为您精选-->
+      <!--</div>-->
+      <!--<div class="small-title">-->
+        <!--您的口味，我们都懂-->
+      <!--</div>-->
+      <!--<div class="box-block flex-between">-->
+        <!--<div class="choice-img">-->
+          <!--<img src="../../assets/images/goods/987tea_16.png" alt="">-->
+        <!--</div>-->
+        <!--<div class="choice-text">-->
+          <!--<div class="choice-text-title">这些茶，甜的让人念念不忘。</div>-->
+          <!--<div class="choice-text-p">在众多茶里，以甜占主导地位的，确实不多，幸运的是，小七有幸喝到这几款</div>-->
+          <!--<div class="choice-text-bottom flex-alig-center">-->
+            <!--<div class="flex-alig-center lm-margin-r-lg">-->
+              <!--<span></span>-->
+              <!--77-->
+            <!--</div>-->
+            <!--<div class="flex-alig-center">-->
+              <!--<span></span>-->
+              <!--1457-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</div>-->
+    <!--TODO：社区模块还未完成 先注释
     <div class="box choice">
       <div class="title flex-alig-center">
         <span></span>为您精选
@@ -120,21 +148,21 @@
           </div>
         </div>
       </div>
-    </div>
+    </div>-->
     <div class="box mode">
       <div class="title flex-alig-center">
         自品好茶 <span></span>
       </div>
       <div class="mode-box">
-        <div class="mode-list" v-for="(item,index) in modeList" :class="{'mode-left': index % 2 !== 0}">
+        <div class="mode-list" v-for="(item,index) in ownTea" :class="{'mode-left': index % 2 !== 0}">
           <router-link :to="{path:'/ProductDetails'}">
             <div class="mode-img">
-              <img :src="item.imgSrc"/>
+              <img :src="item.HeadImg"/>
             </div>
-            <div class="mode-dp">{{ item.dp }}</div>
-            <div class="mode-title">{{ item.title }}</div>
+            <div class="mode-dp">{{ item.SaleComment }}</div>
+            <div class="mode-title">{{ item.Name }}</div>
             <div class="mode-price ">
-              <span class="lm-text-red">￥{{ item.price }}元</span>
+              <span class="lm-text-red">￥{{ item.Price }}元</span>
               <span class="mode-btn">立即购买</span>
             </div>
           </router-link>
@@ -146,12 +174,12 @@
         送礼必备 <span></span>
       </div>
       <div class="mode-box">
-        <div class="mode-list" v-for="(item,index) in modeList" :class="{'mode-left' : index % 2 !== 0}">
+        <div class="mode-list" v-for="(item,index) in giftsTea" :class="{'mode-left' : index % 2 !== 0}">
           <div class="mode-img">
-            <img :src="item.imgSrc"/>
+            <img :src="item.HeadImg"/>
           </div>
-          <div class="mode-dp">{{ item.dp }}</div>
-          <div class="mode-title">{{ item.title }}</div>
+          <div class="mode-dp">{{ item.SaleComment }}</div>
+          <div class="mode-title">{{ item.Name }}</div>
           <div class="mode-price">
             <span class="lm-text-red">￥{{ item.price }}元</span>
             <span class="mode-btn">立即购买</span>
@@ -159,12 +187,13 @@
         </div>
       </div>
     </div>
-    <Mfooter :indexCurrent=true></Mfooter>
+    <Mfooter :indexCurrent='true'></Mfooter>
   </div>
 </template>
 
 <script>
   import Mfooter from '../../components/Mfooter'
+  import { Toast } from 'mint-ui';
 
   export default {
     name: 'index',
@@ -173,33 +202,89 @@
     },
     data() {
       return {
-        modeList: [
-          {
-            title: '正品碧螺春',
-            dp: '2017新品上市',
-            price: '99',
-            imgSrc: require('../../assets/images/goods/987tea_20.png')
-          },
-          {
-            title: '正品金骏梅',
-            dp: '尝鲜价 买一送一',
-            price: '99',
-            imgSrc: require('../../assets/images/goods/987tea_06.png')
-          },
-          {
-            title: '正品正山小种',
-            dp: '经典味道 值得一试',
-            price: '99',
-            imgSrc: require('../../assets/images/goods/987tea_25.png')
-          },
-          {
-            title: '正品铁观音',
-            dp: '好茶待寻知己',
-            price: '99',
-            imgSrc: require('../../assets/images/goods/987tea_27.png')
-          }
-        ]
+        ownTag:'ca6da57ae81b44f2a6c4f3d4ddbb1491',
+        giftsTag:'f44d0325fe524c899ecc76ce75b39cd5',
+        ownTea:[],
+        giftsTea:[],
+        day:0,
+        hour:0,
+        minute:0,
+        second:0,
+        flag:false,
+        time:new Date()
       }
+    },
+    mounted () {
+      this.$nextTick(function(){
+
+               this.timeDown()
+
+        }
+      )
+       },
+    methods:{
+        getOwnTea(){
+           this.axios.post(this.url+'/api/Product/HomeProducts',{tagId:this.ownTag}).then((res)=>{
+           if(res.status==200){
+             this.ownTea=res.data.Data;
+            }else{
+              Toast(res.data.Data);
+            }
+          }).catch((err)=>{
+             Toast('网络请求超时');
+          })
+        },
+        getGiftsTea(){
+           this.axios.post(this.url+'/api/Product/HomeProducts',{tagId:this.giftsTag}).then((res)=>{
+           if(res.status==200){
+             this.giftsTea=res.data.Data;
+            }else{
+              Toast(res.data.Data);
+            }
+          }).catch((err)=>{
+             Toast('网络请求超时');
+          })
+        },
+        //倒计时
+        timeDown () {
+          console.log(this.time)
+
+               var endTime = this.time
+               endTime.setHours(endTime.getHours() + 3); //给endTime增加3小时
+
+          setInterval( ()=> {
+            let nowTime = new Date()
+            let leftTime = parseInt((endTime.getTime()-nowTime.getTime())/1000)
+            let d = parseInt(leftTime/(24*60*60))
+            let h = this.formate(parseInt(leftTime/(60*60)%24))
+            let m = this.formate(parseInt(leftTime/60%60))
+            let s = this.formate(parseInt(leftTime%60))
+            if(leftTime <= 0){
+              this.flag = true
+            }
+            this.day=d;
+            this.hour=h;
+            this.minute=m;
+            this.second=s;
+          },1000)
+
+           },
+
+
+
+
+           formate (time) {
+               if(time>=10){
+                   return time
+               }else{
+                   return `0${time}`
+               }
+           }
+
+    },
+    created:function(){
+       this.getOwnTea();
+       this.getGiftsTea();
     }
   }
 </script>
