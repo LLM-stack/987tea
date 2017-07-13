@@ -10,6 +10,7 @@ import Mint from 'mint-ui'
 import 'mint-ui/lib/style.css'
 
 
+
 Vue.use(Mint)
 //Vue.use(axios)
 Vue.prototype.axios = axios

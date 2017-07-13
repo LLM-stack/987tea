@@ -1,16 +1,16 @@
 <template>
-  <div>
+  <div class="container">
     <Mheader :show=true>
       <div slot="title">商品详情</div>
 
     </Mheader>
     <div class="img-box">
-      <img src="../../assets/images/goods/987tea_20.png" alt="">
+      <img :src="product.HeadImg"  alt="">
     </div>
     <div class="title">
-      <div>正宗碧螺新春发售</div>
-      <div class="lm-text-grey">尝鲜价，买一送一</div>
-      <div class="lm-text-red">￥99 <span class="old-price lm-text-grey ">￥199</span></div>
+      <div>{{product.Name}}</div>
+      <div class="lm-text-grey">{{product.SaleComment}}</div>
+      <div class="lm-text-red">￥99 <span class="old-price lm-text-grey ">￥{{product.Price}}</span></div>
     </div>
     <div class="service">
       <div>
@@ -35,9 +35,10 @@
           联系客服
         </div>
       </div>
-      <div class="icon">
-        <div>
-          <img src="../../assets/images/productDetails/wsc.png" alt="">
+      <div class="icon" @click="favouriteProduct">
+        <div @click="collection">
+          <img v-if="sc" src="../../assets/images/productDetails/ysc.png" />
+          <img v-else src="../../assets/images/productDetails/wsc.png" />
           收藏商品
         </div>
       </div>
@@ -53,19 +54,80 @@
 
     <!-- tab-container -->
     <div>
-      <div v-if="tabIndex == 0">
-        图片图片图片图片图片图片图片图片图片图片图片图片图片图片图片图片图片图片图片图片图片图片图片图片图片图片图片图片图片图片图片图片图片图片图片图片图片图片图片图片
+      <div v-if="tabIndex == 0" v-html="product.Describe">
       </div>
       <div v-if="tabIndex == 1">
         <div class="parameter">
-          <div class="parameter-list">产品名称：碧螺春</div>
+          <div class="parameter-list" v-for="(item,index) in productParams">{{itemParamKey}}：{{item.ParamValue}}</div>
+          <!--<div class="parameter-list">产品名称：碧螺春</div>
           <div class="parameter-list">茶叶配料：2017嫩芽</div>
           <div class="parameter-list">净含量：155g</div>
-          <div class="parameter-list">茶叶产地：江苏</div>
+          <div class="parameter-list">茶叶产地：江苏</div>-->
         </div>
       </div>
       <div v-if="tabIndex == 2">
-        test test
+        <div class="evaluate-list">
+          <div class="evaluate">
+            <div>
+              <img src="../../assets/images/myInfo/toux.jpg"/>
+              <span class="lm-margin-l-sm lm-text-grey">买家姓名</span>
+            </div>
+            <div class="content lm-margin-t-sm">
+              玫瑰红KJM的红酒鞥你今儿，jog牛肉价格能on，e日给你就按我看你发给我瑰红KJ，M的红酒鞥你今儿jog牛肉价格，能one日给你就按我看你发给我
+            </div>
+            <div class="evaluate-time lm-margin-t-xs">
+              2012-11-22 16:15
+            </div>
+          </div>
+          <div class="evaluate">
+            <div>
+              <img src="../../assets/images/myInfo/toux.jpg"/>
+              <span class="lm-margin-l-sm lm-text-grey">买家姓名</span>
+            </div>
+            <div class="content lm-margin-t-sm">
+              玫瑰红KJM的红酒鞥你今儿，jog牛肉价格能on，e日给你就按我看你发给我瑰红KJ，M的红酒鞥你今儿jog牛肉价格，能one日给你就按我看你发给我
+            </div>
+            <div class="evaluate-time lm-margin-t-xs">
+              2012-11-22 16:15
+            </div>
+          </div>
+          <div class="evaluate">
+            <div>
+              <img src="../../assets/images/myInfo/toux.jpg"/>
+              <span class="lm-margin-l-sm lm-text-grey">买家姓名</span>
+            </div>
+            <div class="content lm-margin-t-sm">
+              玫瑰红KJM的红酒鞥你今儿，jog牛肉价格能on，e日给你就按我看你发给我瑰红KJ，M的红酒鞥你今儿jog牛肉价格，能one日给你就按我看你发给我
+            </div>
+            <div class="evaluate-time lm-margin-t-xs">
+              2012-11-22 16:15
+            </div>
+          </div>
+          <div class="evaluate">
+            <div>
+              <img src="../../assets/images/myInfo/toux.jpg"/>
+              <span class="lm-margin-l-sm lm-text-grey">买家姓名</span>
+            </div>
+            <div class="content lm-margin-t-sm">
+              玫瑰红KJM的红酒鞥你今儿，jog牛肉价格能on，e日给你就按我看你发给我瑰红KJ，M的红酒鞥你今儿jog牛肉价格，能one日给你就按我看你发给我
+            </div>
+            <div class="evaluate-time lm-margin-t-xs">
+              2012-11-22 16:15
+            </div>
+          </div>
+          <div class="evaluate">
+            <div>
+              <img src="../../assets/images/myInfo/toux.jpg"/>
+              <span class="lm-margin-l-sm lm-text-grey">买家姓名</span>
+            </div>
+            <div class="content lm-margin-t-sm">
+              玫瑰红KJM的红酒鞥你今儿，jog牛肉价格能on，e日给你就按我看你发给我瑰红KJ，M的红酒鞥你今儿jog牛肉价格，能one日给你就按我看你发给我
+            </div>
+            <div class="evaluate-time lm-margin-t-xs">
+              2012-11-22 16:15
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -81,8 +143,38 @@
           <img src="../../assets/images/goods/987tea_20.png" alt="">
         </div>
         <div class="choice-p">
-          
+          <div>
+            <div class="choice-p-price ">￥89</div>
+            <div class="del" @click="choice"><img src="../../assets/images/productDetails/del.png" height="48" width="48"/></div>
+          </div>
+          <div>库存 1987 件</div>
+          <div>请选择 规格 数量</div>
         </div>
+        <div class="choice-spec">
+          <div>规格</div>
+          <div class="spec-box">
+            <div class="spec spec-checked">特技龙井125g 一盒共125g</div>
+            <div class="spec">特 二盒共250g</div>
+            <div class="spec">特 三盒共375g</div>
+            <div class="spec">特 四盒共500g</div>
+            <div class="spec">特 二盒共250g</div>
+            <div class="spec">特 三盒共375g</div>
+            <div class="spec">特 四盒共500g</div>
+            <div class="spec">特 二盒共250g</div>
+            <div class="spec">特 三盒共375g</div>
+            <div class="spec">特 四盒共500g</div>
+          </div>
+        </div>
+        <div class="choice-num">
+          <div>购买数量</div>
+          <div>
+            <span>-</span>
+            <input readonly="readonly" type="text" v-model="productNum">
+            <span>+</span>
+          </div>
+        </div>
+
+        <div class="choice-btn">确定</div>
       </div>
     </transition>
 
@@ -91,7 +183,7 @@
 
 <script>
   import Mheader from '../../components/Mheader'
-
+  import { Toast } from 'mint-ui';
   export default {
     components: {
       Mheader
@@ -100,14 +192,15 @@
       return {
         tabIndex: 0,
         choiceShow: false,
+        productNum: 1,
+        sc: false,
         tab: [
           {tabName: "商品详情"},
           {tabName: "参数"},
           {tabName: "评论(132)"}
         ],
-        timer: 30,       //默认倒数30秒
-        stop: false,   //默认是停止的，但界面加载之后会变成false
-        Interval: null  //setInterval的对象
+        product:'' ,
+        productParams:''
       }
     },
     methods: {
@@ -116,7 +209,59 @@
       },
       choice() {
         this.choiceShow = !this.choiceShow
+      },
+      getProduct(){//获取商品信息
+        this.axios.post(this.url + '/api/Product/ProductDetail', {productId: this.$route.params.productID}).then((res) => {
+          if (res.data.Code == 200) {
+            this.product = res.data.Data;
+          } else {
+            Toast(res.data.Data);
+          }
+        }).catch((err) => {
+          Toast('网络请求超时');
+        })
+      },
+      getProductSKU(){//获取商品SKU
+        this.axios.post(this.url + '/api/Product/ProductSpecs', {productId: this.$route.params.productID}).then((res) => {
+          if (res.data.Code == 200) {
+            this.productSpec = res.data.Data;
+          } else {
+            Toast(res.data.Data);
+          }
+        }).catch((err) => {
+          Toast('网络请求超时');
+        })
+      },
+      getParams(){//获取商品参数
+        this.axios.post(this.url + '/api/Product/ProductParameters', {productId: this.$route.params.productID}).then((res) => {
+          if (res.data.Code == 200) {
+            this.productParams = res.data.Data;
+          } else {
+            Toast(res.data.Data);
+          }
+        }).catch((err) => {
+          Toast('网络请求超时');
+        })
+      },
+      favouriteProduct(){//收藏商品
+        this.axios.post(this.url + '/api/Product/FavouriteProduct', {ProductSpecId: this.$route.params.productID}).then((res) => {
+          if (res.data.Code == 200) {
+            Toast(res.data.Data);
+          } else {
+            Toast(res.data.Data);
+          }
+        }).catch((err) => {
+          Toast('网络请求超时');
+        })
+      },
+      collection() {
+        this.sc = !this.sc
       }
+    },
+    created: function () {
+      this.getProduct();
+      this.getProductSKU();
+      this.getParams();
     }
   }
 </script>
@@ -187,7 +332,7 @@
     font-size: 0.65rem;
     display: flex;
     position: fixed;
-    z-index: 999;
+    z-index: 911;
     bottom: 0;
     width: 100%;
     height: 2rem;
@@ -227,7 +372,8 @@
   .tab {
     display: flex;
     align-items: center;
-    background-color: #fff;;
+    background-color: #fff;
+    border-bottom: 1px solid #eeeeee;
   }
 
   .tab > div {
@@ -265,16 +411,17 @@
     position: fixed;
     width: 100%;
     height: 100%;
-    z-index: 9999;
-    background-color: rgba(0, 0, 0, 0.75);
+    z-index: 922;
+    background-color: rgba(0, 0, 0, 0.8);
   }
 
   .choice {
     width: 100%;
-    height: 16rem;
+    height: 18rem;
     bottom: 0;
     position: fixed;
-    z-index: 99999;
+    padding: 0.5rem 0.5rem 0;
+    z-index: 933;
     background-color: #fff;
   }
 
@@ -282,16 +429,137 @@
     width: 5rem;
     height: 5rem;
     border-radius: 0.2rem;
+    padding: 0.1rem;
     background-color: #ffffff;
     border: 1px solid #ddd;
+    box-shadow: 0 0 3px #ddd;
     top:-0.8rem;
     left: 0.5rem;
     position: absolute;
   }
+
+  .choice .choice-p{
+    line-height: 1.1rem;
+    padding: 0 0 1.2rem 6rem;
+    font-size: 0.55rem;
+    border-bottom: 1px solid #eee;
+  }
+  .choice-p .choice-p-price{
+    font-weight: 600;
+    color: #d81e06;
+    font-size: 0.75rem;
+  }
+   .choice-p > div:first-child{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .choice-p .del{
+    width: 1rem;
+    height: 1rem;
+  }
+
+
+
+
+  .choice .choice-spec{
+    padding: 0.5rem 0 0.7rem;
+    border-bottom: 1px solid #eeeeee;
+  }
+  .choice-spec .spec-box{
+    margin-top: 0.5rem;
+    font-size: 0.55rem;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .choice-spec .spec-box .spec{
+    padding: 0.2rem;
+    margin-left: 0.5rem;
+    font-size: 0.5rem;
+    border-radius: 0.2rem;
+    margin-bottom: 0.5rem;
+    background-color: #F5F5F5;
+  }
+  .choice-spec .spec-box .spec-checked{
+    color: #ffffff;
+    background-color: #d81e06;
+  }
+  .choice .choice-num{
+    padding: 0.8rem 0;
+    border-bottom: 1px solid #eeeeee;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+   .choice-num > div:last-child{
+    display: flex;
+    align-items: center;
+    border-radius: 0.1rem;
+    border: 1px solid #bbb;
+  }
+   .choice-num input{
+    text-align: center;
+    width: 1.8rem;
+    height: 1.2rem;
+    border-top: none;
+    border-bottom: none;
+    border-left: 1px solid #bbb;
+    border-right: 1px solid #bbb;
+  }
+  .choice-num span{
+    width: 1.4rem;
+    text-align: center;
+    line-height: 1.2rem;
+    height: 1.2rem;
+    padding: 0 0.4rem;
+    font-size: 0.8rem;
+  }
+
+  .choice .choice-btn{
+    position:absolute;
+    left: 0;
+    bottom: 0;
+    text-align: center;
+    padding: 0.6rem 0;
+    color: #ffffff;
+    background-color: #d81e06;
+    width: 100%;
+  }
+
+/*评价列表*/
+  .evaluate-list{
+    background-color: #ffffff;
+  }
+  .evaluate-list .evaluate{
+    padding:0.4rem;
+    font-size: 0.55rem;
+    border-bottom: 1px solid #eeeeee;
+  }
+  .evaluate > div{
+    display: flex;
+    align-items: center;
+  }
+  .evaluate > div:first-child img{
+    width: 1.4rem;
+    height: 1.4rem;
+    border-radius: 50%;
+  }
+  .evaluate .content{
+    line-height: 0.8rem;
+  }
+  .evaluate .evaluate-time{
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+
+
+
+
   .fade-enter-active, .fade-leave-active {
     transition: all .4s;
   }
-
   .fade-enter, .fade-leave-active {
     opacity: 0;
   }

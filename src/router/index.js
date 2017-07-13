@@ -50,7 +50,7 @@ export default new Router({
       path: '/SearchPage',
       component: SearchPage
     }, {
-      path: '/ProductDetails',
+      path: '/ProductDetails/:productID',
       component: ProductDetails
     },
     // 购物车

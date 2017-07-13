@@ -76,7 +76,7 @@
             return;
           } 
           this.axios.post(this.url+'/api/Login/LoginUp',{phone:this.phone,pwd:this.password}).then((res)=>{
-            if(res.status==200){
+            if(res.data.Code==200){
               let instance = Toast(res.data.Data);
               setTimeout(() => {
                 instance.close();

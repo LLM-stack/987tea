@@ -53,7 +53,7 @@
           }      
           this.axios.post(this.url+'/api/Login/SendSMSCode',{phone:this.phone}).then((res)=>{
             this.timeOut();
-            if(res.status==200){
+            if(res.data.Code==200){
               Toast(res.data.Data);
             }else{
               Toast(res.data.Data);
@@ -117,7 +117,7 @@
             return;
           } 
           this.axios.post(this.url+'/api/Login/EditUserPwd',{phone:this.phone,code:this.number,pwd:this.password}).then((res)=>{
-            if(res.status==200){
+            if(res.data.Code==200){
               let instance = Toast(res.data.Data);
               setTimeout(() => {
                 instance.close();

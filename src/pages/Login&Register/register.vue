@@ -171,7 +171,7 @@
         }
         this.axios.post(this.url + '/api/Login/SendSMSCode', {phone: this.phone}).then((res) => {
           this.timeOut();//发送成功开始倒计时
-        if (res.status == 200) {
+        if (res.data.Code == 200) {
           Toast(res.data.Data);
         } else {
           Toast(res.data.Data);
@@ -235,7 +235,7 @@
           password: this.password
         }).then((res) =>
         {
-          if (res.status == 200) {
+          if (res.data.Code == 200) {
             let instance = Toast(res.data.Data);
             setTimeout(() =>
             {

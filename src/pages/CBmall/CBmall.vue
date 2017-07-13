@@ -7,7 +7,7 @@
       <div class="cb-cu-top">当前茶币</div>
       <div class="cb-cu-mid"><img class="lm-margin-r-sm" src="../../assets/images/cbmall/cb_03.png"/><span>0</span>
       </div>
-      <div class="cb-cu-btm">茶币收支账单</div>
+      <div class="cb-cu-btm"><router-link :to="{path:'/MyCB'}">茶币收支账单</router-link></div>
     </div>
     <div class="cb-category">
       <div class="title0"><img class="lm-margin-r-xs" src="../../assets/images/cbmall/cb_07.png"/>花茶币 换好礼</div>

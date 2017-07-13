@@ -94,33 +94,6 @@
         </div>
       </div>
     </div>
-    <!--<div class="box choice">-->
-      <!--<div class="title flex-alig-center">-->
-        <!--<span></span>为您精选-->
-      <!--</div>-->
-      <!--<div class="small-title">-->
-        <!--您的口味，我们都懂-->
-      <!--</div>-->
-      <!--<div class="box-block flex-between">-->
-        <!--<div class="choice-img">-->
-          <!--<img src="../../assets/images/goods/987tea_16.png" alt="">-->
-        <!--</div>-->
-        <!--<div class="choice-text">-->
-          <!--<div class="choice-text-title">这些茶，甜的让人念念不忘。</div>-->
-          <!--<div class="choice-text-p">在众多茶里，以甜占主导地位的，确实不多，幸运的是，小七有幸喝到这几款</div>-->
-          <!--<div class="choice-text-bottom flex-alig-center">-->
-            <!--<div class="flex-alig-center lm-margin-r-lg">-->
-              <!--<span></span>-->
-              <!--77-->
-            <!--</div>-->
-            <!--<div class="flex-alig-center">-->
-              <!--<span></span>-->
-              <!--1457-->
-            <!--</div>-->
-          <!--</div>-->
-        <!--</div>-->
-      <!--</div>-->
-    <!--</div>-->
     <!--TODO：社区模块还未完成 先注释
     <div class="box choice">
       <div class="title flex-alig-center">
@@ -155,7 +128,7 @@
       </div>
       <div class="mode-box">
         <div class="mode-list" v-for="(item,index) in ownTea" :class="{'mode-left': index % 2 !== 0}">
-          <router-link :to="{path:'/ProductDetails'}">
+          <router-link :to="{path:'/ProductDetails/'+item.ProductId}">
             <div class="mode-img">
               <img :src="item.HeadImg"/>
             </div>
@@ -163,7 +136,7 @@
             <div class="mode-title">{{ item.Name }}</div>
             <div class="mode-price ">
               <span class="lm-text-red">￥{{ item.Price }}元</span>
-              <span class="mode-btn">立即购买</span>
+              <span class="mode-btn" :to="{path:'/ProductDetails/'+item.ProductId}">立即购买</span>
             </div>
           </router-link>
         </div>
@@ -175,15 +148,17 @@
       </div>
       <div class="mode-box">
         <div class="mode-list" v-for="(item,index) in giftsTea" :class="{'mode-left' : index % 2 !== 0}">
+        <router-link :to="{path:'/ProductDetails/'+item.ProductId}">
           <div class="mode-img">
             <img :src="item.HeadImg"/>
           </div>
           <div class="mode-dp">{{ item.SaleComment }}</div>
           <div class="mode-title">{{ item.Name }}</div>
           <div class="mode-price">
-            <span class="lm-text-red">￥{{ item.price }}元</span>
-            <span class="mode-btn">立即购买</span>
+            <span class="lm-text-red">￥{{ item.Price }}元</span>
+            <span class="mode-btn" :to="{path:'/ProductDetails/'+item.ProductId}">立即购买</span>
           </div>
+          </router-link>
         </div>
       </div>
     </div>
@@ -193,7 +168,7 @@
 
 <script>
   import Mfooter from '../../components/Mfooter'
-  import { Toast } from 'mint-ui';
+  import { Toast } from 'mint-ui'
 
   export default {
     name: 'index',
@@ -216,16 +191,14 @@
     },
     mounted () {
       this.$nextTick(function(){
-
-               this.timeDown()
-
+           this.timeDown()
         }
       )
        },
     methods:{
-        getOwnTea(){
+        getOwnTea(){//获取自品好茶
            this.axios.post(this.url+'/api/Product/HomeProducts',{tagId:this.ownTag}).then((res)=>{
-           if(res.status==200){
+           if(res.data.Code==200){
              this.ownTea=res.data.Data;
             }else{
               Toast(res.data.Data);
@@ -234,9 +207,9 @@
              Toast('网络请求超时');
           })
         },
-        getGiftsTea(){
+        getGiftsTea(){//获取送礼必备
            this.axios.post(this.url+'/api/Product/HomeProducts',{tagId:this.giftsTag}).then((res)=>{
-           if(res.status==200){
+           if(res.data.Code==200){
              this.giftsTea=res.data.Data;
             }else{
               Toast(res.data.Data);
@@ -247,11 +220,8 @@
         },
         //倒计时
         timeDown () {
-          console.log(this.time)
-
-               var endTime = this.time
-               endTime.setHours(endTime.getHours() + 3); //给endTime增加3小时
-
+          var endTime = this.time
+          endTime.setHours(endTime.getHours() + 3); //给endTime增加3小时
           setInterval( ()=> {
             let nowTime = new Date()
             let leftTime = parseInt((endTime.getTime()-nowTime.getTime())/1000)
@@ -267,12 +237,7 @@
             this.minute=m;
             this.second=s;
           },1000)
-
-           },
-
-
-
-
+         },
            formate (time) {
                if(time>=10){
                    return time

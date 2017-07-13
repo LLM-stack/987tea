@@ -8,18 +8,22 @@
       <div class="product" v-for="(item,index) in testlist">
         <div class="product-select" :class="{checked:item.ischecked}" @click="check(item)"></div>
         <div class="product-img">
-          <img src="../../assets/images/goods/987tea_16.png" alt="">
+          <img :src="item.HeadImg" alt="">
         </div>
         <div>
           <div>
-            <div class="product-name">正宗铁观音</div>
+            <div class="product-name">
+              <router-link :to="{path:'/ProductDetails/'+item.ProductId}">
+              {{ item.ShortName }}
+              </router-link>
+            </div>
             <div class="product-delete" @click="del()"></div>
           </div>
           <div class="product-price">
-            <div>￥{{ item.price | formatMoney(item.num) }}</div>
+            <div>{{ item.SalePrice | formatMoney(item.Count) }}</div>
             <div class="product-num">
               <span @click="changeNum(item,-1)">-</span>
-              <input type="text" v-model="item.num">
+              <input type="text" v-model="item.Count">
               <span @click="changeNum(item,1)">+</span>
             </div>
           </div>
@@ -29,12 +33,11 @@
 
     <div class="settlement">
       <div>
-        <div class="product-select"  @click="check(item)"></div>
+        <div class="product-select" :class="{checked:allCheck}" @click="checkAll(!allCheck)"></div>
         <div>
-          <div>共选择 <span class="lm-text-red">{{ totalMoney  }}</span> 件商品</div>
-          <div>共计￥ <span class="lm-text-red">{{ totalMoney | formatMoney }}</span> 元</div>
-
-          </div>
+          <div>共选择 <span class="lm-text-red">{{ totalNum }}</span> 件商品</div>
+          <div>共计 <span class="lm-text-red">{{ totalMoney | formatMoney }}</span></div>
+        </div>
       </div>
       <router-link :to="{path:'/Payment'}">
         <div class="tobuy">立即购买</div>
@@ -47,6 +50,7 @@
 
 <script>
   import Mheader from '../../components/Mheader'
+  import {Toast} from 'mint-ui'
 
   export default {
     components: {
@@ -54,63 +58,75 @@
     },
     data() {
       return {
-          totalMoney:0,
-        price: 22,
-        num: 1,
-        testlist: [{
-          price: 10,
-          num:1
-        }, {
-          price: 22,
-          num:1
-        }, {
-          price: 8,
-          num:1
-        }
-        ]
+        totalMoney: 0,
+        totalNum: 0,
+        allCheck:false,
+        testlist: []
       }
     },
     filters: {
       formatMoney: function (value, quentity) {
-        if(!quentity)quentity=1;
-        return (value*quentity).toFixed(2) +" 元";
+        if (!quentity) quentity = 1;
+        return "￥ " + (value * quentity).toFixed(2) + " 元";
       }
     },
     methods: {
       check(product){
-        if(typeof product.ischecked == "undefined"){
-          this.$set(product,"ischecked",true);
-        }else{
+        if (typeof product.ischecked == "undefined") {
+          this.$set(product, "ischecked", true);
+        } else {
           product.ischecked = !product.ischecked;
         }
+        this.allCheck = false;
         this.calcTotalMoney();
       },
-      changeNum(product,way) {
-        if(way>0){
-          product.num++;
-        }else{
-          product.num--;
-          if(product.num<1){
-            product.num=1;
+      changeNum(product, way) {
+        if (way > 0) {
+          product.Count++;
+        } else {
+          product.Count--;
+          if (product.Count < 1) {
+            product.Count = 1;
           }
         }
         this.calcTotalMoney();
       },
       calcTotalMoney() {
         let totalMoney = 0;
+        let totalNum = 0;
         this.testlist.forEach(function (item) {
-          if(item.ischecked){
-            totalMoney+=item.price*item.num;
+          if (item.ischecked) {
+            totalMoney += item.SalePrice * item.Count;
+            totalNum++
           }
         });
         this.totalMoney = totalMoney;
+        this.totalNum = totalNum;
       },
-      del(){
-
-      },
-      delProduct(){
-
+      checkAll(isCheck) {
+        this.allCheck = isCheck;
+        this.testlist.forEach((item) =>{
+          if (typeof item.checked == "undefined") {
+            this.$set(item, "ischecked", isCheck);
+          } else {
+            item.ischecked = ischecked;
+          }
+        })
+        this.calcTotalMoney();
       }
+    },
+    mounted: function () {
+      this.$nextTick(function () {
+        this.axios.post(this.url + '/api/ShoppingCar/UserShoppingCar', {userId: '4105ef9aea6c4a88bfbf36d703af82db'}).then((res) => {
+          if (res.data.Code == 200) {
+            this.testlist = res.data.Data;
+          } else {
+            Toast(res.data.Data);
+          }
+        }).catch((err) => {
+          Toast('网络请求超时');
+        })
+      })
     }
   }
 </script>
@@ -165,7 +181,7 @@
     border: 0.1rem solid #B4282D;
   }
 
-   .product-select {
+  .product-select {
     width: 0.8rem;
     height: 0.8rem;
     margin-right: 0.4rem;
@@ -173,7 +189,7 @@
     background-size: 100% 100%;
   }
 
-  .product .checked {
+  .checked {
     background-image: url("../../assets/images/cart/checked.png");
   }
 
@@ -195,12 +211,14 @@
   }
 
   .product .product-num > span {
+    width: 1.4rem;
+    text-align: center;
     height: 1.2rem;
     padding: 0 0.4rem;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
   }
 
-  .settlement{
+  .settlement {
     width: 100%;
     bottom: 0;
     position: fixed;
@@ -212,11 +230,13 @@
     align-items: center;
     justify-content: space-between;
   }
-  .settlement > div:first-child{
+
+  .settlement > div:first-child {
     display: flex;
     align-items: center;
   }
-  .settlement .tobuy{
+
+  .settlement .tobuy {
     text-align: center;
     line-height: 2.4rem;
     color: #ffffff;
