@@ -4,7 +4,7 @@
       <div slot="title">商品详情</div>
     </Mheader>
     <div class="img-box">
-      <img :src="product.HeadImg"  alt="">
+      <img :src="product.HeadImg" alt="">
     </div>
     <div class="title">
       <div>{{product.Name}}</div>
@@ -36,8 +36,8 @@
       </div>
       <div class="icon" @click="favouriteProduct">
         <div>
-          <img v-if="sc" src="../../assets/images/productDetails/ysc.png" />
-          <img v-else src="../../assets/images/productDetails/wsc.png" />
+          <img v-if="sc" src="../../assets/images/productDetails/ysc.png"/>
+          <img v-else src="../../assets/images/productDetails/wsc.png"/>
           收藏商品
         </div>
       </div>
@@ -144,7 +144,8 @@
         <div class="choice-p">
           <div>
             <div class="choice-p-price ">￥{{specPrice}}</div>
-            <div class="del" @click="choice"><img src="../../assets/images/productDetails/del.png" height="48" width="48"/></div>
+            <div class="del" @click="choice"><img src="../../assets/images/productDetails/del.png" height="48"
+                                                  width="48"/></div>
           </div>
           <div>库存 {{specStock}} 件</div>
           <div>{{checkMsg}}</div>
@@ -153,9 +154,9 @@
           <div>规格</div>
           <div class="spec-box">
 
-          <div class="spec"   v-for="(item, index) in productSpec" @click="checkSpec(index)"
-          :class="index == checkIndex?'spec-checked':''">{{item.ShortName}}
-          </div>
+            <div class="spec" v-for="(item, index) in productSpec" @click="checkSpec(index)"
+                 :class="index == checkIndex?'spec-checked':''">{{item.ShortName}}
+            </div>
 
             <!--<div class="spec spec-checked">特技龙井125g 一盒共125g</div>
             <div class="spec">特技龙井125g 二盒共250g</div>
@@ -181,7 +182,7 @@
 
 <script>
   import Mheader from '../../components/Mheader'
-  import { Toast } from 'mint-ui';
+  import {Toast} from 'mint-ui';
   export default {
     components: {
       Mheader
@@ -197,18 +198,18 @@
           {tabName: "参数"},
           {tabName: "评论(132)"}
         ],
-        product:'' ,
-        productSpec:'',
-        productParams:'',
+        product: '',
+        productSpec: '',
+        productParams: '',
         //规格参数
-        checkMsg:'请选择 规格',
-        specId:'',
-        specName:'',
-        specImg:'',
-        specPrice:0,
-        specStock:0,
-        checkIndex:-1,
-        isCar:0
+        checkMsg: '请选择 规格',
+        specId: '',
+        specName: '',
+        specImg: '',
+        specPrice: 0,
+        specStock: 0,
+        checkIndex: -1,
+        isCar: 0
       }
     },
     methods: {
@@ -216,7 +217,7 @@
         this.tabIndex = i
       },
       choice(val) {
-        this.isCar=val;
+        this.isCar = val;
         this.choiceShow = !this.choiceShow
       },
       getProduct(){//获取商品信息
@@ -224,9 +225,9 @@
           if (res.data.Code == 200) {
             this.product = res.data.Data;
             //设置选择商品规格的默认参数
-            this.specImg =this.product.HeadImg;
-            this.specPrice=this.product.Price;
-            this.specStock=this.product.AllStock;
+            this.specImg = this.product.HeadImg;
+            this.specPrice = this.product.Price;
+            this.specStock = this.product.AllStock;
           } else {
             Toast(res.data.Data);
           }
@@ -257,8 +258,11 @@
         })
       },
       favouriteProduct(){//收藏商品
-        if(!this.sc){
-          this.axios.post(this.url + '/api/Product/FavouriteProduct', {ProductId: this.$route.params.productID,userId:this.$store.state.user_id}).then((res) => {
+        if (!this.sc) {
+          this.axios.post(this.url + '/api/Product/FavouriteProduct', {
+            ProductId: this.$route.params.productID,
+            userId: this.$store.state.user_id
+          }).then((res) => {
             if (res.data.Code == 200) {
               this.sc = !this.sc
               Toast(res.data.Data);
@@ -271,48 +275,52 @@
         }
       },
       checkSpec(index) {//选中商品规格
-        this.checkIndex=index;
-        this.specId=this.productSpec[index].ProductSpecId;
-        this.specName=this.productSpec[index].Name;
-        this.specImg =this.productSpec[index].HeadImg;
-        this.specPrice=this.productSpec[index].SalePrice;
-        this.specStock=this.productSpec[index].Stock;
-        this.checkMsg='已选：'+this.productSpec[index].ShortName;
+        this.checkIndex = index;
+        this.specId = this.productSpec[index].ProductSpecId;
+        this.specName = this.productSpec[index].Name;
+        this.specImg = this.productSpec[index].HeadImg;
+        this.specPrice = this.productSpec[index].SalePrice;
+        this.specStock = this.productSpec[index].Stock;
+        this.checkMsg = '已选：' + this.productSpec[index].ShortName;
       },
       add(){//加
-        if(parseInt(this.productNum)<parseInt(this.specStock)){
+        if (parseInt(this.productNum) < parseInt(this.specStock)) {
           this.productNum++;
-        }else{
+        } else {
           Toast('已经加到顶啦！');
         }
       },
       minus(){//减
-        if(parseInt(this.productNum)>1){
-            this.productNum--;
-        }else{
+        if (parseInt(this.productNum) > 1) {
+          this.productNum--;
+        } else {
           Toast('已经减到底啦！');
         }
       },
       //确定的加入购物车或下单
       addCar(){
-        if(this.checkIndex==-1){
+        if (this.checkIndex == -1) {
           Toast('请选择商品规格');
           return;
         }
         //判断是否userId是否空
-        if(!!!this.$store.state.user_id){
-         // var url=window.location.pathname;//获取当前路径名称
-         var url=window.location.href
+        if (!!!this.$store.state.user_id) {
+          // var url=window.location.pathname;//获取当前路径名称
+          var url = window.location.href
           let instance = Toast('还未登录，请先登录');
           setTimeout(() => {
             instance.close();
-             this.$router.push({ path: '/login', params: { s_url: url }})
+            this.$router.push({path: '/login', params: {s_url: url}})
           }, 2000);
           return;
         }
-        if(this.isCar==1){
+        if (this.isCar == 1) {
           //加入购物车
-          this.axios.post(this.url + '/api/ShoppingCar/AddToShoppingCar', {productSpecId:this.specId,userId: this.$store.state.user_id,count:this.productNum}).then((res) => {
+          this.axios.post(this.url + '/api/ShoppingCar/AddToShoppingCar', {
+            productSpecId: this.specId,
+            userId: this.$store.state.user_id,
+            count: this.productNum
+          }).then((res) => {
             if (res.data.Code == 200) {
               this.choiceShow = !this.choiceShow
               Toast(res.data.Data);
@@ -323,28 +331,28 @@
             Toast('网络请求超时');
           })
         }
-        if(this.isCar==2){
-          let sc={
-            UserId:this.$store.state.user_id,
-            TotalPrice:this.specPrice,
-            PayType:-1,//支付类型 -1 标识全部
-            ProductCount:this.productNum,
-            OrderFrom:2,//订单来源  2标识商城
-            ProductSkus:[{
-              ProductSpecId:this.specId,
-              ProductName:this.product.Name+' '+this.specName,
-              ProductCount:this.productNum,
-              ProductSpecPrice:this.specPrice*this.productNum
+        if (this.isCar == 2) {
+          let sc = {
+            UserId: this.$store.state.user_id,
+            TotalPrice: this.specPrice,
+            PayType: -1,//支付类型 -1 标识全部
+            ProductCount: this.productNum,
+            OrderFrom: 2,//订单来源  2标识商城
+            ProductSkus: [{
+              ProductSpecId: this.specId,
+              ProductName: this.product.Name + ' ' + this.specName,
+              ProductCount: this.productNum,
+              ProductSpecPrice: this.specPrice * this.productNum
             }]
           }
           //加入订单
-            this.axios.post(this.url + '/api/Order/AddOrder', {strSc:JSON.stringify(sc)}).then((res) => {
+          this.axios.post(this.url + '/api/Order/AddOrder', {strSc: JSON.stringify(sc)}).then((res) => {
             if (res.data.Code == 200) {
               this.choiceShow = !this.choiceShow
               let instance = Toast(res.data.Data);
               setTimeout(() => {
                 instance.close();
-                this.$router.push({ path: '/Payment/'+res.data.ExData})
+                this.$router.push({path: '/Payment/' + res.data.ExData})
               }, 2000);
             } else {
               Toast(res.data.Data);
@@ -355,17 +363,24 @@
         }
       },
       isFavourite(){//该商品是否收藏了
-        if(!!this.$store.state.user_id){
-            this.axios.post(this.url + '/api/Product/IsFavourite', {productId:this.$route.params.productID,userId: this.$store.state.user_id}).then((res) => {
+        if (!!this.$store.state.user_id) {
+          this.axios.post(this.url + '/api/Product/IsFavourite', {
+            productId: this.$route.params.productID,
+            userId: this.$store.state.user_id
+          }).then((res) => {
             if (res.data.Code == 200) {
-               this.sc = !this.sc
+              this.sc = !this.sc
             }
           })
         }
       },
       //获取商品评论
       getProductEstimates(){
-         this.axios.post(this.url + '/api/Product/ProductEstimates', {productId: this.$route.params.productID,rows:10,page:1}).then((res) => {
+        this.axios.post(this.url + '/api/Product/ProductEstimates', {
+          productId: this.$route.params.productID,
+          rows: 10,
+          page: 1
+        }).then((res) => {
           if (res.data.Code == 200) {
             this.productSpec = res.data.Data;
           } else {
@@ -377,12 +392,12 @@
       }
     },
     mounted: function () {
-      this.$nextTick(()=>{
-this.getProduct();
-      this.getProductSKU();
-      this.getParams();
-      this.getProductEstimates();
-      this.isFavourite();
+      this.$nextTick(() => {
+        this.getProduct();
+        this.getProductSKU();
+        this.getParams();
+        this.getProductEstimates();
+        this.isFavourite();
       })
 
     }
@@ -513,9 +528,10 @@ this.getProduct();
     border-bottom: 3px solid #B22328 !important;
   }
 
-    .productDescribe img {
-    width:100%;
-    }
+  .productDescribe img {
+    width: 100%;
+  }
+
   /*参数页*/
 
   .parameter {
@@ -552,7 +568,7 @@ this.getProduct();
     background-color: #fff;
   }
 
-  .choice .choice-img{
+  .choice .choice-img {
     width: 5rem;
     height: 5rem;
     border-radius: 0.2rem;
@@ -560,47 +576,49 @@ this.getProduct();
     background-color: #ffffff;
     border: 1px solid #ddd;
     box-shadow: 0 0 3px #ddd;
-    top:-0.8rem;
+    top: -0.8rem;
     left: 0.5rem;
     position: absolute;
   }
 
-  .choice .choice-p{
+  .choice .choice-p {
     line-height: 1.1rem;
     padding: 0 0 1.2rem 6rem;
     font-size: 0.55rem;
     border-bottom: 1px solid #eee;
   }
-  .choice-p .choice-p-price{
+
+  .choice-p .choice-p-price {
     font-weight: 600;
     color: #d81e06;
     font-size: 0.75rem;
   }
-   .choice-p > div:first-child{
+
+  .choice-p > div:first-child {
     display: flex;
     align-items: center;
     justify-content: space-between;
   }
-  .choice-p .del{
+
+  .choice-p .del {
     width: 1rem;
     height: 1rem;
   }
 
-
-
-
-  .choice .choice-spec{
+  .choice .choice-spec {
     padding: 0.5rem 0 0.7rem;
     border-bottom: 1px solid #eeeeee;
   }
-  .choice-spec .spec-box{
+
+  .choice-spec .spec-box {
     margin-top: 0.5rem;
     font-size: 0.55rem;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
   }
-  .choice-spec .spec-box .spec{
+
+  .choice-spec .spec-box .spec {
     padding: 0.2rem;
     margin-left: 0.5rem;
     font-size: 0.5rem;
@@ -608,24 +626,28 @@ this.getProduct();
     margin-bottom: 0.5rem;
     background-color: #F5F5F5;
   }
-  .choice-spec .spec-box .spec-checked{
+
+  .choice-spec .spec-box .spec-checked {
     color: #ffffff;
     background-color: #d81e06;
   }
-  .choice .choice-num{
+
+  .choice .choice-num {
     padding: 0.8rem 0;
     border-bottom: 1px solid #eeeeee;
     display: flex;
     align-items: center;
     justify-content: space-between;
   }
-   .choice-num > div:last-child{
+
+  .choice-num > div:last-child {
     display: flex;
     align-items: center;
     border-radius: 0.1rem;
     border: 1px solid #bbb;
   }
-   .choice-num input{
+
+  .choice-num input {
     text-align: center;
     width: 1.8rem;
     height: 1.2rem;
@@ -634,7 +656,8 @@ this.getProduct();
     border-left: 1px solid #bbb;
     border-right: 1px solid #bbb;
   }
-  .choice-num span{
+
+  .choice-num span {
     width: 1.4rem;
     text-align: center;
     line-height: 1.2rem;
@@ -643,8 +666,8 @@ this.getProduct();
     font-size: 0.8rem;
   }
 
-  .choice .choice-btn{
-    position:absolute;
+  .choice .choice-btn {
+    position: absolute;
     left: 0;
     bottom: 0;
     text-align: center;
@@ -654,39 +677,41 @@ this.getProduct();
     width: 100%;
   }
 
-/*评价列表*/
-  .evaluate-list{
+  /*评价列表*/
+  .evaluate-list {
     background-color: #ffffff;
   }
-  .evaluate-list .evaluate{
-    padding:0.4rem;
+
+  .evaluate-list .evaluate {
+    padding: 0.4rem;
     font-size: 0.55rem;
     border-bottom: 1px solid #eeeeee;
   }
-  .evaluate > div{
+
+  .evaluate > div {
     display: flex;
     align-items: center;
   }
-  .evaluate > div:first-child img{
+
+  .evaluate > div:first-child img {
     width: 1.4rem;
     height: 1.4rem;
     border-radius: 50%;
   }
-  .evaluate .content{
+
+  .evaluate .content {
     line-height: 0.8rem;
   }
-  .evaluate .evaluate-time{
+
+  .evaluate .evaluate-time {
     width: 100%;
     justify-content: flex-end;
   }
 
-
-
-
-
   .fade-enter-active, .fade-leave-active {
     transition: all .4s;
   }
+
   .fade-enter, .fade-leave-active {
     opacity: 0;
   }

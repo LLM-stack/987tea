@@ -17,10 +17,12 @@
         性别
 
         <div class="sex">
-          <mt-radio
-            v-model="value"
-            :options="['男', '女']">
-          </mt-radio>
+          <div class="lm-margin-r-lg" @click="checSex(-1)">
+            <div class="sex-select"></div>男
+          </div>
+          <div class="lm-margin-l-lg" @click="checSex(1)">
+            <div class="sex-select"></div>女
+          </div>
         </div>
 
       </div>
@@ -42,7 +44,7 @@
 
 <script>
   import Mheader from '../../components/Mheader'
-  import { DatetimePicker } from 'mint-ui';
+  import DatetimePicker from 'mint-ui'
 
   export default {
     components: {
@@ -53,6 +55,7 @@
     	return {
         pickerValue:'',
     		value: '',
+        sex: null,
         options: [
           {
             label: '男',
@@ -117,5 +120,22 @@
     border: none;
     padding: 0.1rem;
     width: 10.5rem;
+  }
+  .info .sex{
+    width: 10.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  .info .sex > div{
+    display: flex;
+    align-items: center;
+  }
+  .info .sex .sex-select{
+    width: 0.8rem;
+    height: 0.8rem;
+    margin-right: 0.4rem;
+    background-image: url('../../assets/images/myInfo/oo.png');
+    background-size: 100% 100%;
   }
 </style>

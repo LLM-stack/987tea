@@ -88,7 +88,18 @@
       </div>
 
     </div>
-    <div @click="save">SAVE</div>
+
+
+
+
+    <Mdialog :dialog="dialog">
+      <div slot="title">请输入手机号</div>
+      <div slot="content">系统会在开抢前给您的手机发送短信提醒。</div>
+      <div slot="prompt"><input type="text"></div>
+
+      <div slot="btn">提醒我</div>
+      <div slot="cancel" @click="cancel">取消</div>
+    </Mdialog>
   </div>
 
 
@@ -97,50 +108,32 @@
 
 <script>
   import Mheader from '../../components/Mheader'
-  import {MessageBox} from 'mint-ui'
+  import Mdialog from '../../components/Mdialog'
 
   export default {
     components: {
-      Mheader
+      Mheader,
+      Mdialog
     },
     data(){
-      return {}
+      return {
+      	dialog: false
+      }
     },
     methods: {
       tips() {
-        MessageBox.prompt({
-          title: '输入您的手机号',
-          message: '系统将会给您的手机发送短信提醒'
-        }).then((value) => {
-          alert(value)
-        })
+this.dialog = true
+//        MessageBox.prompt({
+//          title: '输入您的手机号',
+//          message: '系统将会给您的手机发送短信提醒'
+//        }).then((value) => {
+//          alert(value)
+//        })
       },
-//    	测试localStorage，可删
-      save() {
-        localStorage.a = 1;
-        localStorage.setItem("asdadadasd", 3);
-        console.log(localStorage);
-        localStorage.setItem("asdadadasd", 666);
-        console.log(localStorage);
-        localStorage.clear();
-        console.log(localStorage);
+      cancel() {
+        this.dialog = false
       }
-    },
-    created() {
-//      this.axios({
-//        url: 'http://localhost:55400/api/Login/LoginTest',
-//        method: 'post',
-////        header:{ 'Authorization': 'BasicAuth '  },
-//
-//        params:{account: "admin", password:"123456"}
-//      }).then((res)=>{
-//      	alert(res.Data)
-//      })
-      this.axios.post('http://localhost:55400/api/Login/LoginTest',{account: "admin", password:"123456"}).then((res)=>{
-        localStorage.setItem("lut", res.data.Data);
-      })
     }
-    //    	测试localStorage，可删 end
   }
 </script>
 
@@ -308,5 +301,14 @@
     text-align: center;
     line-height: 1.4rem;
     background-color: #fff;
+  }
+
+  .dialog .prompt input{
+    font-size: 0.7rem;
+    width: 11rem;
+    height: 1.5rem;
+    border: 1px solid #aaa;
+    border-radius: 0.2rem;
+    padding: 0.2rem 0.3rem;
   }
 </style>

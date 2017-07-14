@@ -107,7 +107,6 @@
 <script>
   import Mheader from '../../components/Mheader'
   import Mfooter from '../../components/Mfooter'
-  import Mdialog from '../../components/Mdialog'
 
   export default {
     components: {

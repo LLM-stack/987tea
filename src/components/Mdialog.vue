@@ -4,9 +4,10 @@
     <div class="dialog" v-if="dialog">
       <div class="title"><slot name="title"></slot></div>
       <div class="content"><slot name="content"></slot></div>
+      <div class="prompt"><slot name="prompt"></slot></div>
       <div class="btn-group">
-        <div><slot name="btn"></slot></div>
-
+        <div class="lm-text-grey"><slot name="cancel"></slot></div>
+        <div class="lm-text-red"><slot name="btn"></slot></div>
       </div>
     </div>
     </transition>
@@ -21,7 +22,10 @@
             type: Boolean,
             default: false
           }
-        }
+        },
+      methods: {
+
+      }
     }
 </script>
 
@@ -29,7 +33,7 @@
   .dialog{
     padding: 0.5rem;
     width: 75%;
-    position: absolute;
+    position: fixed;
     top:50%;
     left: 50%;
     transform: translate(-50%,-50%);
@@ -58,19 +62,25 @@
     max-height: 15rem;
     overflow: auto;
   }
+  .dialog .prompt{
+    margin-top: 0.4rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .dialog .btn-group{
-    color: #B4282D;
     margin-top: 0.4rem ;
     display: flex;
     align-items: center;
-    justify-content: space-around;
+    justify-content: space-between;
   }
   .dialog .btn-group > div{
-    padding: 0.2rem 1rem;
+    padding: 0.3rem 1rem;
   }
   .dialog .btn-group > div:active,  .dialog .btn-group > div:hover
   {
-    padding: 0.2rem 1rem;
     background-color: #eee;
   }
   .drop-enter-active,.drop-leave-active {
