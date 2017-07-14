@@ -32,7 +32,7 @@
         </div>
       </div>
     </div>
-    <Mfooter :shopCurrent=true></Mfooter>
+    <Mfooter :indexCurrent='true'></Mfooter>
   </div>
 </template>
 
@@ -85,6 +85,9 @@
       goBack() {
         window.history.go(-1)
       }
+    },
+    created:function(){
+      console.log(this.$store.state.user_id);
     }
   }
 </script>

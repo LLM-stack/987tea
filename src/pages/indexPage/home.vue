@@ -71,11 +71,13 @@
       <div class="title flex-alig-center">
         人气热卖 <span></span>
       </div>
-      <div class="box-block box-block-one">
-        <div class="box-block-title">折扣好茶推荐</div>
-        <div class="box-block-time"><span>{{hour}}</span>：<span>{{minute}}</span>：<span>{{second}}</span></div>
-        <!--<div class="rmtime">下一场19:00开始</div>-->
-      </div>
+      <router-link :to="{path:'/OnSale'}">
+        <div class="box-block box-block-one">
+          <div class="box-block-title">折扣好茶推荐</div>
+          <div class="box-block-time"><span>{{hour}}</span>：<span>{{minute}}</span>：<span>{{second}}</span></div>
+          <!--<div class="rmtime">下一场19:00开始</div>-->
+        </div>
+      </router-link>
       <div class="flex-between">
         <div class="box-block box-block-two">
           <div class="xl-title">2017早春碧螺春</div>
@@ -238,7 +240,7 @@
             this.second=s;
           },1000)
          },
-           formate (time) {
+         formate (time) {
                if(time>=10){
                    return time
                }else{

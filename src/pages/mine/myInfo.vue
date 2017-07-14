@@ -86,7 +86,7 @@
           <img src="../../assets/images/myInfo/icon.10.png"/>
           <div>茶友圈</div>
         </div>
-        <div class="control-icon">
+        <div class="control-icon" @click="test">
           <img src="../../assets/images/myInfo/icon.11.png"/>
           <div>我的客服</div>
         </div>
@@ -120,12 +120,32 @@
       }
     },
     methods: {
+
+//    	测试，可删
     	vuextest() {
         alert(this.$store.state.user_name)
         this.$store.state.user_name = this.username
         alert(this.$store.state.user_name)
         this.$store.commit("showUserName")
+      },
+      test() {
+    		console.log(localStorage.lut);
+        this.axios({
+        url: 'http://localhost:55400/api/Home/PostLoginUser',
+        method: 'post',
+        headers:{ 'Authorization': 'BasicAuth ' }
+
+      }).then((res)=>{
+      	alert(res.data.Data)
+      }) .catch(function (error) {
+          //console.log(error);
+          if(error.response.status == 401){
+          	alert('未登录')
+          }
+
+        });
       }
+      //    	测试，可删 END
     }
   }
 </script>

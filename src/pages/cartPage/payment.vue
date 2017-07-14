@@ -6,7 +6,7 @@
       <router-link :to="{path:'/MyAddress'}">
         <div class="address lm-margin-b-sm">
         <div>
-          <div class="name">法是否按方法</div>
+          <div class="name">收货地址</div>
           <div class="mr">默认</div>
         </div>
         <div>

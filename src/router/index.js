@@ -6,6 +6,7 @@ import Home from '@/pages/indexPage/home'
 import ProductDetails from '@/pages/indexPage/productDetails'
 import SearchPage from '@/pages/indexPage/searchPage'
 import Category from '@/pages/CBmall/category'
+import OnSale from '@/pages/indexPage/onSale'
 
 // 购物车
 import Cart from '@/pages/cartPage/cart'
@@ -52,13 +53,16 @@ export default new Router({
     }, {
       path: '/ProductDetails/:productID',
       component: ProductDetails
+    }, {
+      path: '/onSale',
+      component: OnSale
     },
     // 购物车
     {
       path: '/Cart',
       component: Cart
     }, {
-      path: '/Payment',
+      path: '/Payment/:orderID',
       component: Payment
     }, {
       path: '/PaymentCompleted',

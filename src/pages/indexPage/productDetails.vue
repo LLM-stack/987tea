@@ -1,8 +1,7 @@
 <template>
   <div class="container">
-    <Mheader :show=true>
+    <Mheader :show='true'>
       <div slot="title">商品详情</div>
-
     </Mheader>
     <div class="img-box">
       <img :src="product.HeadImg"  alt="">
@@ -36,14 +35,14 @@
         </div>
       </div>
       <div class="icon" @click="favouriteProduct">
-        <div @click="collection">
+        <div>
           <img v-if="sc" src="../../assets/images/productDetails/ysc.png" />
           <img v-else src="../../assets/images/productDetails/wsc.png" />
           收藏商品
         </div>
       </div>
-      <div class="buy-mode">加入购物车</div>
-      <div class="buy-mode" @click="choice">立即购买</div>
+      <div class="buy-mode" @click="choice(1)">加入购物车</div>
+      <div class="buy-mode" @click="choice(2)">立即购买</div>
     </div>
 
     <div class="tab">
@@ -54,11 +53,11 @@
 
     <!-- tab-container -->
     <div>
-      <div v-if="tabIndex == 0" v-html="product.Describe">
+      <div v-if="tabIndex == 0" class="productDescribe" v-html="product.Describe">
       </div>
       <div v-if="tabIndex == 1">
         <div class="parameter">
-          <div class="parameter-list" v-for="(item,index) in productParams">{{itemParamKey}}：{{item.ParamValue}}</div>
+          <div class="parameter-list" v-for="(item,index) in productParams">{{item.ParamKey}}：{{item.ParamValue}}</div>
           <!--<div class="parameter-list">产品名称：碧螺春</div>
           <div class="parameter-list">茶叶配料：2017嫩芽</div>
           <div class="parameter-list">净含量：155g</div>
@@ -140,41 +139,40 @@
     <transition name="drop">
       <div class="choice" v-if="choiceShow">
         <div class="choice-img">
-          <img src="../../assets/images/goods/987tea_20.png" alt="">
+          <img :src="specImg" alt="">
         </div>
         <div class="choice-p">
           <div>
-            <div class="choice-p-price ">￥89</div>
+            <div class="choice-p-price ">￥{{specPrice}}</div>
             <div class="del" @click="choice"><img src="../../assets/images/productDetails/del.png" height="48" width="48"/></div>
           </div>
-          <div>库存 1987 件</div>
-          <div>请选择 规格 数量</div>
+          <div>库存 {{specStock}} 件</div>
+          <div>{{checkMsg}}</div>
         </div>
         <div class="choice-spec">
           <div>规格</div>
           <div class="spec-box">
-            <div class="spec spec-checked">特技龙井125g 一盒共125g</div>
-            <div class="spec">特 二盒共250g</div>
-            <div class="spec">特 三盒共375g</div>
-            <div class="spec">特 四盒共500g</div>
-            <div class="spec">特 二盒共250g</div>
-            <div class="spec">特 三盒共375g</div>
-            <div class="spec">特 四盒共500g</div>
-            <div class="spec">特 二盒共250g</div>
-            <div class="spec">特 三盒共375g</div>
-            <div class="spec">特 四盒共500g</div>
+
+          <div class="spec"   v-for="(item, index) in productSpec" @click="checkSpec(index)"
+          :class="index == checkIndex?'spec-checked':''">{{item.ShortName}}
+          </div>
+
+            <!--<div class="spec spec-checked">特技龙井125g 一盒共125g</div>
+            <div class="spec">特技龙井125g 二盒共250g</div>
+            <div class="spec">特技龙井125g 三盒共375g</div>
+            <div class="spec">特技龙井125g 四盒共500g</div>-->
           </div>
         </div>
         <div class="choice-num">
           <div>购买数量</div>
           <div>
-            <span>-</span>
+            <span @click="minus">-</span>
             <input readonly="readonly" type="text" v-model="productNum">
-            <span>+</span>
+            <span @click="add">+</span>
           </div>
         </div>
 
-        <div class="choice-btn">确定</div>
+        <div class="choice-btn" @click="addCar">确定</div>
       </div>
     </transition>
 
@@ -200,20 +198,35 @@
           {tabName: "评论(132)"}
         ],
         product:'' ,
-        productParams:''
+        productSpec:'',
+        productParams:'',
+        //规格参数
+        checkMsg:'请选择 规格',
+        specId:'',
+        specName:'',
+        specImg:'',
+        specPrice:0,
+        specStock:0,
+        checkIndex:-1,
+        isCar:0
       }
     },
     methods: {
       selected(i) {
         this.tabIndex = i
       },
-      choice() {
+      choice(val) {
+        this.isCar=val;
         this.choiceShow = !this.choiceShow
       },
       getProduct(){//获取商品信息
         this.axios.post(this.url + '/api/Product/ProductDetail', {productId: this.$route.params.productID}).then((res) => {
           if (res.data.Code == 200) {
             this.product = res.data.Data;
+            //设置选择商品规格的默认参数
+            this.specImg =this.product.HeadImg;
+            this.specPrice=this.product.Price;
+            this.specStock=this.product.AllStock;
           } else {
             Toast(res.data.Data);
           }
@@ -244,29 +257,140 @@
         })
       },
       favouriteProduct(){//收藏商品
-        this.axios.post(this.url + '/api/Product/FavouriteProduct', {ProductSpecId: this.$route.params.productID}).then((res) => {
+        if(!this.sc){
+          this.axios.post(this.url + '/api/Product/FavouriteProduct', {ProductId: this.$route.params.productID,userId:this.$store.state.user_id}).then((res) => {
+            if (res.data.Code == 200) {
+              this.sc = !this.sc
+              Toast(res.data.Data);
+            } else {
+              Toast(res.data.Data);
+            }
+          }).catch((err) => {
+            Toast('网络请求超时');
+          })
+        }
+      },
+      checkSpec(index) {//选中商品规格
+        this.checkIndex=index;
+        this.specId=this.productSpec[index].ProductSpecId;
+        this.specName=this.productSpec[index].Name;
+        this.specImg =this.productSpec[index].HeadImg;
+        this.specPrice=this.productSpec[index].SalePrice;
+        this.specStock=this.productSpec[index].Stock;
+        this.checkMsg='已选：'+this.productSpec[index].ShortName;
+      },
+      add(){//加
+        if(parseInt(this.productNum)<parseInt(this.specStock)){
+          this.productNum++;
+        }else{
+          Toast('已经加到顶啦！');
+        }
+      },
+      minus(){//减
+        if(parseInt(this.productNum)>1){
+            this.productNum--;
+        }else{
+          Toast('已经减到底啦！');
+        }
+      },
+      //确定的加入购物车或下单
+      addCar(){
+        if(this.checkIndex==-1){
+          Toast('请选择商品规格');
+          return;
+        }
+        //判断是否userId是否空
+        if(!!!this.$store.state.user_id){
+         // var url=window.location.pathname;//获取当前路径名称
+         var url=window.location.href
+          let instance = Toast('还未登录，请先登录');
+          setTimeout(() => {
+            instance.close();
+             this.$router.push({ path: '/login', params: { s_url: url }})
+          }, 2000);
+          return;
+        }
+        if(this.isCar==1){
+          //加入购物车
+          this.axios.post(this.url + '/api/ShoppingCar/AddToShoppingCar', {productSpecId:this.specId,userId: this.$store.state.user_id,count:this.productNum}).then((res) => {
+            if (res.data.Code == 200) {
+              this.choiceShow = !this.choiceShow
+              Toast(res.data.Data);
+            } else {
+              Toast(res.data.Data);
+            }
+          }).catch((err) => {
+            Toast('网络请求超时');
+          })
+        }
+        if(this.isCar==2){
+          let sc={
+            UserId:this.$store.state.user_id,
+            TotalPrice:this.specPrice,
+            PayType:-1,//支付类型 -1 标识全部
+            ProductCount:this.productNum,
+            OrderFrom:2,//订单来源  2标识商城
+            ProductSkus:[{
+              ProductSpecId:this.specId,
+              ProductName:this.product.Name+' '+this.specName,
+              ProductCount:this.productNum,
+              ProductSpecPrice:this.specPrice*this.productNum
+            }]
+          }
+          //加入订单
+            this.axios.post(this.url + '/api/Order/AddOrder', {strSc:JSON.stringify(sc)}).then((res) => {
+            if (res.data.Code == 200) {
+              this.choiceShow = !this.choiceShow
+              let instance = Toast(res.data.Data);
+              setTimeout(() => {
+                instance.close();
+                this.$router.push({ path: '/Payment/'+res.data.ExData})
+              }, 2000);
+            } else {
+              Toast(res.data.Data);
+            }
+          }).catch((err) => {
+            Toast('网络请求超时');
+          })
+        }
+      },
+      isFavourite(){//该商品是否收藏了
+        if(!!this.$store.state.user_id){
+            this.axios.post(this.url + '/api/Product/IsFavourite', {productId:this.$route.params.productID,userId: this.$store.state.user_id}).then((res) => {
+            if (res.data.Code == 200) {
+               this.sc = !this.sc
+            }
+          })
+        }
+      },
+      //获取商品评论
+      getProductEstimates(){
+         this.axios.post(this.url + '/api/Product/ProductEstimates', {productId: this.$route.params.productID,rows:10,page:1}).then((res) => {
           if (res.data.Code == 200) {
-            Toast(res.data.Data);
+            this.productSpec = res.data.Data;
           } else {
             Toast(res.data.Data);
           }
         }).catch((err) => {
           Toast('网络请求超时');
         })
-      },
-      collection() {
-        this.sc = !this.sc
       }
     },
-    created: function () {
-      this.getProduct();
+    mounted: function () {
+      this.$nextTick(()=>{
+this.getProduct();
       this.getProductSKU();
       this.getParams();
+      this.getProductEstimates();
+      this.isFavourite();
+      })
+
     }
   }
 </script>
 
 <style scoped>
+
   .img-box {
     height: 13.6rem;
   }
@@ -354,8 +478,8 @@
   .buy-box .icon img {
     margin: 0 auto 0.06rem;
     display: block;
-    width: 1rem;
-    height: 1rem;
+    width: 0.8rem;
+    height: 0.8rem;
   }
 
   .buy-box .buy-mode {
@@ -389,6 +513,9 @@
     border-bottom: 3px solid #B22328 !important;
   }
 
+    .productDescribe img {
+    width:100%;
+    }
   /*参数页*/
 
   .parameter {

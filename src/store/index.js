@@ -8,10 +8,10 @@ Vue.use(Vuex);
 // 定义数据源
 const state = {
   // 登录状态
-  user_id:"123456",
+  user_id:"",
   // 购物车
-  product_num: 0,
-  url:'http://114.55.178.84:81'?'':'https://bird.ioliu.cn/v1?url=http://114.55.178.84:81'
+  product_num: 0
+ 
 }
 
 // 定义方法

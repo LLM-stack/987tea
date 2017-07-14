@@ -15,11 +15,13 @@ Vue.use(Mint)
 //Vue.use(axios)
 Vue.prototype.axios = axios
 
-Vue.prototype.userId = '0'
+Vue.prototype.user_Id = '0'
 //https://bird.ioliu.cn/v1?url=http://114.55.178.84:81
 Vue.prototype.url='http://localhost:8088'
 
 Vue.config.productionTip = false
+
+//axios.defaults.withCredentials=true
 
 /* eslint-disable no-new */
 new Vue({
