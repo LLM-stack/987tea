@@ -118,11 +118,15 @@
           }           
           this.axios.post(this.url+'/api/Login/SMSLogin',{phone:this.phone,code:this.number}).then((res)=>{
             if(res.data.Code==200){
+               localStorage.setItem("lut", res.data.ExData);
               let instance = Toast(res.data.Data);
               setTimeout(() => {
                 instance.close();
                 //TODO:登录跳转从那个页面来 回那个页面还没做
-                this.$router.push({ path: '/home' })
+                let url=this.$route.params.s_url;
+                console.log(this.$route.params.s_url);
+                console.log(url);
+                this.$router.push({ path: '/' })
               }, 1000);
             
             }else{

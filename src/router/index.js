@@ -102,7 +102,7 @@ export default new Router({
       path: '/MyAddress',
       component: MyAddress
     }, {
-      path: '/EditAddress',
+      path: '/EditAddress/:aId',
       component: EditAddress
     }, {
       path: '/CommentsBox',

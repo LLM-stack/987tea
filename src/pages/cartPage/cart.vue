@@ -5,7 +5,7 @@
     </Mheader>
 
     <div class="cart-list">
-      <div class="product" v-for="(item,index) in testlist">
+      <div class="product" v-for="(item,index) in productlist">
         <div class="product-select" :class="{checked:item.ischecked}" @click="check(item)"></div>
         <div class="product-img">
           <img :src="item.HeadImg" alt="">
@@ -17,7 +17,7 @@
               {{ item.ShortName }}
               </router-link>
             </div>
-            <div class="product-delete" @click="del()"></div>
+            <div class="product-delete" @click="deleteProduct(item.ShoppingCarId)"></div>
           </div>
           <div class="product-price">
             <div>{{ item.SalePrice | formatMoney(item.Count) }}</div>
@@ -39,9 +39,8 @@
           <div>共计 <span class="lm-text-red">{{ totalMoney | formatMoney }}</span></div>
         </div>
       </div>
-      <router-link :to="{path:'/Payment'}">
-        <div class="tobuy">立即购买</div>
-      </router-link>
+      
+        <div class="tobuy" @click="addOrder">立即购买</div>
     </div>
 
 
@@ -61,7 +60,7 @@
         totalMoney: 0,
         totalNum: 0,
         allCheck:false,
-        testlist: []
+        productlist: []
       }
     },
     filters: {
@@ -71,15 +70,28 @@
       }
     },
     methods: {
+      //单个选中事件
       check(product){
         if (typeof product.ischecked == "undefined") {
           this.$set(product, "ischecked", true);
         } else {
           product.ischecked = !product.ischecked;
-        }
-        this.allCheck = false;
-        this.calcTotalMoney();
+        }   
+
+        let chkCount=0;    
+        this.calcTotalMoney();   
+         this.productlist.forEach(function (item) {
+            if (item.ischecked) {
+              chkCount++;
+            }
+          }); 
+          if(chkCount==this.productlist.length){
+            this.allCheck=true;
+          } else{
+            this.allCheck=false;
+          }     
       },
+      //商品数量变化
       changeNum(product, way) {
         if (way > 0) {
           product.Count++;
@@ -89,12 +101,41 @@
             product.Count = 1;
           }
         }
+        //数量变动保存到数据库
+        this.axios({
+          url: this.url + '/api/ShoppingCar/UpdateCount',
+          method: 'post',
+          data:{shoppingCarId:product.ShoppingCarId,type:way},
+          headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
+
+          }).then((res)=>{
+            if (res.data.Code == 200) {
+               
+              } else {
+                Toast(res.data.Data);
+              }
+          }) .catch(function (err) {
+            if(err.response.status==401){
+                var url=window.location.href;//获取当前路径
+                let instance = Toast('还未登录，请先登录');
+                setTimeout(() => {
+                  instance.close();
+                  this.$router.push({ path: '/login/' ,params: { s_url: url }})
+                  //this.$router.push({ path: '/login/'+url})
+                }, 2000);
+              
+              }else{
+                  Toast('网络请求错误');
+              }
+          });
+
         this.calcTotalMoney();
       },
+      //总金额计算
       calcTotalMoney() {
         let totalMoney = 0;
         let totalNum = 0;
-        this.testlist.forEach(function (item) {
+        this.productlist.forEach(function (item) {
           if (item.ischecked) {
             totalMoney += item.SalePrice * item.Count;
             totalNum++
@@ -103,9 +144,10 @@
         this.totalMoney = totalMoney;
         this.totalNum = totalNum;
       },
+      //选中所有
       checkAll(isCheck) {
         this.allCheck = isCheck;
-        this.testlist.forEach((item) =>{
+        this.productlist.forEach((item) =>{
           if (typeof item.checked == "undefined") {
             this.$set(item, "ischecked", isCheck);
           } else {
@@ -113,19 +155,125 @@
           }
         })
         this.calcTotalMoney();
+      },
+      //获取购车商品列表
+      getCarInfo(){
+        this.axios({
+        url: this.url + '/api/ShoppingCar/UserShoppingCar',
+        method: 'get',
+        headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
+
+        }).then((res)=>{
+          if (res.data.Code == 200) {
+              this.productlist = res.data.Data;
+            } else {
+              Toast(res.data.Data);
+            }
+        }) .catch(function (err) {
+          if(err.response.status==401){
+              var url=window.location.href;//获取当前路径
+              let instance = Toast('还未登录，请先登录');
+              setTimeout(() => {
+                instance.close();
+                this.$router.push({ path: '/login/' ,params: { s_url: url }})
+                //this.$router.push({ path: '/login/'+url})
+              }, 2000);
+             
+            }else{
+                Toast('网络请求错误');
+            }
+        });
+      },
+      //删除购物车中的商品
+      deleteProduct(carId){
+         this.axios({
+          url: this.url + '/api/ShoppingCar/RemoveProduct',
+          method: 'post',
+          data:{shoppingCarId:carId},
+          headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
+
+          }).then((res)=>{
+            if (res.data.Code == 200) {
+              //移除删除的商品
+               this.productlist = this.productlist.filter(p => p.ShoppingCarId != carId);
+               Toast(res.data.Data);
+              } else {
+                Toast(res.data.Data);
+              }
+          }) .catch(function (err) {
+            if(err.response.status==401){
+                var url=window.location.href;//获取当前路径
+                let instance = Toast('还未登录，请先登录');
+                setTimeout(() => {
+                instance.close();
+                this.$router.push({ path: 'login', params: { s_url: url }})
+              }, 2000);
+              }else{
+                  Toast('网络请求错误');
+              }
+          });
+      },
+      //提交订单
+      addOrder(){
+         let skus=[];      
+          this.productlist.forEach(function (item) {
+            if (item.ischecked) {
+            let sku={
+                    ShoppingCarId:item.ShoppingCarId,
+                    ProductSpecId:item.ProductSpecId,
+                    ProductName:item.ShortName,
+                    ProductCount:item.Count,
+                    ProductSpecPrice:item.SalePrice*item.Count
+                    }                   
+                    skus.push(sku);
+            }
+          });   
+        if(skus.length==0){
+          Toast("请选择商品");
+        }
+        //定义参数
+        var sc={
+          TotalPrice:this.totalMoney,
+          PayType:-1,//支付类型 -1 标识全部
+          ProductCount:this.totalNum,
+          OrderFrom:2,//订单来源  2标识商城
+          ProductSkus:skus
+        }
+        this.axios({
+        url: this.url + '/api/Order/AddOrder',
+        method: 'post',
+        data:{strSc:JSON.stringify(sc)},
+        headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
+
+        }).then((res)=>{
+          if (res.data.Code == 200) {
+            let instance = Toast(res.data.Data);
+            setTimeout(() => {
+              instance.close();
+              this.$router.push({ path: '/Payment/'+res.data.ExData})
+            }, 2000);
+          } else {
+            Toast(res.data.Data);
+          }
+        }) .catch(function (error) {
+          if(err.response.status==401){
+              var url=window.location.href;//获取当前路径
+              let instance = Toast('还未登录，请先登录');
+              setTimeout(() => {
+              instance.close();
+              this.$router.push({ path: '/login/', params: { s_url: url }})
+            }, 2000);
+            }else{
+                Toast('网络请求错误');
+            }
+        });
       }
     },
     mounted: function () {
       this.$nextTick(function () {
-        this.axios.post(this.url + '/api/ShoppingCar/UserShoppingCar', {userId: '4105ef9aea6c4a88bfbf36d703af82db'}).then((res) => {
-          if (res.data.Code == 200) {
-            this.testlist = res.data.Data;
-          } else {
-            Toast(res.data.Data);
-          }
-        }).catch((err) => {
-          Toast('网络请求超时');
-        })
+        //localStorage.setItem("lut", "");
+        this.getCarInfo();
+        
       })
     }
   }

@@ -1,6 +1,6 @@
 <template>
   <div class="cont">
-    <Mheader :show=true>
+    <Mheader :show='true'>
       <div slot="title">登录</div>
     </Mheader>
     <div class="box">
@@ -78,13 +78,13 @@
           this.axios.post(this.url+'/api/Login/LoginUp',{phone:this.phone,pwd:this.password}).then((res)=>{
             if(res.data.Code==200){
               this.$store.state.user_id=res.data.ExData;//将用户id赋值给数据源
-              this.user_Id=res.data.ExData;
-              console.log(this.user_Id)
+              localStorage.setItem("lut", res.data.ExData);
               let instance = Toast(res.data.Data);
               setTimeout(() => {
                 instance.close();
                 //TODO:登录跳转从那个页面来 回那个页面还没做
                 let url=this.$route.params.s_url;
+                console.log(this.$route.params.s_url);
                 console.log(url);
                 this.$router.push({ path: '/' })
               }, 1000);

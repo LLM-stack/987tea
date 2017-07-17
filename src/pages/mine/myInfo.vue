@@ -4,21 +4,21 @@
     <div class="head">
       <div class="avatar lm-margin-r-lg">
         <router-link :to="{path: '/MySet'}">
-          <img src="../../assets/images/myInfo/toux.jpg" alt="">
+          <img :src="user.HeadImg" alt="">
         </router-link>
       </div>
       <div class="info ">
-        <div class="name lm-margin-l-sm">嘛卖批</div>
+        <div class="name lm-margin-l-sm">{{user.UserName}}</div>
         <div class="cb lm-margin-t-xs">
           <router-link :to="{path:'/MyCB'}">
-            <i class="lm-margin-r-xs"></i>茶币：5
+            <i class="lm-margin-r-xs"></i>茶币：{{user.TeaNum}}
           </router-link>
         </div>
       </div>
 
     </div>
     <div class="my-order">
-      <div class="title" @click="vuextest">我的订单</div>
+      <div class="title">我的订单</div>
       <div class="order-control">
         <router-link :to="{path: '/MyOrder/待付款/1'}">
           <div class="control-icon" >
@@ -82,11 +82,11 @@
             <div>邀请好友</div>
           </div>
         <!--</router-link>-->
-        <div class="control-icon" @click="">
+        <div class="control-icon" >
           <img src="../../assets/images/myInfo/icon.10.png"/>
           <div>茶友圈</div>
         </div>
-        <div class="control-icon" @click="test">
+        <div class="control-icon">
           <img src="../../assets/images/myInfo/icon.11.png"/>
           <div>我的客服</div>
         </div>
@@ -100,13 +100,14 @@
     </div>
 
 
-    <Mfooter :myCenterCurrent=true></Mfooter>
+    <Mfooter :myCenterCurrent='true'></Mfooter>
   </div>
 </template>
 
 <script>
   import Mheader from '../../components/Mheader'
   import Mfooter from '../../components/Mfooter'
+  import {Toast} from 'mint-ui'
 
   export default {
     components: {
@@ -115,36 +116,41 @@
     },
     data(){
     	return {
-        username:'新的'
+        user:''
       }
     },
     methods: {
+        getUserInfo(){
+          this.axios({
+          url: this.url + '/api/User/GetUserInfoByUserId',
+          method: 'get',
+          headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
 
-//    	测试，可删
-    	vuextest() {
-        alert(this.$store.state.user_name)
-        this.$store.state.user_name = this.username
-        alert(this.$store.state.user_name)
-        this.$store.commit("showUserName")
-      },
-      test() {
-    		console.log(localStorage.lut);
-        this.axios({
-        url: 'http://localhost:55400/api/Home/PostLoginUser',
-        method: 'post',
-        headers:{ 'Authorization': 'BasicAuth ' }
+          }).then((res)=>{
+            if (res.data.Code == 200) {
+              this.user=res.data.ExData;
+              } else {
+                Toast(res.data.Data);
+              }
+          }) .catch(function (err) {
+            if(err.response.status==401){
+                var url=window.location.href;//获取当前路径
+                let instance = Toast('还未登录，请先登录');
+                setTimeout(() => {
+                  instance.close();
+                  this.$router.push({ path: '/login/' ,params: { s_url: url }})
+                  //this.$router.push({ path: '/login/'+url})
+                }, 2000);
+              
+              }else{
+                  Toast('网络请求错误');
+              }
+          });
+        }
 
-      }).then((res)=>{
-      	alert(res.data.Data)
-      }) .catch(function (error) {
-          //console.log(error);
-          if(error.response.status == 401){
-          	alert('未登录')
-          }
-
-        });
-      }
-      //    	测试，可删 END
+    },
+    mounted:function(){
+      this.getUserInfo();
     }
   }
 </script>

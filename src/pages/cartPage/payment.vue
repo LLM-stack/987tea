@@ -1,17 +1,17 @@
 <template>
     <div class="container">
-      <Mheader :show=true>
+      <Mheader :show='true'>
         <div slot="title">提交订单</div>
       </Mheader>
       <router-link :to="{path:'/MyAddress'}">
         <div class="address lm-margin-b-sm">
         <div>
           <div class="name">收货地址</div>
-          <div class="mr">默认</div>
+          <div class="mr" v-if="defaultAddress.IsDefault==0">默认</div>
         </div>
         <div>
-          <div class="tel">1715646541</div>
-          <div class="add">福建省福州市仓山区浦上大道万达C4 1422</div>
+          <div class="tel">{{defaultAddress.Mobile}}</div>
+          <div class="add">{{defaultAddress.Province+defaultAddress.City+defaultAddress.Area+defaultAddress.Detail}}</div>
         </div>
         <div>
           <img src="../../assets/images/arrow.png"/>
@@ -21,67 +21,187 @@
       <div class="pay-modes lm-margin-b-sm">
         <div>支付方式：</div>
         <div class="pay-mode lm-margin-t-sm">
-          <div class="active">货到付款</div>
-          <div>支付宝</div>
-          <div>微信支付</div>
+          <div  :class="payType==0?'active':''" @click="checkType(0)">货到付款</div>
+          <div :class="payType==2?'active':''" @click="checkType(2)">支付宝</div>
+          <!--<div :class="payType==1?'active':''" @click="checkType(1)">微信支付</div>-->
         </div>
       </div>
-      <div class="product lm-margin-b-sm">
-        <img class="product-img" src="../../assets/images/goods/987tea_25.png" />
+      <div class="product lm-margin-b-sm" v-for="(item,index) in oederDetails">
+        <img class="product-img" :src="item.HeadImg" />
         <div class="product-details">
-          <div>正宗观音铁</div>
+          <div>{{item.ProductName}}</div>
           <div>
-            <span>￥999</span>
-            <span>x1</span>
+            <span>￥{{item.Price}}</span>
+            <span>x{{item.ProductCount}}</span>
           </div>
         </div>
       </div>
-      <router-link :to="{path:'/Coupon'}">
+      <!--优惠券的先注释-->
+      <!--<router-link :to="{path:'/Coupon'}">
         <div class="coupon lm-margin-b-sm">
           有3张优惠券可用
         </div>
-      </router-link>
+      </router-link>-->
       <div class="order-details">
         <div class="lm-margin-b-sm">订单明细：</div>
         <div class="details">
           <span>订单总价</span>
-          <span>￥999</span>
+          <span>￥{{order.TotalPrice}}</span>
         </div>
+        <!--TODO:运费还未计算到总价格中去-->
         <div class="details">
           <span>运费</span>
           <span>0</span>
         </div>
-        <div class="details">
+        <!--<div class="details">
           <span>优惠券</span>
           <span>￥-5</span>
-        </div>
+        </div>-->
         <div class="details">
           <span>总计</span>
-          <span class="lm-text-red">￥994</span>
+          <span class="lm-text-red">￥{{order.TotalPrice}}</span>
         </div>
       </div>
-
+      <div class="hide" v-html="alipay"></div> 
       <div class="pay">
         <div>
-          <div>共选择 <span class="lm-text-red">1</span>件商品</div>
-          <div>总金额：<span class="lm-text-red">￥994</span> 元</div>
+          <div>共选择 <span class="lm-text-red">{{oederDetails.length}}</span>件商品</div>
+          <div>总金额：<span class="lm-text-red">￥{{order.TotalPrice}}</span> 元</div>
         </div>
-        <div class="topay">立即付款</div>
+        <div class="topay" @click="oncePayment">立即付款</div>
       </div>
-    </div>
+      
+    </div>   
+    
 </template>
 
 <script>
   import Mheader from '../../components/Mheader'
+  import {Toast} from 'mint-ui'
 
 	export default {
     components: {
       Mheader
-    }
+    },
+    data() {
+      return {
+        defaultAddress:'',
+        order:'',
+        oederDetails:[],
+        payType:0,
+        alipay:''
+      }
+    },
+   methods:{
+     //获取默认的收货地址
+     getDefaultAddress(){
+       this.axios({
+        url: this.url + '/api/ReceiveAddress/GetDefaultAddress',
+        method: 'get',
+        headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
+
+        }).then((res)=>{
+          if (res.data.Code == 200) {
+              this.defaultAddress = res.data.ExData;
+            } else {
+              Toast(res.data.Data);
+            }
+        }) .catch(function (err) {
+          if(err.response.status==401){
+              var url=window.location.href;//获取当前路径
+              let instance = Toast('还未登录，请先登录');
+              setTimeout(() => {
+                instance.close();
+                this.$router.push({ path: '/login/' ,params: { s_url: url }})
+                //this.$router.push({ path: '/login/'+url})
+              }, 2000);
+             
+            }else{
+                Toast('网络请求错误');
+            }
+        });
+     },
+     //获取订单详情
+     getOrderDetail(){
+       this.axios({
+        url: this.url + '/api/Order/OrderDetailByProductOrderId',
+        method: 'post',
+        data:{orderId:this.$route.params.orderID},
+        headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
+
+        }).then((res)=>{
+          if (res.data.Code == 200) {
+            this.order=res.data.ExData.orderModel;
+              this.oederDetails = res.data.ExData.orderDetailList;
+            } else {
+              Toast(res.data.Data);
+            }
+        }) .catch(function (err) {
+          if(err.response.status==401){
+              var url=window.location.href;//获取当前路径
+              let instance = Toast('还未登录，请先登录');
+              setTimeout(() => {
+                instance.close();
+                this.$router.push({ path: '/login/' ,params: { s_url: url }})
+                //this.$router.push({ path: '/login/'+url})
+              }, 2000);
+             
+            }else{
+                Toast('网络请求错误');
+            }
+        });
+     },
+     //支付类型选择
+     checkType(val){
+        this.payType=val;
+     },
+     //提交订单支付
+     oncePayment(){
+       this.axios({
+        url: this.url + '/api/Order/OncePayment',
+        method: 'post',
+        data:{orderId:this.$route.params.orderID,payType:this.payType,addressId:this.defaultAddress.AdressId},
+        headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
+
+        }).then((res)=>{
+          if (res.data.Code == 200) {
+             this.alipay=res.data.ExData;
+            } else {
+              Toast(res.data.Data);
+            }
+        }) .catch(function (err) {
+          if(err.response.status==401){
+              var url=window.location.href;//获取当前路径
+              let instance = Toast('还未登录，请先登录');
+              setTimeout(() => {
+                instance.close();
+                this.$router.push({ path: '/login/' ,params: { s_url: url }})
+                //this.$router.push({ path: '/login/'+url})
+              }, 2000);
+             
+            }else{
+                Toast('网络请求错误');
+            }
+        });
+     }
+   },
+   mounted:function(){
+     //收货地址展示
+     if(!!!this.$store.state.receiveAddress){
+        this.getDefaultAddress();
+     }else{
+       this.defaultAddress=this.$store.state.receiveAddress;
+     }
+     this.getOrderDetail();
+   }
+
   }
 </script>
 
 <style scoped>
+  .hide{
+    display:none;
+  }
   .address{
     display: flex;
     align-items: center;

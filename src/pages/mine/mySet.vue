@@ -17,11 +17,13 @@
         性别
 
         <div class="sex">
-          <div class="lm-margin-r-lg" @click="checSex(-1)">
-            <div class="sex-select"></div>男
+          <div class="lm-margin-r-lg">
+            <input type="radio" v-model="sex" value="男">
+            <div class="sex-select" :class="{sexSelected: sex == '男'}"></div>男
           </div>
-          <div class="lm-margin-l-lg" @click="checSex(1)">
-            <div class="sex-select"></div>女
+          <div class="lm-margin-l-lg">
+            <input type="radio" v-model="sex" value="女">
+            <div class="sex-select" :class="{sexSelected: sex == '女'}"></div>女
           </div>
         </div>
 
@@ -35,7 +37,6 @@
       ref="picker"
       type="date"
       v-model="pickerValue"
-
     >
     </mt-datetime-picker>
   </div>
@@ -55,17 +56,7 @@
     	return {
         pickerValue:'',
     		value: '',
-        sex: null,
-        options: [
-          {
-            label: '男',
-            value: '男'
-          },
-          {
-            label: '女',
-            value: '女'
-          }
-        ]
+        sex: null
       }
     },
     methods: {
@@ -128,8 +119,16 @@
     justify-content: flex-start;
   }
   .info .sex > div{
+    position: relative;
     display: flex;
     align-items: center;
+  }
+  .info .sex input{
+    position: absolute;
+    width: 1.5rem;
+    top: 0;
+    opacity: 0;
+    height: 0.7rem;
   }
   .info .sex .sex-select{
     width: 0.8rem;
@@ -137,5 +136,8 @@
     margin-right: 0.4rem;
     background-image: url('../../assets/images/myInfo/oo.png');
     background-size: 100% 100%;
+  }
+  .info .sex .sexSelected{
+    background-image: url('../../assets/images/cart/checked.png');
   }
 </style>

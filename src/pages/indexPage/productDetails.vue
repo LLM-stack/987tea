@@ -66,72 +66,25 @@
       </div>
       <div v-if="tabIndex == 2">
         <div class="evaluate-list">
-          <div class="evaluate">
+          <div class="evaluate" v-for="(item,index) in productSpec">
             <div>
-              <img src="../../assets/images/myInfo/toux.jpg"/>
-              <span class="lm-margin-l-sm lm-text-grey">买家姓名</span>
+              <!--<img src="../../assets/images/myInfo/toux.jpg"/>-->
+              <span class="lm-margin-l-sm lm-text-grey">{{item.UserName}}</span>
             </div>
             <div class="content lm-margin-t-sm">
-              玫瑰红KJM的红酒鞥你今儿，jog牛肉价格能on，e日给你就按我看你发给我瑰红KJ，M的红酒鞥你今儿jog牛肉价格，能one日给你就按我看你发给我
+              {{item.Content}}
             </div>
             <div class="evaluate-time lm-margin-t-xs">
-              2012-11-22 16:15
+              {{item.CrateTime}}
             </div>
           </div>
-          <div class="evaluate">
-            <div>
-              <img src="../../assets/images/myInfo/toux.jpg"/>
-              <span class="lm-margin-l-sm lm-text-grey">买家姓名</span>
-            </div>
-            <div class="content lm-margin-t-sm">
-              玫瑰红KJM的红酒鞥你今儿，jog牛肉价格能on，e日给你就按我看你发给我瑰红KJ，M的红酒鞥你今儿jog牛肉价格，能one日给你就按我看你发给我
-            </div>
-            <div class="evaluate-time lm-margin-t-xs">
-              2012-11-22 16:15
-            </div>
-          </div>
-          <div class="evaluate">
-            <div>
-              <img src="../../assets/images/myInfo/toux.jpg"/>
-              <span class="lm-margin-l-sm lm-text-grey">买家姓名</span>
-            </div>
-            <div class="content lm-margin-t-sm">
-              玫瑰红KJM的红酒鞥你今儿，jog牛肉价格能on，e日给你就按我看你发给我瑰红KJ，M的红酒鞥你今儿jog牛肉价格，能one日给你就按我看你发给我
-            </div>
-            <div class="evaluate-time lm-margin-t-xs">
-              2012-11-22 16:15
-            </div>
-          </div>
-          <div class="evaluate">
-            <div>
-              <img src="../../assets/images/myInfo/toux.jpg"/>
-              <span class="lm-margin-l-sm lm-text-grey">买家姓名</span>
-            </div>
-            <div class="content lm-margin-t-sm">
-              玫瑰红KJM的红酒鞥你今儿，jog牛肉价格能on，e日给你就按我看你发给我瑰红KJ，M的红酒鞥你今儿jog牛肉价格，能one日给你就按我看你发给我
-            </div>
-            <div class="evaluate-time lm-margin-t-xs">
-              2012-11-22 16:15
-            </div>
-          </div>
-          <div class="evaluate">
-            <div>
-              <img src="../../assets/images/myInfo/toux.jpg"/>
-              <span class="lm-margin-l-sm lm-text-grey">买家姓名</span>
-            </div>
-            <div class="content lm-margin-t-sm">
-              玫瑰红KJM的红酒鞥你今儿，jog牛肉价格能on，e日给你就按我看你发给我瑰红KJ，M的红酒鞥你今儿jog牛肉价格，能one日给你就按我看你发给我
-            </div>
-            <div class="evaluate-time lm-margin-t-xs">
-              2012-11-22 16:15
-            </div>
-          </div>
+          
         </div>
       </div>
     </div>
 
     <transition name="fade">
-      <div class="choice-model" v-if="choiceShow" @click="choice">
+      <div class="choice-model" v-if="choiceShow" @click="choice(isCar)">
 
       </div>
     </transition>
@@ -216,7 +169,10 @@
       selected(i) {
         this.tabIndex = i
       },
-      choice(val) {
+      choice(val) {    
+        if(this.isCar==0){//首次点击加载sku信息
+          this.getProductSKU();
+        }    
         this.isCar = val;
         this.choiceShow = !this.choiceShow
       },
@@ -258,6 +214,14 @@
         })
       },
       favouriteProduct(){//收藏商品
+        if(!this.sc){
+          this.axios({
+            url: this.url + '/api/Product/FavouriteProduct',
+            method: 'post',
+            data:{ProductId: this.$route.params.productID},
+            headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
+
+          }).then((res)=>{
         if (!this.sc) {
           this.axios.post(this.url + '/api/Product/FavouriteProduct', {
             ProductId: this.$route.params.productID,
@@ -269,9 +233,20 @@
             } else {
               Toast(res.data.Data);
             }
-          }).catch((err) => {
-            Toast('网络请求超时');
-          })
+          }) .catch(function (err) {
+            if(err.response.status==401){
+                var url=window.location.pathname;//获取当前路径名称
+                //var url=window.location.href
+                let instance = Toast('还未登录，请先登录');
+                setTimeout(() => {
+                instance.close();
+                this.$router.push({ path: '/login', params: { s_url: url }})
+              }, 2000);
+              }else{
+                  Toast('网络请求错误');
+              }
+            });
+         
         }
       },
       checkSpec(index) {//选中商品规格
@@ -304,10 +279,13 @@
           return;
         }
         //判断是否userId是否空
-        if (!!!this.$store.state.user_id) {
+<<<<<<< .mine        if (!!!this.$store.state.user_id) {
           // var url=window.location.pathname;//获取当前路径名称
           var url = window.location.href
-          let instance = Toast('还未登录，请先登录');
+=======        if(!!!localStorage.lut){
+         // var url=window.location.pathname;//获取当前路径名称
+         var url=window.location.href
+>>>>>>> .theirs          let instance = Toast('还未登录，请先登录');
           setTimeout(() => {
             instance.close();
             this.$router.push({path: '/login', params: {s_url: url}})
@@ -315,23 +293,42 @@
           return;
         }
         if (this.isCar == 1) {
-          //加入购物车
+<<<<<<< .mine          //加入购物车
           this.axios.post(this.url + '/api/ShoppingCar/AddToShoppingCar', {
             productSpecId: this.specId,
             userId: this.$store.state.user_id,
             count: this.productNum
           }).then((res) => {
-            if (res.data.Code == 200) {
+=======          //加入购物车          
+           this.axios({
+            url: this.url + '/api/ShoppingCar/AddToShoppingCar',
+            method: 'post',
+            data:{productSpecId:this.specId,userId: this.$store.state.user_id,count:this.productNum},
+            headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
+
+          }).then((res)=>{
+>>>>>>> .theirs            if (res.data.Code == 200) {
               this.choiceShow = !this.choiceShow
               Toast(res.data.Data);
             } else {
               Toast(res.data.Data);
             }
-          }).catch((err) => {
-            Toast('网络请求超时');
-          })
+          }) .catch(function (err) {
+            if(err.response.status==401){
+                var url=window.location.pathname;//获取当前路径名称
+                //var url=window.location.href
+                let instance = Toast('还未登录，请先登录');
+                setTimeout(() => {
+                instance.close();
+                this.$router.push({ path: '/login', params: { s_url: url }})
+              }, 2000);
+              }else{
+                  Toast('网络请求错误');
+              }
+            });
+
         }
-        if (this.isCar == 2) {
+<<<<<<< .mine        if (this.isCar == 2) {
           let sc = {
             UserId: this.$store.state.user_id,
             TotalPrice: this.specPrice,
@@ -343,11 +340,31 @@
               ProductName: this.product.Name + ' ' + this.specName,
               ProductCount: this.productNum,
               ProductSpecPrice: this.specPrice * this.productNum
-            }]
+=======        if(this.isCar==2){
+          let sc={            
+            TotalPrice:this.specPrice,
+            PayType:-1,//支付类型 -1 标识全部
+            ProductCount:this.productNum,
+            OrderFrom:2,//订单来源  2标识商城
+            ProductSkus:[{
+              ShoppingCarId:0,
+              ProductSpecId:this.specId,
+              ProductName:this.product.Name+' '+this.specName,
+              ProductCount:this.productNum,
+              ProductSpecPrice:this.specPrice*this.productNum
+>>>>>>> .theirs            }]
           }
-          //加入订单
+<<<<<<< .mine          //加入订单
           this.axios.post(this.url + '/api/Order/AddOrder', {strSc: JSON.stringify(sc)}).then((res) => {
-            if (res.data.Code == 200) {
+=======          //加入订单           
+           this.axios({
+            url: this.url + '/api/Order/AddOrder',
+            method: 'post',
+            data:{strSc:JSON.stringify(sc)},
+            headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
+
+          }).then((res)=>{
+>>>>>>> .theirs            if (res.data.Code == 200) {
               this.choiceShow = !this.choiceShow
               let instance = Toast(res.data.Data);
               setTimeout(() => {
@@ -357,21 +374,42 @@
             } else {
               Toast(res.data.Data);
             }
-          }).catch((err) => {
-            Toast('网络请求超时');
-          })
+          }) .catch(function (err) {
+            if(err.response.status==401){
+                var url=window.location.pathname;//获取当前路径名称
+                //var url=window.location.href
+                let instance = Toast('还未登录，请先登录');
+                setTimeout(() => {
+                instance.close();
+                this.$router.push({ path: '/login', params: { s_url: url }})
+              }, 2000);
+              }else{
+                  Toast('网络请求错误');
+              }
+            });
+
         }
       },
       isFavourite(){//该商品是否收藏了
-        if (!!this.$store.state.user_id) {
+<<<<<<< .mine        if (!!this.$store.state.user_id) {
           this.axios.post(this.url + '/api/Product/IsFavourite', {
             productId: this.$route.params.productID,
             userId: this.$store.state.user_id
           }).then((res) => {
             if (res.data.Code == 200) {
-              this.sc = !this.sc
+=======        if(!!localStorage.lut){
+              this.axios({
+            url: this.url + '/api/Product/IsFavourite',
+            method: 'post',
+            data:{productId:this.$route.params.productID},
+            headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
+
+          }).then((res)=>{
+             if (res.data.Code == 200) {
+>>>>>>> .theirs              this.sc = !this.sc
             }
           })
+           
         }
       },
       //获取商品评论
@@ -382,7 +420,8 @@
           page: 1
         }).then((res) => {
           if (res.data.Code == 200) {
-            this.productSpec = res.data.Data;
+            this.productSpec = res.data.Data.List;
+            this.tab[2].tabName="评论("+res.data.Data.total+")"
           } else {
             Toast(res.data.Data);
           }
@@ -392,13 +431,18 @@
       }
     },
     mounted: function () {
-      this.$nextTick(() => {
+<<<<<<< .mine      this.$nextTick(() => {
         this.getProduct();
         this.getProductSKU();
         this.getParams();
         this.getProductEstimates();
         this.isFavourite();
-      })
+=======      this.$nextTick(()=>{
+        this.getProduct();      
+        this.getParams();      
+        this.getProductEstimates();
+        this.isFavourite();
+>>>>>>> .theirs      })
 
     }
   }

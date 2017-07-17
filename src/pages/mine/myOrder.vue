@@ -7,14 +7,11 @@
         <div class="tab" v-for="(item,index) in tabList" :class="{active:item.isactive}" @click="tabActive(index)">{{ item.tabName }}</div>
       </div>
 
-      <div>
-        <MorderBox :number="number" :price="price"></MorderBox>
-      </div>
-      <div>
-        <MorderBox :number="number" :price="price"></MorderBox>
+      <div v-for="(item,index) in orderList">
+        <MorderBox :number="item.OrderNo"  :price="item.TotalPrice"></MorderBox>
       </div>
 
-      <Mfooter :myCenterCurrent=true></Mfooter>
+      <Mfooter :myCenterCurrent='true'></Mfooter>
     </div>
 </template>
 
@@ -22,6 +19,7 @@
   import Mheader from '../../components/Mheader'
   import Mfooter from '../../components/Mfooter'
   import MorderBox from '../../components/MorderBox'
+  import {Toast} from 'mint-ui'
 
   export default {
     components: {
@@ -33,6 +31,9 @@
       return {
       	number:12313,
         price: 500,
+        typeId:1,
+        pageIndex:1,
+        pageSeze:100,
 
         tabList: [
           {
@@ -55,7 +56,8 @@
             tabName: '待评价',
             isactive: false
           }
-        ]
+        ],
+        orderList:[]
       }
     },
     methods: {
@@ -64,11 +66,55 @@
           array[index].isactive= false;
         });
         this.tabList[i].isactive = true;
+        this.typeId=i+1;
+        this.pageIndex=1;
+        this.orderList=[];
+        this.getOrderByType();
+      },
+      //获取订单信息
+      getOrderByType(){
+        this.axios({
+        url: this.url + '/api/Order/OrderList',
+        method: 'post',
+        data:{PageIndex:this.pageIndex,PageSize:this.pageSeze,TypeId:this.typeId},
+        headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
+
+        }).then((res)=>{
+          if (res.data.Code == 200) {
+            if(this.pageIndex==1){
+                this.orderList=res.data.Data.List;
+            }else{
+              if(res.data.Data.List.length>0){
+                res.data.Data.List.forEach(function (item) {
+                  this.orderList.push(item);
+                });
+              }
+            }
+             
+            } else {
+              Toast(res.data.Data);
+            }
+        }) .catch(function (err) {
+          if(err.response.status==401){
+              var url=window.location.href;//获取当前路径
+              let instance = Toast('还未登录，请先登录');
+              setTimeout(() => {
+                instance.close();
+                this.$router.push({ path: '/login/' ,params: { s_url: url }})
+                //this.$router.push({ path: '/login/'+url})
+              }, 2000);
+             
+            }else{
+                Toast('网络请求错误');
+            }
+        });
       }
     },
     created() {
     	let index = this.$route.params.tabNum
-    	this.tabList[index].isactive = true
+    	this.tabList[index].isactive = true 
+      this.typeId=parseInt(index) + 1;
+      this.getOrderByType();     
     }
   }
 </script>

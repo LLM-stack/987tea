@@ -22,7 +22,7 @@
 	export default {
     props: {
       number:{
-      	type: Number
+      	type: String
       },
       price:{
         type: Number

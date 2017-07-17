@@ -4,68 +4,88 @@
         <div slot="title">地址管理</div>
       </Mheader>
 
-      <div class="address">
+      <div class="address" v-for="(item,index) in userAllAddress" @click="checkAddress(index)">
         <div>
-          <div class="name">法是否按方法</div>
-          <div class="mr">默认</div>
+          <div class="name">收货地址</div>
+          <div class="mr" v-if="item.IsDefault==0">默认</div>
         </div>
         <div>
-          <div class="tel">1715646541</div>
-          <div class="add">福建省福州市仓山区浦上大道万达C4 1422</div>
+          <div class="tel">{{item.Mobile}}</div>
+          <div class="add">{{item.Province+item.City+item.Area+item.Detail}}</div>
         </div>
         <div>
-          <img src="../../assets/images/myInfo/edit.png" />
-        </div>
-      </div>
-      <div class="address">
-        <div>
-          <div class="name">法是否按方法</div>
-          <div class="mr">默认</div>
-        </div>
-        <div>
-          <div class="tel">1715646541</div>
-          <div class="add">福建省福州市仓山区浦上大道万达C4 1422</div>
-        </div>
-        <div>
-          <img src="../../assets/images/myInfo/edit.png" />
-        </div>
-      </div>
-      <div class="address">
-        <div>
-          <div class="name">法是否按方法</div>
-          <div class="mr">默认</div>
-        </div>
-        <div>
-          <div class="tel">1715646541</div>
-          <div class="add">福建省福州市仓山区浦上大道万达C4 1422</div>
-        </div>
-        <div>
-          <img src="../../assets/images/myInfo/edit.png" />
+          <router-link :to="{path:'/EditAddress/'+item.AdressId}">        
+            <img src="../../assets/images/myInfo/edit.png" />        
+          </router-link>
         </div>
       </div>
 
-      <router-link :to="{path:'/EditAddress'}">
+      <router-link :to="{path:'/EditAddress/0'}">
         <div class="new-address">
           +新建地址
         </div>
       </router-link>
 
 
-      <Mfooter :myCenterCurrent=true></Mfooter>
+      <Mfooter :myCenterCurrent='true'></Mfooter>
     </div>
 </template>
 
 <script>
   import Mheader from '../../components/Mheader'
   import Mfooter from '../../components/Mfooter'
+  import {Toast} from 'mint-ui'
 
   export default {
     components: {
       Mheader,
       Mfooter
     },
+    data(){
+      return{
+        userAllAddress:[]
+      }
+    },
     methods: {
+      //获取用户地址列表
+      getUserAddress(){
+         this.axios({
+        url: this.url + '/api/ReceiveAddress/GetAddressByUserId',
+        method: 'get',
+        headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
+
+        }).then((res)=>{
+          if (res.data.Code == 200) {
+              this.userAllAddress = res.data.ExData;
+            } else {
+              Toast(res.data.Data);
+            }
+        }) .catch(function (err) {
+          if(err.response.status==401){
+              var url=window.location.href;//获取当前路径
+              let instance = Toast('还未登录，请先登录');
+              setTimeout(() => {
+                instance.close();
+                this.$router.push({ path: '/login/' ,params: { s_url: url }})
+                //this.$router.push({ path: '/login/'+url})
+              }, 2000);
+             
+            }else{
+                Toast('网络请求错误');
+            }
+        });
+      },
+      //选中收货地址
+      checkAddress(index){
+        
+        this.$store.state.receiveAddress=this.userAllAddress[index];
+        this.$router.go(-1);
+      }
+    },
+    mounted:function(){
+      this.getUserAddress();
     }
+
   }
 </script>
 

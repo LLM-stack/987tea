@@ -1,7 +1,7 @@
 <template>
     <div>
       <Mheader>
-        <div slot="title">编辑地址</div>
+        <div slot="title">{{title}}</div>
       </Mheader>
       <mt-field label="收货人" placeholder="请输入用户名" v-model="username"></mt-field>
       <mt-field label="手机号" placeholder="请输入手机号" type="tel" v-model="phone"></mt-field>
@@ -20,8 +20,8 @@
       </div>
       <mt-field label="详细地址" placeholder="请输入地址" v-model="detailAddress"></mt-field>
       <mt-cell title="是否设为默认地址"><mt-switch v-model="isDefault"></mt-switch></mt-cell>
-      <div class="save">保存</div>
-      <Mfooter :myCenterCurrent=true></Mfooter>
+      <div class="save" @click="save">{{btnName}}</div>
+      <Mfooter :myCenterCurrent='true'></Mfooter>
     </div>
 </template>
 
@@ -29,6 +29,7 @@
   import Mheader from '../../components/Mheader'
   import Mfooter from '../../components/Mfooter'
   import {address, slots} from '../../components/linkage/address';
+  import {Toast} from 'mint-ui'
 
 	export default {
     components: {
@@ -37,6 +38,8 @@
     },
     data () {
     	return {
+        title:'编辑地址',
+        btnName:'修改',
         username:'',
         phone:'',
         address_flag: false,
@@ -44,10 +47,11 @@
         temp_addr: '',
         address: '',
         detailAddress:'',
-        isDefault: ''
+        isDefault: false
       }
     },
     methods: {
+      //TODO:编辑的时候已选择的省份没有省市区插件没有选中
       fillAddress() {
         // 填入省市区
         this.address = this.temp_addr;
@@ -83,10 +87,121 @@
           // 这里可以指定地址符，此处以空格进行连接
           this.temp_addr = values[0].aname + ' ' + values[1].aname + ' ' + values[2].aname;
         }
-      }
+      },
+      isPhoneNo(phone) {  //手机号验证 
+          var pattern = /^1[34578]\d{9}$/; 
+          return pattern.test(phone); 
+      },
+      //添加新地址
+      save(){
+        if(!!!this.username){
+            Toast('请填写收货人姓名');
+            return;
+        }
+        if(!!!this.phone){
+            Toast('请填写收货人手机号');
+            return;
+        }
+        if(!this.isPhoneNo){
+           Toast('手机号格式错误');
+            return;
+        }
+        if(!!!this.address){
+            Toast('请选择省市区');
+            return;
+        }
+        if(!!!this.detailAddress){
+            Toast('请填写详细的收货地址');
+            return;
+        }
+        
+        let str=this.address.split(' ');
+
+        let nad={
+          AdressId:this.$route.params.aId,
+          Province:str[0],
+          City:str[1],
+          Area:str[2],
+          Detail:this.detailAddress,
+          ConsigneeName:this.username,
+          Mobile:this.phone,
+          IsDefault:this.isDefault==true?0:1
+        }
+        this.axios({
+        url: this.url + '/api/ReceiveAddress/AddAddress',
+        method: 'post',
+        data:nad,
+        headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
+
+        }).then((res)=>{
+          if (res.data.Code == 200) {
+              let instance = Toast(res.data.Data);
+              setTimeout(() => {
+                instance.close();
+                this.$router.push({ path: '/MyAddress'});
+              }, 2000);
+            } else {
+              Toast(res.data.Data);
+            }
+        }) .catch(function (err) {
+          if(err.response.status==401){
+              var url=window.location.href;//获取当前路径
+              let instance = Toast('还未登录，请先登录');
+              setTimeout(() => {
+                instance.close();
+                this.$router.push({ path: '/login/' ,params: { s_url: url }})
+                //this.$router.push({ path: '/login/'+url})
+              }, 2000);
+             
+            }else{
+                Toast('网络请求错误');
+            }
+        });
+      },
     },
     mounted() {
-      this.initAddress();
+      this.$nextTick(function () {
+        if(this.$route.params.aId==0){//aid为0时是新增收货地址页面
+            this.title='添加地址';
+            this.btnName='保存';
+        }else{          
+            //请求要编辑的地址信息
+            this.axios({
+            url: this.url + '/api/ReceiveAddress/GetAddressByAddressId',
+            method: 'post',
+            data:{addressId:this.$route.params.aId},
+            headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
+
+            }).then((res)=>{
+              if (res.data.Code == 200) {
+                  let a=res.data.ExData;
+                  this.username=a.ConsigneeName;
+                  this.phone=a.Mobile;
+                  this.address=a.Province+' '+a.City+' '+a.Area;
+                  this.detailAddress=a.Detail;
+                  this.isDefault=a.IsDefault==0?true:false;
+                } else {
+                  Toast(res.data.Data);
+                }
+            }) .catch(function (err) {
+              if(err.response.status==401){
+                  var url=window.location.href;//获取当前路径
+                  let instance = Toast('还未登录，请先登录');
+                  setTimeout(() => {
+                    instance.close();
+                    this.$router.push({ path: '/login/' ,params: { s_url: url }})
+                    //this.$router.push({ path: '/login/'+url})
+                  }, 2000);
+                
+                }else{
+                    Toast('网络请求错误');
+                }
+            });
+        }
+
+        this.initAddress();
+      })      
+      
     }
   }
 </script>

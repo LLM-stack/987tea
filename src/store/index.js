@@ -10,7 +10,9 @@ const state = {
   // 登录状态
   user_id:"",
   // 购物车
-  product_num: 0
+  product_num: 0,
+  //订单的收货地址
+  receiveAddress:''
  
 }
 

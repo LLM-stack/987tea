@@ -179,8 +179,8 @@
     },
     data() {
       return {
-        ownTag:'ca6da57ae81b44f2a6c4f3d4ddbb1491',
-        giftsTag:'f44d0325fe524c899ecc76ce75b39cd5',
+        ownTag:'c996e6f4a4614793a42f89428eab7039',
+        giftsTag:'068cf06410bd48629a01a98fd514e9bc',
         ownTea:[],
         giftsTea:[],
         day:0,
