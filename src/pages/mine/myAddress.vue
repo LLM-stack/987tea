@@ -4,12 +4,12 @@
         <div slot="title">地址管理</div>
       </Mheader>
 
-      <div class="address" v-for="(item,index) in userAllAddress" @click="checkAddress(index)">
+      <div class="address" v-for="(item,index) in userAllAddress" >
         <div>
           <div class="name">收货地址</div>
           <div class="mr" v-if="item.IsDefault==0">默认</div>
         </div>
-        <div>
+        <div @click.stop="checkAddress(index)">
           <div class="tel">{{item.Mobile}}</div>
           <div class="add">{{item.Province+item.City+item.Area+item.Detail}}</div>
         </div>
@@ -60,15 +60,16 @@
             } else {
               Toast(res.data.Data);
             }
-        }) .catch(function (err) {
-          if(err.response.status==401){
-              var url=window.location.href;//获取当前路径
+        }) .catch((err)=>{
+          if(err.response.status==401){             
               let instance = Toast('还未登录，请先登录');
               setTimeout(() => {
-                instance.close();
-                this.$router.push({ path: '/login/' ,params: { s_url: url }})
-                //this.$router.push({ path: '/login/'+url})
-              }, 2000);
+                instance.close(); 
+                this.$router.replace({
+                      path: '/login/',
+                      query: {redirect: this.$router.currentRoute.fullPath}
+                    })
+              }, 1000);
              
             }else{
                 Toast('网络请求错误');
@@ -76,8 +77,7 @@
         });
       },
       //选中收货地址
-      checkAddress(index){
-        
+      checkAddress(index){        
         this.$store.state.receiveAddress=this.userAllAddress[index];
         this.$router.go(-1);
       }

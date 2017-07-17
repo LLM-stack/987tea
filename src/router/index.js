@@ -29,6 +29,8 @@ import Coupon from '@/pages/mine/coupon'
 import MyAddress from '@/pages/mine/myAddress'
 import EditAddress from '@/pages/mine/editAddress'
 import CommentsBox from '@/pages/mine/commentsBox'
+import Preferences from '@/pages/mine/preferences'
+
 
 // 商城
 import CBmall from '@/pages/CBmall/CBmall'
@@ -37,8 +39,8 @@ import Mall from '@/pages/CBmall/mall'
 Vue.use(Router)
 
 export default new Router({
-  mode: 'history',
-  base: '/',
+  // mode: 'history',
+  // base: '/',
   routes: [
     // 首页
     {
@@ -110,6 +112,9 @@ export default new Router({
     }, {
       path: '/Coupon',
       component: Coupon
+    }, {
+      path: '/Preferences/:title/:id',
+      component: Preferences
     },
     // 商城
     {

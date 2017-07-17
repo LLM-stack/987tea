@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <Mheader :show=true>
       <div slot="title">我的收藏</div>
     </Mheader>

@@ -58,11 +58,11 @@
            if(!!!this.phone){
            Toast('手机号不能为空');
             return;
-          } 
+          }
           if(!this.isPhoneNo(this.phone)){
              Toast('手机号格式不正确');
              return;
-          }  
+          }
           if(!!!this.password){
            Toast('密码不能为空');
             return;
@@ -70,11 +70,11 @@
           if(this.password.length<6 || this.password.length>12){
             Toast('密码的长度在6-12位之间');
             return;
-          } 
+          }
           if(!this.verifyPassword(this.password)){
             Toast('密码的格式错误');
             return;
-          } 
+          }
           this.axios.post(this.url+'/api/Login/LoginUp',{phone:this.phone,pwd:this.password}).then((res)=>{
             if(res.data.Code==200){
               this.$store.state.user_id=res.data.ExData;//将用户id赋值给数据源
@@ -82,24 +82,24 @@
               let instance = Toast(res.data.Data);
               setTimeout(() => {
                 instance.close();
-                //TODO:登录跳转从那个页面来 回那个页面还没做
-                let url=this.$route.params.s_url;
-                console.log(this.$route.params.s_url);
-                console.log(url);
-                this.$router.push({ path: '/' })
+               if(this.$route.query.redirect){
+                  this.$router.push({path: decodeURIComponent(this.$route.query.redirect)});
+                }else{
+                  this.$router.push({path: '/'});
+                }
               }, 1000);
-            
+
             }else{
               Toast(res.data.Data);
             }
-          }).catch((err)=>{            
+          }).catch((err)=>{
             Toast(err.message);
-          })    
+          })
 
         },
-        isPhoneNo(phone) {  //手机号验证 
-          var pattern = /^1[34578]\d{9}$/; 
-          return pattern.test(phone); 
+        isPhoneNo(phone) {  //手机号验证
+          var pattern = /^1[34578]\d{9}$/;
+          return pattern.test(phone);
         },
         verifyPassword(pwd){//密码验证
             let pattern=/^[A-Za-z_0-9]{6,16}$/;
@@ -124,7 +124,7 @@
   }
 
   .box .login {
-    height: 9rem;
+    height: 7rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -132,8 +132,8 @@
 
   .box .login > img {
     margin: 0 auto;
-    width: 6rem;
-    height: 4.0rem;
+    width: 5rem;
+    height: 3.3rem;
   }
 
   .box .login-box .login-btn {

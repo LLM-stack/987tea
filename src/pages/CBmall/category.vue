@@ -9,24 +9,24 @@
     </header>
     <div class="category">
       <div class="tabs">
-        <div class="tab" :class="{active:teasInx == index}" v-for="(tea,index) in teas" @click="checked(index)">{{
-          tea.name }}
+        <div class="tab" :class="{active:classIndex == index}" v-for="(cl,index) in classList" @click="checked(index,cl.ProductClassifyId)">{{
+          cl.Name }}
         </div>
       </div>
       <div class="tabs-cont">
-        <div class="tea-box" v-for="(tea,index) in teas" v-if="teasInx == index">
+        <div class="tea-box" v-for="(teaClass,index) in classList" v-if="classIndex == index">
           <div class="top-img">
             <img src="../../assets/images/category/category_03.png" alt="">
           </div>
           <div class="title">
             <div class="hr"></div>
-            <div>{{ tea.name }}</div>
+            <div>{{ teaClass.Name }}</div>
             <div class="hr"></div>
           </div>
           <div class="tea-list">
-            <div v-for="item in teas[index].list">
-              <img :src="item.imgSrc" alt="">
-              <div class="lm-font-sm">{{ item.goods }}</div>
+            <div v-for="item in productList">
+              <img :src="item.HeadImg" alt="">
+              <div class="lm-font-sm">{{ item.Name }}</div>
             </div>
           </div>
         </div>
@@ -38,6 +38,7 @@
 
 <script>
   import Mfooter from '../../components/Mfooter'
+  import {Toast} from 'mint-ui'
 
   export default {
     components: {
@@ -45,48 +46,47 @@
     },
     data() {
       return {
-        teasInx: '',
-        teas: [
-          {
-            name: '推荐',
-            list: [{
-              goods: '金骏眉',
-              imgSrc: require('../../assets/images/category/category_07.png')
-            },{
-              goods: '大红袍',
-              imgSrc: require('../../assets/images/category/category_07.png')
-            },{
-              goods: '大红袍',
-              imgSrc: require('../../assets/images/category/category_07.png')
-            },{
-              goods: '金骏眉',
-              imgSrc: require('../../assets/images/category/category_07.png')
-            },{
-              goods: '大红袍',
-              imgSrc: require('../../assets/images/category/category_07.png')
-            },{
-              goods: '大红袍',
-              imgSrc: require('../../assets/images/category/category_07.png')
-            }]
-          }, {
-            name: '龙井茶'
-          }, {
-            name: '红茶'
-          }, {
-            name: '普洱'
-          }
-        ]
+        classIndex: '',        
+        classList:[],
+        productList:[]
       }
     },
     methods: {
-      checked(i) {
-        this.teasInx = i
+      checked(i,classId) {
+        this.classIndex = i;
+        this.productList=[];
+        this.getProducts(classId);
       },
       goBack() {
         window.history.go(-1)
+      },
+      //获取类别
+      getClassInfo(){
+         this.axios.get(this.url+'/api/ProductClassify/GetProductClassify',{}).then((res)=>{
+           if(res.data.Code==200){
+             this.classList=res.data.ExData;
+             this.getProducts(this.classList[0].ProductClassifyId);
+            }else{
+              Toast(res.data.Data);
+            }
+          }).catch((err)=>{
+             Toast('网络请求超时');
+          })
+      },
+      getProducts(cId){
+        this.axios.post(this.url+'/api/Product/GetCategoryProducts',{categoryId:cId}).then((res)=>{
+           if(res.data.Code==200){
+             this.productList=res.data.Data;
+            }else{
+              Toast(res.data.Data);
+            }
+          }).catch((err)=>{
+             Toast('网络请求超时');
+          })
       }
     },
     created:function(){
+      this.getClassInfo();
       console.log(this.$store.state.user_id);
     }
   }

@@ -133,6 +133,9 @@ export default {
   .lm-margin-r-xs{
     margin-right: 0.2rem;
   }
+  .lm-margin-l-xxl{
+    margin-left: 2.5rem;
+  }
   .lm-margin-l-lg{
     margin-left: 1rem;
   }
@@ -197,6 +200,9 @@ export default {
   }
 
   .mode-list .mode-title {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
     padding: 0.3rem 0.3rem 0;
   }
 
@@ -237,6 +243,39 @@ body .mint-switch-input:checked + .mint-switch-core{
     border-radius: 0.2rem;
     margin-top: 0.8rem;
     padding: 0 0.4rem;
+  }
+  .mint-checklist-title,
+  .mint-radiolist-title{
+    margin: 0;
+  }
+  .mint-radio-input:checked + .mint-radio-core,
+  .mint-checkbox-input:checked + .mint-checkbox-core{
+    border-color: #B4282D;
+    background-color: #B4282D;
+  }
+  .mint-radio-input:checked + .mint-radio-core::after {
+    border-color: #fff;
+    background-color: rgba(0,0,0,0);
+    -webkit-transform: rotate(45deg) scale(1);
+    transform: rotate(45deg) scale(1);
+  }
+  .mint-radio-core::after {
+    border-radius:0;
+    border: 2px solid transparent;
+    border-left: 0;
+    border-top: 0;
+    content: " ";
+    top: 3px;
+    left: 6px;
+    position: absolute;
+    width: 4px;
+    height: 8px;
+    -webkit-transform: rotate(45deg) scale(0);
+    transform: rotate(45deg) scale(0);
+    -webkit-transition: -webkit-transform .2s;
+    transition: -webkit-transform .2s;
+    transition: transform .2s;
+    transition: transform .2s, -webkit-transform .2s;
   }
   .sex .mint-cell{
     width: 5.5rem;

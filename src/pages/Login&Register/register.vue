@@ -19,7 +19,7 @@
         <div class="register-btn" @click="sendRegister">注册</div>
         <div class=" lm-font-sm lm-margin-t-sm">注册即视为同意 <span class="tips lm-text-red" @click="open">《服务协议》</span></div>
       </div>
-      <Mdialog :dialog="dialog">
+      <Mdialog :dialog="dialog" >
         <div slot="title">九八七茶网用户网络协议</div>
         <div slot="content">
           <div class="lm-margin-t">一、前言</div>
@@ -317,7 +317,7 @@
   }
 
   .box .register {
-    height: 9rem;
+    height: 7rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -325,8 +325,8 @@
 
   .box .register > img {
     margin: 0 auto;
-    width: 6rem;
-    height: 4.0rem;
+    width: 5rem;
+    height: 3.3rem;
   }
 
   .box .register-box .register-btn {

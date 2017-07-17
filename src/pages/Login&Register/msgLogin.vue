@@ -50,19 +50,19 @@
         phone: null,
         number: null,
         timerCodeMsg:'获取验证码',
-        fetchCodeMsg:false 
+        fetchCodeMsg:false
       }
     },
     methods: {
-      sendCode(){//发送短信验证码  
+      sendCode(){//发送短信验证码
           if(!!!this.phone){
            Toast('手机号不能为空');
             return;
-          } 
+          }
           if(!this.isPhoneNo(this.phone)){
              Toast('手机号格式不正确');
              return;
-          }      
+          }
           this.axios.post(this.url+'/api/Login/SendSMSCode',{phone:this.phone}).then((res)=>{
             this.timeOut();//发送成功开始倒计时
             if(res.data.Code==200){
@@ -73,14 +73,14 @@
           }).catch((err)=>{
              Toast('网络请求超时');
           })
-      }, 
+      },
       timeOut(){//倒计时
         let self=this;
         self.fetchCodeMsg = true
         let sec =60;
         for(let  i=0; i<=60; i++){
           window.setTimeout(function(){
-              if (sec != 0) {                
+              if (sec != 0) {
                 self.timerCodeMsg = sec + "s后重新发送" ;
                 sec--;
             } else {
@@ -95,19 +95,19 @@
           let pattern=/^[A-Za-z_0-9]{6,16}$/;
           return pattern.test(pwd);
       },
-      isPhoneNo(phone) {  //手机号验证 
-        var pattern = /^1[34578]\d{9}$/; 
-        return pattern.test(phone); 
+      isPhoneNo(phone) {  //手机号验证
+        var pattern = /^1[34578]\d{9}$/;
+        return pattern.test(phone);
       },
       smsLogin(){//短信登录
           if(!!!this.phone){
           Toast('手机号不能为空');
           return;
-          } 
+          }
           if(!this.isPhoneNo(this.phone)){
               Toast('手机号格式不正确');
               return;
-          }  
+          }
           if(!!!this.number){
             Toast('验证码不能为空');
             return;
@@ -115,7 +115,7 @@
           if(this.number.length !=6){
             Toast('验证码格式不正确');
             return;
-          }           
+          }
           this.axios.post(this.url+'/api/Login/SMSLogin',{phone:this.phone,code:this.number}).then((res)=>{
             if(res.data.Code==200){
                localStorage.setItem("lut", res.data.ExData);
@@ -128,13 +128,13 @@
                 console.log(url);
                 this.$router.push({ path: '/' })
               }, 1000);
-            
+
             }else{
               Toast(res.data.Data);
             }
           }).catch((err)=>{
             Toast('网络请求超时');
-          })  
+          })
       },
 
     }
@@ -155,7 +155,7 @@
   }
 
   .box .msg-login {
-    height: 9rem;
+    height: 7rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -163,8 +163,8 @@
 
   .box .msg-login > img {
     margin: 0 auto;
-    width: 6rem;
-    height: 4.0rem;
+    width: 5rem;
+    height: 3.3rem;
   }
 
   .box .msg-login-box .msg-login-btn {
@@ -220,7 +220,7 @@
     line-height: 2.1rem;
     border: 1px solid #B4282D;
     border-radius: 0.2rem;
-    margin-top: 0.8rem;    
+    margin-top: 0.8rem;
   }
   .code a{
 

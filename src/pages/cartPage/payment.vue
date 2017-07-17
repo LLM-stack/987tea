@@ -9,7 +9,10 @@
           <div class="name">收货地址</div>
           <div class="mr" v-if="defaultAddress.IsDefault==0">默认</div>
         </div>
-        <div>
+        <div v-if="!!!defaultAddress">
+          <div>还没有收货地址</div>
+        </div>
+        <div v-else>
           <div class="tel">{{defaultAddress.Mobile}}</div>
           <div class="add">{{defaultAddress.Province+defaultAddress.City+defaultAddress.Area+defaultAddress.Detail}}</div>
         </div>
@@ -106,15 +109,16 @@
             } else {
               Toast(res.data.Data);
             }
-        }) .catch(function (err) {
-          if(err.response.status==401){
-              var url=window.location.href;//获取当前路径
+        }) .catch((err)=>{
+          if(err.response.status==401){             
               let instance = Toast('还未登录，请先登录');
               setTimeout(() => {
-                instance.close();
-                this.$router.push({ path: '/login/' ,params: { s_url: url }})
-                //this.$router.push({ path: '/login/'+url})
-              }, 2000);
+                instance.close(); 
+                this.$router.replace({
+                      path: '/login/',
+                      query: {redirect: this.$router.currentRoute.fullPath}
+                    })
+              }, 1000);
              
             }else{
                 Toast('网络请求错误');
@@ -136,15 +140,16 @@
             } else {
               Toast(res.data.Data);
             }
-        }) .catch(function (err) {
-          if(err.response.status==401){
-              var url=window.location.href;//获取当前路径
+        }) .catch((err)=>{
+          if(err.response.status==401){             
               let instance = Toast('还未登录，请先登录');
               setTimeout(() => {
-                instance.close();
-                this.$router.push({ path: '/login/' ,params: { s_url: url }})
-                //this.$router.push({ path: '/login/'+url})
-              }, 2000);
+                instance.close(); 
+                this.$router.replace({
+                      path: '/login/',
+                      query: {redirect: this.$router.currentRoute.fullPath}
+                    })
+              }, 1000);
              
             }else{
                 Toast('网络请求错误');
@@ -166,18 +171,23 @@
         }).then((res)=>{
           if (res.data.Code == 200) {
              this.alipay=res.data.ExData;
+             if(!!this.alipay){
+                document.forms['alipaysubmit'].submit();
+             }
+             
             } else {
               Toast(res.data.Data);
             }
-        }) .catch(function (err) {
-          if(err.response.status==401){
-              var url=window.location.href;//获取当前路径
+        }) .catch((err)=>{
+          if(err.response.status==401){             
               let instance = Toast('还未登录，请先登录');
               setTimeout(() => {
-                instance.close();
-                this.$router.push({ path: '/login/' ,params: { s_url: url }})
-                //this.$router.push({ path: '/login/'+url})
-              }, 2000);
+                instance.close(); 
+                this.$router.replace({
+                      path: '/login/',
+                      query: {redirect: this.$router.currentRoute.fullPath}
+                    })
+              }, 1000);
              
             }else{
                 Toast('网络请求错误');

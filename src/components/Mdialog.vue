@@ -4,7 +4,7 @@
     <div class="dialog" v-if="dialog">
       <div class="title"><slot name="title"></slot></div>
       <div class="content"><slot name="content"></slot></div>
-      <div class="prompt"><slot name="prompt"></slot></div>
+      <div class="prompt" v-if="prompt"><slot name="prompt"></slot></div>
       <div class="btn-group">
         <div class="lm-text-grey"><slot name="cancel"></slot></div>
         <div class="lm-text-red"><slot name="btn"></slot></div>
@@ -21,7 +21,8 @@
           dialog: {
             type: Boolean,
             default: false
-          }
+          },
+          prompt: false
         },
       methods: {
 

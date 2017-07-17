@@ -1,18 +1,25 @@
 <template>
-    <div>
-      <Mheader>
-          <div slot="title" >{{ this.$route.params.title }}</div>
-      </Mheader>
-      <div class="tabs">
-        <div class="tab" v-for="(item,index) in tabList" :class="{active:item.isactive}" @click="tabActive(index)">{{ item.tabName }}</div>
+  <div>
+    <Mheader>
+      <div slot="title">{{ this.$route.params.title }}</div>
+    </Mheader>
+    <div class="tabs">
+      <div class="tab" v-for="(item,index) in tabList" :class="{active:item.isactive}" @click="tabActive(index)">{{
+        item.tabName }}
       </div>
-
-      <div v-for="(item,index) in orderList">
-        <MorderBox :number="item.OrderNo"  :price="item.TotalPrice"></MorderBox>
-      </div>
-
-      <Mfooter :myCenterCurrent='true'></Mfooter>
     </div>
+
+    <div v-for="(item,index) in orderList">
+      <MorderBox>
+        <span slot="number">{{ item.OrderNo }}</span>
+        <span slot="state">{{ item.OrderStateStr }}</span>
+        <span slot="name">{{ item.ProductName }}</span>
+        <span slot="price">{{ item.TotalPrice }}</span>
+      </MorderBox>
+    </div>
+
+    <Mfooter :myCenterCurrent='true'></Mfooter>
+  </div>
 </template>
 
 <script>
@@ -29,11 +36,11 @@
     },
     data() {
       return {
-      	number:12313,
+        number: 12313,
         price: 500,
-        typeId:1,
-        pageIndex:1,
-        pageSeze:100,
+        typeId: 1,
+        pageIndex: 1,
+        pageSeze: 100,
 
         tabList: [
           {
@@ -57,64 +64,65 @@
             isactive: false
           }
         ],
-        orderList:[]
+        orderList: []
       }
     },
     methods: {
       tabActive(i) {
-        this.tabList.forEach(function(value,index,array){
-          array[index].isactive= false;
+        this.tabList.forEach(function (value, index, array) {
+          array[index].isactive = false;
         });
         this.tabList[i].isactive = true;
-        this.typeId=i+1;
-        this.pageIndex=1;
-        this.orderList=[];
+        this.typeId = i + 1;
+        this.pageIndex = 1;
+        this.orderList = [];
         this.getOrderByType();
       },
       //获取订单信息
       getOrderByType(){
         this.axios({
-        url: this.url + '/api/Order/OrderList',
-        method: 'post',
-        data:{PageIndex:this.pageIndex,PageSize:this.pageSeze,TypeId:this.typeId},
-        headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
+          url: this.url + '/api/Order/OrderList',
+          method: 'post',
+          data: {PageIndex: this.pageIndex, PageSize: this.pageSeze, TypeId: this.typeId},
+          headers: {'Authorization': 'BasicAuth ' + localStorage.lut}
 
-        }).then((res)=>{
+        }).then((res) => {
           if (res.data.Code == 200) {
-            if(this.pageIndex==1){
-                this.orderList=res.data.Data.List;
-            }else{
-              if(res.data.Data.List.length>0){
+            if (this.pageIndex == 1) {
+              this.orderList = res.data.Data.List;
+            } else {
+              if (res.data.Data.List.length > 0) {
                 res.data.Data.List.forEach(function (item) {
                   this.orderList.push(item);
                 });
               }
             }
-             
-            } else {
-              Toast(res.data.Data);
-            }
-        }) .catch(function (err) {
-          if(err.response.status==401){
-              var url=window.location.href;//获取当前路径
-              let instance = Toast('还未登录，请先登录');
-              setTimeout(() => {
-                instance.close();
-                this.$router.push({ path: '/login/' ,params: { s_url: url }})
-                //this.$router.push({ path: '/login/'+url})
-              }, 2000);
-             
-            }else{
-                Toast('网络请求错误');
-            }
+          }
+          else {
+            Toast(res.data.Data);
+          }
+        }).catch((err) => {
+          if (err.response.status == 401) {
+            let instance = Toast('还未登录，请先登录');
+            setTimeout(() => {
+              instance.close();
+              this.$router.replace({
+                path: '/login/',
+                query: {redirect: this.$router.currentRoute.fullPath}
+              })
+            }, 1000);
+          }
+          else {
+            Toast('网络请求错误');
+          }
         });
       }
     },
     created() {
-    	let index = this.$route.params.tabNum
-    	this.tabList[index].isactive = true 
-      this.typeId=parseInt(index) + 1;
-      this.getOrderByType();     
+      let index = this.$route.params.tabNum
+      this.tabList[index].isactive = true
+      this.typeId = parseInt(index) + 1;
+      this.getOrderByType();
     }
   }
 </script>
@@ -129,6 +137,7 @@
     background-color: #ffffff;
     border-bottom: 1px solid #eeeeee;
   }
+
   .tabs .tab {
     text-align: center;
     width: 20%;

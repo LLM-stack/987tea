@@ -1,17 +1,20 @@
 <template>
     <div>
-      <div class="cont">
+      <div class="cont" @click="chkOrder(orderId)">
         <div class="top">
-          <span>订单编号:{{ number }}</span>
-          <span></span>
+          <span>订单编号: <slot name="number"></slot></span>
+          <span class="lm-text-red"><slot name="state"></slot></span>
         </div>
         <div class="mid">
           <img :src="imgSrc" alt="">
-          <span>{{ name }}</span>
+          <slot name="name"></slot>
         </div>
         <div class="btm">
-          <span>实付:{{ price }}元</span>
-          <span></span>
+          <span>实付: <slot name="price"></slot>元</span>
+          <span>
+            <span></span>
+            <span></span>
+          </span>
         </div>
       </div>
     </div>
@@ -21,22 +24,45 @@
 
 	export default {
     props: {
-      number:{
-      	type: String
+      imgSrc: {
+      	type: String,
+        default: require('../assets/images/noimg.png')
       },
-      price:{
-        type: Number
-      },
-      imgSrc: '',
-      name: ''
+      orderId:{
+        type:String
+      }
+    },
+    methods:{
+      chkOrder(orderId){
+        this.$router.push({ path: '/Payment/'+orderId})
+      }
     }
   }
-</script>
+  </script>
 
 <style scoped>
   .cont{
-    padding: 0.4rem;
+    margin-bottom: 0.5rem;
+    padding:0 0.4rem;
     background-color: #ffffff;
     border-bottom: 1px solid #eeeeee;
+  }
+  .mid{
+    display: flex;
+    align-items: center;
+    padding: 0.4rem 0;
+    border-top:1px solid #eee;
+    border-bottom:1px solid #eee;
+  }
+  .mid img{
+    width: 3rem;
+    height: 3rem;
+    margin-right: 0.5rem;
+  }
+  .top,.btm{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.4rem 0;
   }
 </style>

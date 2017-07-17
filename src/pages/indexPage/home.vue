@@ -252,6 +252,7 @@
     created:function(){
        this.getOwnTea();
        this.getGiftsTea();
+       localStorage.setItem("lut", '');
     }
   }
 </script>
@@ -263,6 +264,10 @@
     padding: 0 0.4rem;
     justify-content: space-between;
     background-color: #B4282D;
+    position: fixed;
+    width: 100%;
+    top:0;
+    z-index: 999;
   }
 
   header img {
@@ -296,6 +301,7 @@
   }
 
   .banner {
+    margin-top: 1.8rem;
     height: 7.7rem;
   }
 

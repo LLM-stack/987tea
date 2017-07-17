@@ -114,20 +114,21 @@
               } else {
                 Toast(res.data.Data);
               }
-          }) .catch(function (err) {
-            if(err.response.status==401){
-                var url=window.location.href;//获取当前路径
-                let instance = Toast('还未登录，请先登录');
-                setTimeout(() => {
-                  instance.close();
-                  this.$router.push({ path: '/login/' ,params: { s_url: url }})
-                  //this.$router.push({ path: '/login/'+url})
-                }, 2000);
-              
-              }else{
-                  Toast('网络请求错误');
-              }
-          });
+          }) .catch((err)=>{
+          if(err.response.status==401){             
+              let instance = Toast('还未登录，请先登录');
+              setTimeout(() => {
+                instance.close(); 
+                this.$router.replace({
+                      path: '/login/',
+                      query: {redirect: this.$router.currentRoute.fullPath}
+                    })
+              }, 1000);
+             
+            }else{
+                Toast('网络请求错误');
+            }
+        });
 
         this.calcTotalMoney();
       },
@@ -169,15 +170,16 @@
             } else {
               Toast(res.data.Data);
             }
-        }) .catch(function (err) {
-          if(err.response.status==401){
-              var url=window.location.href;//获取当前路径
+        }).catch((err)=>{
+          if(err.response.status==401){             
               let instance = Toast('还未登录，请先登录');
               setTimeout(() => {
-                instance.close();
-                this.$router.push({ path: '/login/' ,params: { s_url: url }})
-                //this.$router.push({ path: '/login/'+url})
-              }, 2000);
+                instance.close(); 
+                this.$router.replace({
+                      path: '/login/',
+                      query: {redirect: this.$router.currentRoute.fullPath}
+                    })
+              }, 1000);
              
             }else{
                 Toast('网络请求错误');
@@ -200,18 +202,21 @@
               } else {
                 Toast(res.data.Data);
               }
-          }) .catch(function (err) {
-            if(err.response.status==401){
-                var url=window.location.href;//获取当前路径
-                let instance = Toast('还未登录，请先登录');
-                setTimeout(() => {
-                instance.close();
-                this.$router.push({ path: 'login', params: { s_url: url }})
-              }, 2000);
-              }else{
-                  Toast('网络请求错误');
-              }
-          });
+          }) .catch((err)=>{
+          if(err.response.status==401){             
+              let instance = Toast('还未登录，请先登录');
+              setTimeout(() => {
+                instance.close(); 
+                this.$router.replace({
+                      path: '/login/',
+                      query: {redirect: this.$router.currentRoute.fullPath}
+                    })
+              }, 1000);
+             
+            }else{
+                Toast('网络请求错误');
+            }
+        });
       },
       //提交订单
       addOrder(){
@@ -251,18 +256,21 @@
             setTimeout(() => {
               instance.close();
               this.$router.push({ path: '/Payment/'+res.data.ExData})
-            }, 2000);
+            }, 1000);
           } else {
             Toast(res.data.Data);
           }
-        }) .catch(function (error) {
-          if(err.response.status==401){
-              var url=window.location.href;//获取当前路径
+        }) .catch((err)=>{
+          if(err.response.status==401){             
               let instance = Toast('还未登录，请先登录');
               setTimeout(() => {
-              instance.close();
-              this.$router.push({ path: '/login/', params: { s_url: url }})
-            }, 2000);
+                instance.close(); 
+                this.$router.replace({
+                      path: '/login/',
+                      query: {redirect: this.$router.currentRoute.fullPath}
+                    })
+              }, 1000);
+             
             }else{
                 Toast('网络请求错误');
             }
@@ -270,8 +278,7 @@
       }
     },
     mounted: function () {
-      this.$nextTick(function () {
-        //localStorage.setItem("lut", "");
+      this.$nextTick(function () {        
         this.getCarInfo();
         
       })
