@@ -17,15 +17,11 @@
       </div>
 
       <div class="tabs">
-        <div class="tab" :class="{active}">收入</div>
+        <div class="tab" :class="{active:isActive}" @click="check">收入</div>
+        <div class="tab" :class="{active:!isActive}" @click="check">支出</div>
       </div>
 
-
-
-
-
-
-
+      
       <Mfooter :myCenterCurrent=true></Mfooter>
     </div>
 </template>
@@ -38,6 +34,16 @@
     components: {
       Mheader,
       Mfooter
+    },
+    data() {
+    	return {
+    		isActive: true
+      }
+    },
+    methods:{
+    	 check() {
+    	 	this.isActive = !this.isActive
+       }
     }
   }
 </script>
