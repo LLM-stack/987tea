@@ -155,6 +155,7 @@
       return {
         phone: null,
         number: null,
+        imgNumber: null,
         password: null,
         dialog: null,
         timerCodeMsg: '获取验证码',
@@ -306,7 +307,6 @@
   }
 
   .code a {
-
     width: 7.5rem !important;
   }
 

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container" >
     <header>
       <div class="back" @click="goBack"></div>
       <div class="title">分类</div>
@@ -46,7 +46,7 @@
     },
     data() {
       return {
-        classIndex: '',        
+        classIndex: '',
         classList:[],
         productList:[]
       }

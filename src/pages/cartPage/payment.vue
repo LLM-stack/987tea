@@ -158,10 +158,20 @@
      //支付类型选择
      checkType(val){
         this.payType=val;
+         this.axios({
+           url: this.url + '/api/Order/OncePayment',
+           method: 'post',
+           data:{orderId:this.$route.params.orderID,payType:this.payType,addressId:this.defaultAddress.AdressId},
+           headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
+         }).then((res)=>{
+           if (res.data.Code == 200) {
+             this.alipay=res.data.ExData;
+           }
+         })
      },
      //提交订单支付
      oncePayment(){
-     	alert(1)
+
        this.axios({
         url: this.url + '/api/Order/OncePayment',
         method: 'post',
@@ -171,7 +181,7 @@
           if (res.data.Code == 200) {
              this.alipay=res.data.ExData;
              if(!!this.alipay){
-                document.forms['alipaysubmit'].submit();
+               document.forms['alipaysubmit'].submit();
              }
             }else {
               Toast(res.data.Data);
