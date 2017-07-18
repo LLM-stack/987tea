@@ -39,7 +39,7 @@
           <div>共计 <span class="lm-text-red">{{ totalMoney | formatMoney }}</span></div>
         </div>
       </div>
-      
+
         <div class="tobuy" @click="addOrder">立即购买</div>
     </div>
 
@@ -76,20 +76,20 @@
           this.$set(product, "ischecked", true);
         } else {
           product.ischecked = !product.ischecked;
-        }   
+        }
 
-        let chkCount=0;    
-        this.calcTotalMoney();   
+        let chkCount=0;
+        this.calcTotalMoney();
          this.productlist.forEach(function (item) {
             if (item.ischecked) {
               chkCount++;
             }
-          }); 
+          });
           if(chkCount==this.productlist.length){
             this.allCheck=true;
           } else{
             this.allCheck=false;
-          }     
+          }
       },
       //商品数量变化
       changeNum(product, way) {
@@ -110,21 +110,21 @@
 
           }).then((res)=>{
             if (res.data.Code == 200) {
-               
+
               } else {
                 Toast(res.data.Data);
               }
           }) .catch((err)=>{
-          if(err.response.status==401){             
+          if(err.response.status==401){
               let instance = Toast('还未登录，请先登录');
               setTimeout(() => {
-                instance.close(); 
+                instance.close();
                 this.$router.replace({
                       path: '/login/',
                       query: {redirect: this.$router.currentRoute.fullPath}
                     })
               }, 1000);
-             
+
             }else{
                 Toast('网络请求错误');
             }
@@ -171,16 +171,16 @@
               Toast(res.data.Data);
             }
         }).catch((err)=>{
-          if(err.response.status==401){             
+          if(err.response.status==401){
               let instance = Toast('还未登录，请先登录');
               setTimeout(() => {
-                instance.close(); 
+                instance.close();
                 this.$router.replace({
                       path: '/login/',
                       query: {redirect: this.$router.currentRoute.fullPath}
                     })
               }, 1000);
-             
+
             }else{
                 Toast('网络请求错误');
             }
@@ -203,16 +203,16 @@
                 Toast(res.data.Data);
               }
           }) .catch((err)=>{
-          if(err.response.status==401){             
+          if(err.response.status==401){
               let instance = Toast('还未登录，请先登录');
               setTimeout(() => {
-                instance.close(); 
+                instance.close();
                 this.$router.replace({
                       path: '/login/',
                       query: {redirect: this.$router.currentRoute.fullPath}
                     })
               }, 1000);
-             
+
             }else{
                 Toast('网络请求错误');
             }
@@ -220,7 +220,7 @@
       },
       //提交订单
       addOrder(){
-         let skus=[];      
+         let skus=[];
           this.productlist.forEach(function (item) {
             if (item.ischecked) {
             let sku={
@@ -229,10 +229,10 @@
                     ProductName:item.ShortName,
                     ProductCount:item.Count,
                     ProductSpecPrice:item.SalePrice*item.Count
-                    }                   
+                    }
                     skus.push(sku);
             }
-          });   
+          });
         if(skus.length==0){
           Toast("请选择商品");
         }
@@ -249,38 +249,36 @@
         method: 'post',
         data:{strSc:JSON.stringify(sc)},
         headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
-
-        }).then((res)=>{
+        }).then((res) =>{
           if (res.data.Code == 200) {
             let instance = Toast(res.data.Data);
-            setTimeout(() => {
+            setTimeout(() =>{
               instance.close();
               this.$router.push({ path: '/Payment/'+res.data.ExData})
             }, 1000);
           } else {
             Toast(res.data.Data);
           }
-        }) .catch((err)=>{
-          if(err.response.status==401){             
+        }).catch((err) =>{
+          if(err.response.status==401){
               let instance = Toast('还未登录，请先登录');
               setTimeout(() => {
-                instance.close(); 
+                instance.close();
                 this.$router.replace({
                       path: '/login/',
                       query: {redirect: this.$router.currentRoute.fullPath}
                     })
-              }, 1000);
-             
-            }else{
+              }, 1000);}
+              else{
                 Toast('网络请求错误');
             }
         });
       }
     },
     mounted: function () {
-      this.$nextTick(function () {        
+      this.$nextTick(function () {
         this.getCarInfo();
-        
+
       })
     }
   }

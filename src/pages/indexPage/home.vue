@@ -71,27 +71,27 @@
       <div class="title flex-alig-center">
         人气热卖 <span></span>
       </div>
-      <router-link :to="{path:'/OnSale'}">
-        <div class="box-block box-block-one">
+      <!--<router-link :to="{path:'/OnSale'}">-->
+        <div class="box-block box-block-one" @click="chkDetail('46436dd188d54e8993427c364099a66d')">
           <div class="box-block-title">折扣好茶推荐</div>
           <div class="box-block-time"><span>{{hour}}</span>：<span>{{minute}}</span>：<span>{{second}}</span></div>
           <!--<div class="rmtime">下一场19:00开始</div>-->
         </div>
-      </router-link>
-      <div class="flex-between">
+      <!--</router-link>-->
+      <div class="flex-between" @click="chkDetail('0c41ebacf33448488c006ca55b5f0b76')">
         <div class="box-block box-block-two">
           <div class="xl-title">2017早春碧螺春</div>
           <div class="buy_one">99元买一送一</div>
           <div class="hot"></div>
         </div>
-        <div class="box-block-four">
+        <div class="box-block-four" @click="chkDetail('1fe433212fd240d998abc63de01bcd37')">
           <div class="box-block box-block-three">
-            <div class="xl-title">2017白瓷系列</div>
-            <div class="buy_one">99元买一送一</div>
+            <div class="xl-title">2017手工紫砂壶</div>
+            <div class="buy_one">99元</div>
           </div>
-          <div class="box-block box-block-five">
-            <div class="xl-title">2017手绘茶具系列</div>
-            <div class="buy_one">369元买一送一</div>
+          <div class="box-block box-block-five" @click="chkDetail('cb77b03361744feb89c21b5abf03a576')">
+            <div class="xl-title">2017西施壶·紫砂壶</div>
+            <div class="buy_one">298元</div>
           </div>
         </div>
       </div>
@@ -137,7 +137,7 @@
             <div class="mode-dp">{{ item.SaleComment }}</div>
             <div class="mode-title">{{ item.Name }}</div>
             <div class="mode-price ">
-              <span class="lm-text-red">￥{{ item.Price }}元</span>
+              <span class="lm-text-red">￥{{ item.SalePrice }}元</span>
               <span class="mode-btn" :to="{path:'/ProductDetails/'+item.ProductId}">立即购买</span>
             </div>
           </router-link>
@@ -157,7 +157,7 @@
           <div class="mode-dp">{{ item.SaleComment }}</div>
           <div class="mode-title">{{ item.Name }}</div>
           <div class="mode-price">
-            <span class="lm-text-red">￥{{ item.Price }}元</span>
+            <span class="lm-text-red">￥{{ item.SalePrice }}元</span>
             <span class="mode-btn" :to="{path:'/ProductDetails/'+item.ProductId}">立即购买</span>
           </div>
           </router-link>
@@ -246,13 +246,15 @@
                }else{
                    return `0${time}`
                }
+           },
+           chkDetail(val){
+             this.$router.push({path: '/ProductDetails/'+val})
            }
 
     },
     created:function(){
        this.getOwnTea();
        this.getGiftsTea();
-       localStorage.setItem("lut", '');
     }
   }
 </script>

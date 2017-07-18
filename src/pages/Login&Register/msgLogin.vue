@@ -9,11 +9,23 @@
       </div>
       <div class="msg-login-box">
         <mt-field placeholder="请输入手机号" type="tel" v-model="phone"></mt-field>
+
+
+        <div class="code">
+          <mt-field placeholder="请输入验证码" type="number" v-model="imgNumber">
+          </mt-field>
+          <div class="seconding">
+            <img src="../../assets/images/noimg.png" />
+          </div>
+        </div>
+
         <div class="code">
           <mt-field placeholder="请输入验证码" type="number" v-model="number">
           </mt-field>
           <div :class="fetchCodeMsg?'seconds':'seconding'"   @click="sendCode">{{timerCodeMsg}}</div>
         </div>
+
+
         <div class="msg-login-btn" @click="smsLogin">登录</div>
         <div class="methods">
           <div class="m-pswd">
@@ -49,6 +61,7 @@
       return {
         phone: null,
         number: null,
+        imgNumber: null,
         timerCodeMsg:'获取验证码',
         fetchCodeMsg:false
       }
@@ -122,11 +135,11 @@
               let instance = Toast(res.data.Data);
               setTimeout(() => {
                 instance.close();
-                //TODO:登录跳转从那个页面来 回那个页面还没做
-                let url=this.$route.params.s_url;
-                console.log(this.$route.params.s_url);
-                console.log(url);
-                this.$router.push({ path: '/' })
+                 if(this.$route.query.redirect){
+                  this.$router.push({path: decodeURIComponent(this.$route.query.redirect)});
+                }else{
+                  this.$router.push({path: '/'});
+                }
               }, 1000);
 
             }else{
@@ -200,6 +213,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    font-size: 0.55rem;
   }
   .code .seconds{
     height: 2.1rem;

@@ -11,7 +11,7 @@
 
 
 
-    <Mfooter :myCenterCurrent=true></Mfooter>
+    <Mfooter :myCenterCurrent='true'></Mfooter>
 
   </div>
 </template>

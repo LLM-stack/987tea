@@ -9,11 +9,11 @@
     <div class="title">
       <div>{{product.Name}}</div>
       <div class="lm-text-grey">{{product.SaleComment}}</div>
-      <div class="lm-text-red">￥99 <span class="old-price lm-text-grey ">￥{{product.Price}}</span></div>
+      <div class="lm-text-red">￥{{product.SalePrice}} <span class="old-price lm-text-grey ">￥{{product.Price}}</span></div>
     </div>
     <div class="service">
       <div>
-        茶币&nbsp;&nbsp;&nbsp;买就赠送<span class="lm-text-red">50</span>茶币
+        茶币&nbsp;&nbsp;&nbsp;买就赠送<span class="lm-text-red">{{product.SalePrice | teaB}}</span>茶币
       </div>
       <div>
         <div class="fw">服务</div>
@@ -163,6 +163,11 @@
         checkIndex:-1,
         isCar:0
       }
+    },
+    filters: {
+        teaB:function (value) {
+            return (Math.floor(value)*0.1);
+        }
     },
     methods: {
       selected(i) {
@@ -406,6 +411,7 @@
         this.getParams();      
         this.getProductEstimates();
         this.isFavourite();
+        console.log("3   "+localStorage.lut)
       })
 
     }

@@ -151,6 +151,8 @@
 
     },
     mounted:function(){
+      console.log("1   "+localStorage.lut)
+     
       this.getUserInfo();
     }
   }

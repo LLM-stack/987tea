@@ -11,6 +11,14 @@
         <mt-field placeholder="请输入手机号" type="tel" v-model="phone"></mt-field>
 
         <div class="code">
+          <mt-field placeholder="请输入验证码" type="number" v-model="imgNumber">
+          </mt-field>
+          <div class="seconding">
+            <img src="../../assets/images/noimg.png" />
+          </div>
+        </div>
+
+        <div class="code">
           <mt-field placeholder="请输入验证码" type="number" v-model="number">
           </mt-field>
           <div :class="fetchCodeMsg?'seconds':'seconding'" @click="sendCode">{{timerCodeMsg}}</div>
@@ -241,18 +249,13 @@
             {
               instance.close();
               this.$router.push({path: '/login'})
-            }
-          ,
-            1000
-          )
-            ;
+            },1000);
 
           } else {
             Toast(res.data.Data);
           }
         }
-      ).
-        catch((err) =>
+      ).catch((err) =>
         {
           Toast('网络请求超时');
         }

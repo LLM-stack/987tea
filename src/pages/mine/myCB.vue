@@ -21,7 +21,7 @@
         <div class="tab" :class="{active:!isActive}" @click="check">支出</div>
       </div>
 
-      
+
       <Mfooter :myCenterCurrent=true></Mfooter>
     </div>
 </template>

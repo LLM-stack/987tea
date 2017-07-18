@@ -65,7 +65,7 @@
           <span class="lm-text-red">￥{{order.TotalPrice}}</span>
         </div>
       </div>
-      <div class="hide" v-html="alipay"></div> 
+      <div class="hide" v-html="alipay"></div>
       <div class="pay">
         <div>
           <div>共选择 <span class="lm-text-red">{{oederDetails.length}}</span>件商品</div>
@@ -73,9 +73,9 @@
         </div>
         <div class="topay" @click="oncePayment">立即付款</div>
       </div>
-      
-    </div>   
-    
+
+    </div>
+
 </template>
 
 <script>
@@ -110,16 +110,16 @@
               Toast(res.data.Data);
             }
         }) .catch((err)=>{
-          if(err.response.status==401){             
+          if(err.response.status==401){
               let instance = Toast('还未登录，请先登录');
               setTimeout(() => {
-                instance.close(); 
+                instance.close();
                 this.$router.replace({
                       path: '/login/',
                       query: {redirect: this.$router.currentRoute.fullPath}
                     })
               }, 1000);
-             
+
             }else{
                 Toast('网络请求错误');
             }
@@ -133,24 +133,23 @@
         data:{orderId:this.$route.params.orderID},
         headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
 
-        }).then((res)=>{
+        }).then((res) =>{
           if (res.data.Code == 200) {
             this.order=res.data.ExData.orderModel;
               this.oederDetails = res.data.ExData.orderDetailList;
-            } else {
+            }else {
               Toast(res.data.Data);
             }
-        }) .catch((err)=>{
-          if(err.response.status==401){             
+        }).catch((err)=> {
+          if(err.response.status==401){
               let instance = Toast('还未登录，请先登录');
-              setTimeout(() => {
-                instance.close(); 
+              setTimeout(()=> {
+                instance.close();
                 this.$router.replace({
                       path: '/login/',
                       query: {redirect: this.$router.currentRoute.fullPath}
                     })
               }, 1000);
-             
             }else{
                 Toast('网络请求错误');
             }
@@ -162,33 +161,31 @@
      },
      //提交订单支付
      oncePayment(){
+     	alert(1)
        this.axios({
         url: this.url + '/api/Order/OncePayment',
         method: 'post',
         data:{orderId:this.$route.params.orderID,payType:this.payType,addressId:this.defaultAddress.AdressId},
         headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
-
         }).then((res)=>{
           if (res.data.Code == 200) {
              this.alipay=res.data.ExData;
              if(!!this.alipay){
                 document.forms['alipaysubmit'].submit();
              }
-             
-            } else {
+            }else {
               Toast(res.data.Data);
             }
-        }) .catch((err)=>{
-          if(err.response.status==401){             
+        }).catch((err)=>{
+          if(err.response.status==401){
               let instance = Toast('还未登录，请先登录');
               setTimeout(() => {
-                instance.close(); 
+                instance.close();
                 this.$router.replace({
                       path: '/login/',
                       query: {redirect: this.$router.currentRoute.fullPath}
                     })
-              }, 1000);
-             
+              }, 1000)
             }else{
                 Toast('网络请求错误');
             }

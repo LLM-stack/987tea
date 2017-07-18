@@ -193,6 +193,11 @@ export default {
     height: 8rem;
   }
 
+  .mode-list .mode-img > img{
+    border-top-left-radius: 0.2rem;
+    border-top-right-radius: 0.2rem;
+  }
+
   .mode-list .mode-dp {
     padding: 0.2rem 0.3rem;
     color: #8F7747;
