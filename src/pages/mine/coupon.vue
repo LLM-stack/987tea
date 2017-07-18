@@ -11,7 +11,7 @@
                 <span class="font-red">￥</span>
                 <span class="font-red coupon-num">15</span>
               </div>
-              <div class="lm-margin-t-sm">
+              <div>
                 满49可用
               </div>
             </div>
@@ -32,7 +32,7 @@
                 <span class="font-red">￥</span>
                 <span class="font-red coupon-num">15</span>
               </div>
-              <div class="lm-margin-t-sm">
+              <div>
                 满49可用
               </div>
             </div>
@@ -91,7 +91,7 @@
    .coupon .coupon-box{
     display: flex;
     align-items: center;
-    height: 3.5rem;
+    height: 4rem;
   }
    .coupon .coupon-box > div:first-child{
     text-align: center;
@@ -107,14 +107,14 @@
     font-weight: 600;
   }
   .coupon-box .coupon-range{
-    margin-top: 0.8rem;
+    margin-top: 0.4rem;
     color: #A4A4A4;
   }
   .coupon .coupon-time{
     font-size: 0.55rem;
     width: 10.4rem;
     height: 1rem;
-    top: 3.8rem;
+    top: 3.4rem;
    color: #A4A4A4;
     position: absolute;
   }

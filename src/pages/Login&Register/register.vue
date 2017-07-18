@@ -271,7 +271,7 @@
 
 <style scoped>
   .cont {
-    height: 100vh;
+    padding-bottom: 1rem;
     background-color: #ffffff;
   }
 

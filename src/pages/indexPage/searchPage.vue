@@ -138,6 +138,7 @@
 
   .search input {
     width: 9rem;
+    font-size: 0.65rem;
     border: none;
   }
 
