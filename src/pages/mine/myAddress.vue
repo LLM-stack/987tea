@@ -4,7 +4,7 @@
         <div slot="title">地址管理</div>
       </Mheader>
 
-      <div class="address" v-for="(item,index) in userAllAddress" >
+      <div class="address" :class="{checked:item.IsDefault==0}" v-for="(item,index) in userAllAddress" >
         <div>
           <div class="name">收货地址</div>
           <div class="mr" v-if="item.IsDefault==0">默认</div>
@@ -14,8 +14,8 @@
           <div class="add">{{item.Province+item.City+item.Area+item.Detail}}</div>
         </div>
         <div>
-          <router-link :to="{path:'/EditAddress/'+item.AdressId}">        
-            <img src="../../assets/images/myInfo/edit.png" />        
+          <router-link :to="{path:'/EditAddress/'+item.AdressId}">
+            <img src="../../assets/images/myInfo/edit.png" />
           </router-link>
         </div>
       </div>
@@ -61,23 +61,23 @@
               Toast(res.data.Data);
             }
         }) .catch((err)=>{
-          if(err.response.status==401){             
+          if(err.response.status==401){
               let instance = Toast('还未登录，请先登录');
               setTimeout(() => {
-                instance.close(); 
+                instance.close();
                 this.$router.replace({
                       path: '/login/',
                       query: {redirect: this.$router.currentRoute.fullPath}
                     })
               }, 1000);
-             
+
             }else{
                 Toast('网络请求错误');
             }
         });
       },
       //选中收货地址
-      checkAddress(index){        
+      checkAddress(index){
         this.$store.state.receiveAddress=this.userAllAddress[index];
         this.$router.go(-1);
       }
@@ -94,14 +94,17 @@
     display: flex;
     align-items: center;
     padding: 0.5rem 0;
+    border-left: 4px solid #fff;
     background-color: #ffffff;
+  }
+  .address.checked{
+    border-left: 4px solid #B4282D;
   }
   .address+.address{
     border-top: 1px solid #eeeeee;
   }
   .address > div:first-child{
     padding-left: 0.5rem;
-    border-left: 4px solid #B4282D;
     width: 4rem;
   }
   .address > div:first-child .name{

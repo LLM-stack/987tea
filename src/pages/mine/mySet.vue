@@ -32,12 +32,16 @@
       </div>
     </div>
     <div class="info">
+      <router-link :to="{path:'/MyAddress'}">
       <div class="info-list arrow">
         收货地址 <img src="../../assets/images/arrow.png" />
       </div>
+      </router-link>
+      <router-link :to="{path:'/ResetPassword'}">
       <div class="info-list arrow">
         改密码 <img src="../../assets/images/arrow.png" />
       </div>
+      </router-link>
     </div>
     <div class="info">
       <router-link :to="{path:'/preferences/选择你喜欢的茶/1'}">
@@ -56,7 +60,7 @@
       </div>
       </router-link>
     </div>
-    <div class="info">
+    <div class="info" @click="signOut">
       <div class="info-list lm-text-grey " style="justify-content: center">
         退出登录
       </div>
@@ -103,8 +107,11 @@
     methods: {
       openPicker() {
         this.$refs.picker.open();
+      },
+      signOut() {
+        localStorage.clear();
+        this.$router.push({path: '/Login'});
       }
-
     }
   }
 </script>

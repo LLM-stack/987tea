@@ -2,7 +2,6 @@
   <div class="container">
     <Mheader>
       <div slot="title">{{ this.$route.params.title }}</div>
-      <div slot="info">保存</div>
     </Mheader>
     <div v-if="this.$route.params.id == 1">
       <mt-checklist
