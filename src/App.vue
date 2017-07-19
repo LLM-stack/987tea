@@ -1,13 +1,9 @@
 <template>
   <div id="app">
-      <router-view></router-view>
-
-
-
-
+    <router-view></router-view>
 
     <div class="gotop" v-show="top>700" @click="gotop">
-      <img src="./assets/images/gotop.png" />
+      <img src="./assets/images/gotop.png"/>
     </div>
   </div>
 
@@ -15,31 +11,28 @@
 </template>
 
 <script>
-export default {
-  name: 'app',
-  data(){
-    return {
-      top: ''
-    }
-  },
-  methods:{
-    scrollTop() {
-      this.top = document.body.scrollTop;
+  export default {
+    name: 'app',
+    data() {
+      return {
+        top: ''
+      }
     },
-    gotop(){
-      document.body.scrollTop = 0
+    methods: {
+      scrollTop() {
+        this.top = document.body.scrollTop;
+      },
+      gotop() {
+        document.body.scrollTop = 0
+      }
+    },
+    mounted: function () {
+      this.$nextTick(() => {
+        window.addEventListener('scroll', this.scrollTop)
+      })
     }
-  },
-  mounted: function () {
-    this.$nextTick(() => {
-      this.getProduct();
-      this.getParams();
-      this.getProductEstimates();
-      this.isFavourite();
-    });
-    window.addEventListener('scroll', this.scrollTop)
+
   }
-}
 </script>
 
 <style>
@@ -67,157 +60,204 @@ export default {
     font: inherit;
     vertical-align: baseline;
   }
+
   /* HTML5 display-role reset for older browsers */
   article, aside, details, figcaption, figure,
   footer, header, hgroup, menu, nav, section {
     display: block;
   }
-  *{
+
+  * {
     box-sizing: border-box;
   }
+
   body {
     color: #4C4C4C;
-    background-color:#eee;
+    background-color: #eee;
     font-size: 0.65rem;
-    font-family: "Microsoft YaHei",Roboto,Lato,sans-serif,"Helvetica Neue",Helvetica,Arial,"Hiragino Sans GB","Hiragino Sans GB W3","Microsoft YaHei UI","WenQuanYi Micro Hei",sans-serif;
+    font-family: "Microsoft YaHei", Roboto, Lato, sans-serif, "Helvetica Neue", Helvetica, Arial, "Hiragino Sans GB", "Hiragino Sans GB W3", "Microsoft YaHei UI", "WenQuanYi Micro Hei", sans-serif;
   }
+
   ol, ul {
     list-style: none;
   }
+
   blockquote, q {
     quotes: none;
   }
+
   blockquote:before, blockquote:after,
   q:before, q:after {
     content: '';
     content: none;
   }
+
   table {
     border-collapse: collapse;
     border-spacing: 0;
   }
+
   a {
     color: inherit;
     text-decoration: none;
   }
-  input{
+
+  input {
     outline: none;
   }
-  span{
+
+  span {
     display: inline-block;
   }
-  img{
+
+  img {
     width: 100%;
     height: 100%;
+  }
+  #cnzz_stat_icon_1262960756{
+    width: 0;
+    opacity: 0;
   }
   /*工具样式*/
   .container {
     margin-bottom: 2rem;
   }
-  .containerbig{
+
+  .containerbig {
     margin-bottom: 2.4rem;
   }
-  .lm-text-grey{
-    color: #999!important;
+
+  .lm-text-grey {
+    color: #999 !important;
   }
-  .lm-text-yellow{
-    color: #FFA944!important;
+
+  .lm-text-yellow {
+    color: #FFA944 !important;
   }
-  .lm-text-orange{
-    color: #FF9B81!important;
+
+  .lm-text-orange {
+    color: #FF9B81 !important;
   }
-  .lm-text-purple{
-    color: #bf7afc!important;
+
+  .lm-text-purple {
+    color: #bf7afc !important;
   }
-  .lm-text-red{
-    color: #B4282D!important;
+
+  .lm-text-red {
+    color: #B4282D !important;
   }
-  .lm-font-sm{
+
+  .lm-font-sm {
     font-size: 0.6rem;
   }
-  .lm-font-defult{
+
+  .lm-font-defult {
     font-size: 0.7rem;
   }
-  .lm-margin-t{
+
+  .lm-margin-t {
     margin-top: 0.6rem;
   }
-  .lm-margin-t-sm{
+
+  .lm-margin-t-sm {
     margin-top: 0.4rem;
   }
-  .lm-margin-t-xs{
+
+  .lm-margin-t-xs {
     margin-top: 0.2rem;
   }
-  .lm-margin-b{
+
+  .lm-margin-b {
     margin-bottom: 0.6rem;
   }
-  .lm-margin-b-sm{
+
+  .lm-margin-b-sm {
     margin-bottom: 0.4rem;
   }
-  .lm-margin-b-xs{
+
+  .lm-margin-b-xs {
     margin-bottom: 0.2rem;
   }
-  .lm-margin-r-lg{
+
+  .lm-margin-r-lg {
     margin-right: 0.8rem;
   }
-  .lm-margin-r{
+
+  .lm-margin-r {
     margin-right: 0.6rem;
   }
-  .lm-margin-r-sm{
+
+  .lm-margin-r-sm {
     margin-right: 0.4rem;
   }
-  .lm-margin-r-xs{
+
+  .lm-margin-r-xs {
     margin-right: 0.2rem;
   }
-  .lm-margin-l-xxl{
+
+  .lm-margin-l-xxl {
     margin-left: 2.5rem;
   }
-  .lm-margin-l-lg{
+
+  .lm-margin-l-lg {
     margin-left: 1rem;
   }
-  .lm-margin-l{
+
+  .lm-margin-l {
     margin-left: 0.6rem;
   }
-  .lm-margin-l-sm{
+
+  .lm-margin-l-sm {
     margin-left: 0.4rem;
   }
-  .lm-margin-l-xs{
+
+  .lm-margin-l-xs {
     margin-left: 0.2rem;
   }
+
   /*垂直居中*/
-  .flex-alig-center{
+  .flex-alig-center {
     display: flex;
     align-items: center;
   }
-  .flex-between{
+
+  .flex-between {
     display: flex;
     align-items: center;
     justify-content: space-between;
   }
+
   image[lazy=loading] {
     width: 40px;
     height: 30px;
     margin: auto;
     background-color: #eee;
   }
-  .gotop{
+
+  .gotop {
     bottom: 3rem;
     right: 1rem;
     position: fixed;
     width: 1.5rem;
     height: 1.5rem;
     border-radius: 50%;
-    background-color: rgba(255,255,255,0.4);
+    background-color: rgba(255, 255, 255, 0.4);
   }
 
   /*路由过渡动画*/
 
+  .slide-enter-active, .slide-leave-active {
+    transition: all .5s;
+  }
 
-  .fade-enter-active,.fade-leave-active {
-    transition: all .5s ;
+  .slide-leave {
+    transform: translateX(100%);
   }
-  .fade-enter,.fade-leave {
-    opacity: 0;
+
+  .slide-enter {
+    transform: translateX(-100%);
   }
+
   /*商品列表模块*/
   .mode-box {
     display: flex;
@@ -242,7 +282,7 @@ export default {
     height: 8rem;
   }
 
-  .mode-list .mode-img > img{
+  .mode-list .mode-img > img {
     border-top-left-radius: 0.2rem;
     border-top-right-radius: 0.2rem;
   }
@@ -266,55 +306,64 @@ export default {
     justify-content: space-between;
     padding: 0.3rem;
   }
-  .mode-list .mode-price .cb-price{
+
+  .mode-list .mode-price .cb-price {
     font-size: 0.5rem;
   }
 
   .mode-list .mode-btn {
-    padding:0.05rem 0.1rem;
+    padding: 0.05rem 0.1rem;
     color: #B4282D;
     font-size: 0.5rem;
     border-radius: 0.15rem;
     transition: all 0.2s;
     border: 1px solid #B4282D;
   }
-  .mode-list .mode-btn:active{
+
+  .mode-list .mode-btn:active {
     color: #ffffff;
     background-color: #B4282D;
   }
+
   /*组件样式覆盖*/
-  body .mint-field .mint-cell-wrapper,body  .mint-cell-wrapper{
+  body .mint-field .mint-cell-wrapper, body .mint-cell-wrapper {
     font-size: 0.6rem;
   }
-body .mint-switch-input:checked + .mint-switch-core{
-  border-color: #e20f0f;
-  background-color: #e20f0f;
-}
+
+  body .mint-switch-input:checked + .mint-switch-core {
+    border-color: #e20f0f;
+    background-color: #e20f0f;
+  }
+
   body .cont .mint-field .mint-cell-wrapper {
     padding: 0;
-    background-image:none;
+    background-image: none;
     border: 1px solid #d9d9d9;
     border-radius: 0.2rem;
     margin-top: 0.8rem;
     padding: 0 0.4rem;
   }
+
   .mint-checklist-title,
-  .mint-radiolist-title{
+  .mint-radiolist-title {
     margin: 0;
   }
+
   .mint-radio-input:checked + .mint-radio-core,
-  .mint-checkbox-input:checked + .mint-checkbox-core{
+  .mint-checkbox-input:checked + .mint-checkbox-core {
     border-color: #B4282D;
     background-color: #B4282D;
   }
+
   .mint-radio-input:checked + .mint-radio-core::after {
     border-color: #fff;
-    background-color: rgba(0,0,0,0);
+    background-color: rgba(0, 0, 0, 0);
     -webkit-transform: rotate(45deg) scale(1);
     transform: rotate(45deg) scale(1);
   }
+
   .mint-radio-core::after {
-    border-radius:0;
+    border-radius: 0;
     border: 2px solid transparent;
     border-left: 0;
     border-top: 0;
@@ -331,25 +380,30 @@ body .mint-switch-input:checked + .mint-switch-core{
     transition: transform .2s;
     transition: transform .2s, -webkit-transform .2s;
   }
-  .sex .mint-cell{
+
+  .sex .mint-cell {
     width: 5.5rem;
     min-height: 1rem;
     background-image: none;
   }
-  .sex .mint-cell-wrapper{
+
+  .sex .mint-cell-wrapper {
     background-image: none;
   }
-  .sex .mint-radiolist{
+
+  .sex .mint-radiolist {
     display: flex;
     align-items: center;
     justify-content: space-between;
   }
+
   /*弹窗*/
-  .primary-btn{
+  .primary-btn {
     color: #fff;
     background-color: #B4282D;
   }
-  .primary-btn:active{
+
+  .primary-btn:active {
     color: #B4282D;
   }
 </style>

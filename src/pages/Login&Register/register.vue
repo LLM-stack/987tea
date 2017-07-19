@@ -318,6 +318,7 @@
 
 <style scoped>
   .cont {
+    height: 100vh;
     padding-bottom: 1rem;
     background-color: #ffffff;
   }
@@ -328,7 +329,7 @@
     align-items: center;
     justify-content: space-between;
   }
-  
+
   .code .seconds {
     height: 2.1rem;
     width: 5.5rem;

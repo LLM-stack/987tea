@@ -3,8 +3,8 @@
       <Mheader :show='true'>
         <div slot="title">提交订单</div>
       </Mheader>
-      <router-link :to="{path:'/MyAddress'}">
-        <div class="address lm-margin-b-sm">
+      <!--<router-link :to="{path:'/MyAddress/pay'}">-->
+        <div class="address lm-margin-b-sm" @click="selectAddress">
         <div>
           <div class="name">{{defaultAddress.ConsigneeName}}</div>
           <div class="mr" v-if="defaultAddress.IsDefault==0">默认</div>
@@ -20,21 +20,21 @@
           <img src="../../assets/images/arrow.png"/>
         </div>
       </div>
-      </router-link>
+      <!--</router-link>-->
       <div class="pay-modes lm-margin-b-sm">
         <div>支付方式：</div>
         <div class="pay-mode lm-margin-t-sm">
-          <div  :class="payType==0?'active':''" @click="checkType(0)">货到付款</div>
-          <div :class="payType==2?'active':''" @click="checkType(2)">支付宝</div>
+          <div  :class="{active:payType==0}" @click="checkType(0)">货到付款</div>
+          <div :class="{active:payType==2}" @click="checkType(2)">支付宝</div>
           <!--<div :class="payType==1?'active':''" @click="checkType(1)">微信支付</div>-->
         </div>
       </div>
-      <div class="product lm-margin-b-sm" v-for="(item,index) in oederDetails">
-        <img class="product-img" :src="item.HeadImg" />
+      <div class="product lm-margin-b-sm" v-for="(item,index) in orderDetails">
+        <img class="product-img" :src="item.ProductImg" />
         <div class="product-details">
           <div>{{item.ProductName}}</div>
           <div>
-            <span>￥{{item.Price}}</span>
+            <span>￥{{item.ProductSpecPrice}}</span>
             <span>x{{item.ProductCount}}</span>
           </div>
         </div>
@@ -49,12 +49,12 @@
         <div class="lm-margin-b-sm">订单明细：</div>
         <div class="details">
           <span>订单总价</span>
-          <span>￥{{order.TotalPrice}}</span>
+          <span>￥{{orderTotal}}</span>
         </div>
         <!--TODO:运费还未计算到总价格中去-->
         <div class="details">
           <span>运费</span>
-          <span>0</span>
+          <span>{{freight}}</span>
         </div>
         <!--<div class="details">
           <span>优惠券</span>
@@ -62,14 +62,14 @@
         </div>-->
         <div class="details">
           <span>总计</span>
-          <span class="lm-text-red">￥{{order.TotalPrice}}</span>
+          <span class="lm-text-red">￥{{total}}</span>
         </div>
       </div>
       <div class="hide" v-html="alipay"></div>
       <div class="pay">
         <div>
-          <div>共选择 <span class="lm-text-red">{{oederDetails.length}}</span>件商品</div>
-          <div>总金额：<span class="lm-text-red">￥{{order.TotalPrice}}</span> 元</div>
+          <div>共选择 <span class="lm-text-red">{{ProductCount}}</span>件商品</div>
+          <div>总金额：<span class="lm-text-red">￥{{total}}</span> 元</div>
         </div>
         <div class="topay" @click="oncePayment">立即付款</div>
       </div>
@@ -89,10 +89,23 @@
     data() {
       return {
         defaultAddress:'',
-        order:'',
-        oederDetails:[],
+        ProductCount:'',
+        orderDetails:[],
+        freight:0,
         payType:0,
         alipay:''
+      }
+    },
+    computed: {
+      orderTotal(){
+        let t=0;
+        this.orderDetails.forEach(function (item) {
+           t+=parseInt(item.ProductCount)*parseFloat(item.ProductSpecPrice);
+        });
+        return t;
+      },
+      total(){
+        return  parseFloat(this.orderTotal)+parseFloat(this.freight);
       }
     },
    methods:{
@@ -125,56 +138,36 @@
             }
         });
      },
-     //获取订单详情
-     getOrderDetail(){
-       this.axios({
-        url: this.url + '/api/Order/OrderDetailByProductOrderId',
-        method: 'post',
-        data:{orderId:this.$route.params.orderID},
-        headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
 
-        }).then((res) =>{
-          if (res.data.Code == 200) {
-            this.order=res.data.ExData.orderModel;
-              this.oederDetails = res.data.ExData.orderDetailList;
-            }else {
-              Toast(res.data.Data);
-            }
-        }).catch((err)=> {
-          if(err.response.status==401){
-              let instance = Toast('还未登录，请先登录');
-              setTimeout(()=> {
-                instance.close();
-                this.$router.replace({
-                      path: '/login/',
-                      query: {redirect: this.$router.currentRoute.fullPath}
-                    })
-              }, 1000);
-            }else{
-                Toast('网络请求错误');
-            }
-        });
-     },
      //支付类型选择
      checkType(val){
         this.payType=val;
-         this.axios({
-           url: this.url + '/api/Order/OncePayment',
-           method: 'post',
-           data:{orderId:this.$route.params.orderID,payType:this.payType,addressId:this.defaultAddress.AdressId},
-           headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
-         }).then((res)=>{
-           if (res.data.Code == 200) {
-             this.alipay=res.data.ExData;
-           }
-         })
+        //  this.axios({
+        //    url: this.url + '/api/Order/OncePayment',
+        //    method: 'post',
+        //    data:{orderId:this.$route.params.orderID,payType:this.payType,addressId:this.defaultAddress.AdressId},
+        //    headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
+        //  }).then((res)=>{
+        //    if (res.data.Code == 200) {
+        //      this.alipay=res.data.ExData;
+        //    }
+        //  })
      },
      //提交订单支付
      oncePayment(){
+       //定义参数
+        var sc={
+          TotalPrice:this.total,
+          PayType:this.payType,
+          ProductCount:this.ProductCount,
+          OrderFrom:2,//订单来源  2标识商城
+          AddressId:this.defaultAddress.AdressId,
+          ProductSkus:this.orderDetails
+        }
        this.axios({
         url: this.url + '/api/Order/OncePayment',
         method: 'post',
-        data:{orderId:this.$route.params.orderID,payType:this.payType,addressId:this.defaultAddress.AdressId},
+        data:{strSc:JSON.stringify(sc)},
         headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
         }).then((res)=>{
           if (res.data.Code == 200) {
@@ -183,7 +176,10 @@
              }
              if(this.payType==2){
                this.alipay=res.data.ExData;
-               document.forms['alipaysubmit'].submit();
+               //setTimeout(document.forms['alipaysubmit'].submit(),500);
+               //document.forms['alipaysubmit'].submit();
+               this.onSubmit();
+               localStorage.removeItem("cars");
              }
             }else {
               Toast(res.data.Data);
@@ -202,6 +198,12 @@
                 Toast('网络请求错误');
             }
         });
+     },
+     onSubmit(){
+       document.forms['alipaysubmit'].submit();
+     },
+     selectAddress() {
+       this.$router.push({ path: '/MyAddress/', query: { from: 'pay'}})
      }
    },
    mounted:function(){
@@ -211,9 +213,11 @@
      }else{
        this.defaultAddress=this.$store.state.receiveAddress;
      }
-     this.getOrderDetail();
+     if(!!localStorage.cars){
+       this.orderDetails=JSON.parse(localStorage.cars);
+       this.ProductCount=this.orderDetails.length;
+     }
    }
-
   }
 </script>
 

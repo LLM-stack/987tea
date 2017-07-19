@@ -5,8 +5,8 @@
     </Mheader>
 
     <div class="box">
-      <textarea class="box-text" placeholder="在这里写下您给我们的意见个建议！十分感谢您对我们的支持" maxlength="300" ></textarea>
-      <div class="btn">提交</div>
+      <textarea class="box-text" placeholder="在这里写下您给我们的意见或建议！十分感谢您对我们的支持。" maxlength="300" v-model="content"></textarea>
+      <div class="btn" @click="submit">提交</div>
     </div>
 
 
@@ -19,12 +19,60 @@
 <script>
   import Mheader from '../../components/Mheader'
   import Mfooter from '../../components/Mfooter'
-
+  import {Toast} from 'mint-ui'
   export default {
     components: {
       Mheader,
       Mfooter
-    }
+    },data(){
+    	return {
+        content:null
+      }
+    },
+    methods: {
+        
+        submitSuggest(){
+          if(!!!this.content){
+            Toast('请填写您的意见或建议后再提交！');
+            return;
+          }
+          let text = {Content:this.content};
+          this.axios({
+            url:this.url + '/api/Suggest/saveSuggestion',
+            method:'post',
+            data:text,
+            headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
+          }).then((res)=>{
+            if (res.data.Code == 200) {
+              let instance = Toast(res.data.Data);
+              setTimeout(() => {
+                instance.close();
+                this.$router.replace({ path: '/MyInfo/'});
+              }, 1000);
+            } else {
+              Toast(res.data.Data);
+            }
+          }).catch((err)=>{
+          if(err.response.status==401){
+              let instance = Toast('还未登录，请先登录');
+              setTimeout(() => {
+                instance.close(); 
+                this.$router.replace({
+                      path: '/login/',
+                      query: {redirect: this.$router.currentRoute.fullPath}
+                    })
+              }, 1000);
+             
+            }else{
+                Toast('网络请求错误');
+            }
+        });
+        },
+
+        submit(){
+          this.submitSuggest()
+        }
+    },
   }
 </script>
 

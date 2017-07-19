@@ -248,7 +248,6 @@
                }
            },
            chkDetail(val){
-             console.log(val);
              this.$router.push({path: '/ProductDetails/'+val})
            }
 

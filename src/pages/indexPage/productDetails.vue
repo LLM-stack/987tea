@@ -164,20 +164,17 @@
       }
     },
   methods: {
-    selected(i)
-    {
+    selected(i){
       this.tabIndex = i
     },
-    choice(val)
-    {
+    choice(val){
       if (this.isCar == 0) {//首次点击加载sku信息
         this.getProductSKU();
       }
       this.isCar = val;
       this.choiceShow = !this.choiceShow
     },
-    getProduct()
-    {//获取商品信息
+    getProduct(){//获取商品信息
       this.axios.post(this.url + '/api/Product/ProductDetail', {productId: this.$route.params.productID}).then((res) => {
         if (res.data.Code == 200) {
           this.product = res.data.Data;
@@ -192,8 +189,7 @@
         Toast('网络请求超时');
       })
     },
-    getProductSKU()
-    {//获取商品SKU
+    getProductSKU(){//获取商品SKU
       this.axios.post(this.url + '/api/Product/ProductSpecs', {productId: this.$route.params.productID}).then((res) => {
         if (res.data.Code == 200) {
           this.productSpec = res.data.Data;
@@ -212,8 +208,7 @@
         Toast('网络请求超时');
       })
     },
-    getParams()
-    {//获取商品参数
+    getParams(){//获取商品参数
       this.axios.post(this.url + '/api/Product/ProductParameters', {productId: this.$route.params.productID}).then((res) => {
         if (res.data.Code == 200) {
           this.productParams = res.data.Data;
@@ -232,7 +227,6 @@
           method: 'post',
           data: {ProductId: this.$route.params.productID},
           headers: {'Authorization': 'BasicAuth ' + localStorage.lut}
-
         }).then((res) => {
           if (res.data.Code == 200) {
             this.sc = !this.sc
@@ -339,59 +333,32 @@
           }
         });
       }
-      if (this.isCar == 2) {
-        let sc = {
-          TotalPrice: this.specPrice * this.productNum,
-          PayType: -1,//支付类型 -1 标识全部
-          ProductCount: this.productNum,
-          OrderFrom: 2,//订单来源  2标识商城
-          ProductSkus: [{
-            ShoppingCarId: 0,
-            ProductSpecId: this.specId,
-            ProductName: this.specName,
-            ProductCount: this.productNum,
-            ProductSpecPrice: this.specPrice * this.productNum
-          }]
-        }
-        //加入订单
-        this.axios({
-          url: this.url + '/api/Order/AddOrder',
-          method: 'post',
-          data: {strSc: JSON.stringify(sc)},
-          headers: {'Authorization': 'BasicAuth ' + localStorage.lut}
-
-        }).then((res) => {
-          if (res.data.Code == 200) {
-            this.choiceShow = !this.choiceShow
-            let instance = Toast(res.data.Data);
-            setTimeout(() => {
-              instance.close();
-              this.$router.push({path: '/Payment/' + res.data.ExData})
-            }, 1000);
-          } else {
-            Toast(res.data.Data);
-          }
-        }).catch((err) => {
-          if (err.response.status == 401) {
+        if(this.isCar==2){
+          let sku=[{
+              ShoppingCarId:0,
+              ProductSpecId:this.specId,
+              ProductName:this.specName,
+              ProductCount:this.productNum,
+              ProductImg:this.specImg,
+              ProductSpecPrice:this.specPrice
+            }]
+          if(!!localStorage.lut){
+            localStorage.setItem("cars", JSON.stringify(sku));
+            this.$router.push({ path: '/Payment'})
+          }else{
             let instance = Toast('还未登录，请先登录');
-            setTimeout(() => {
-              instance.close();
-              this.$router.replace({
-                path: '/login/',
-                query: {redirect: this.$router.currentRoute.fullPath}
-              })
-            }, 1000);
-
-          } else {
-            Toast('网络请求错误');
+              setTimeout(() => {
+                instance.close();
+                this.$router.replace({
+                      path: '/login/',
+                      query: {redirect: this.$router.currentRoute.fullPath}
+                    })
+              }, 1000);
           }
-        });
-      }
-    },
-    isFavourite()
-    {//该商品是否收藏了
-      console.log(localStorage.lut)
 
+        }
+      },
+      isFavourite(){//该商品是否收藏了
       if (!!localStorage.lut) {
         this.axios({
           url: this.url + '/api/Product/IsFavourite',

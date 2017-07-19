@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <Mheader>
       <div slot="title">{{ this.$route.params.title }}</div>
     </Mheader>
@@ -14,10 +14,12 @@
         <span slot="number">{{ item.OrderNo }}</span>
         <span slot="state">{{ item.OrderStateStr }}</span>
         <span slot="img"><img :src="item.HeadImg" alt=""></span>
-        <span slot="name">{{ item.ProductName }}</span>
-        <span slot="count">{{ item.ProductCount}}</span>
-        <span slot="price">{{ item.TotalPrice }}</span>
-        <span slot="time">{{ item.CreateTime }}</span>
+        <span class="product-name" slot="name">{{ item.ProductName }}</span>
+        <span class="lm-text-grey lm-margin-t-sm" slot="count">数量：{{ item.ProductCount}}</span>
+        <span class="lm-text-red" slot="price">{{ item.TotalPrice }}</span>
+        <span slot="cancel" v-if="tabNum == 1">取消订单</span>
+        <span slot="btn">去付款</span>
+        <span slot="time">{{ item.CreateTime | removeT }}</span>
       </MorderBox>
     </div>
 
@@ -39,6 +41,7 @@
     },
     data() {
       return {
+        tabNum:this.$route.params.tabNum,
         number: 12313,
         price: 500,
         typeId: 1,
@@ -71,7 +74,9 @@
       }
     },
      filters: {
-     
+      removeT(val){
+        return val.replace('T',' ');
+      }
     },
     methods: {
       tabActive(i) {
@@ -79,6 +84,7 @@
           array[index].isactive = false;
         });
         this.tabList[i].isactive = true;
+        this.tabNum = i;
         this.typeId = i + 1;
         this.pageIndex = 1;
         this.orderList = [];
@@ -123,7 +129,7 @@
           }
         });
       },
-      
+
     },
     created() {
       let index = this.$route.params.tabNum
@@ -154,5 +160,12 @@
 
   .tabs .active {
     border-bottom: 3px solid #B4282D;
+  }
+
+  .product-name{
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 </style>

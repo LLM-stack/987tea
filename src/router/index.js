@@ -64,7 +64,7 @@ export default new Router({
       path: '/Cart',
       component: Cart
     }, {
-      path: '/Payment/:orderID',
+      path: '/Payment',
       component: Payment
     }, {
       path: '/PaymentCompleted',

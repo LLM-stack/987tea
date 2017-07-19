@@ -14,13 +14,13 @@
           <div>
             <div class="product-name">
               <router-link :to="{path:'/ProductDetails/'+item.ProductId}">
-              {{ item.ShortName }}
+                {{ item.ShortName }}
               </router-link>
             </div>
             <div class="product-delete" @click="deleteProduct(item.ShoppingCarId)"></div>
           </div>
           <div class="product-price">
-            <div>{{ item.SalePrice | formatMoney(item.Count) }}</div>
+            <div>{{ item.SalePrice }}</div>
             <div class="product-num">
               <span @click="changeNum(item,-1)">-</span>
               <input type="text" v-model="item.Count">
@@ -31,16 +31,23 @@
       </div>
     </div>
 
+
+    <div class="cartno" v-if="productlist.length == 0">
+      <router-link :to="{path:'/'}">
+        购物车空空如也，去逛逛吧！>>
+      </router-link>
+    </div>
+
     <div class="settlement">
       <div>
         <div class="product-select" :class="{checked:allCheck}" @click="checkAll(!allCheck)"></div>
         <div>
           <div>共选择 <span class="lm-text-red">{{ totalNum }}</span> 件商品</div>
-          <div>共计 <span class="lm-text-red">{{ totalMoney | formatMoney }}</span></div>
+          <div>共计 <span class="lm-text-red">{{ total }}</span></div>
         </div>
       </div>
 
-        <div class="tobuy" @click="addOrder">立即购买</div>
+      <div class="tobuy" @click="addOrder">立即购买</div>
     </div>
 
 
@@ -50,6 +57,7 @@
 <script>
   import Mheader from '../../components/Mheader'
   import {Toast} from 'mint-ui'
+  import { MessageBox } from 'mint-ui'
 
   export default {
     components: {
@@ -59,7 +67,7 @@
       return {
         totalMoney: 0,
         totalNum: 0,
-        allCheck:false,
+        allCheck: false,
         productlist: []
       }
     },
@@ -69,27 +77,38 @@
         return "￥ " + (value * quentity).toFixed(2) + " 元";
       }
     },
+    computed: {
+      total() {
+        let t = 0;
+        this.productlist.forEach(function (item) {
+          if (item.ischecked) {
+            t += parseInt(item.Count) * parseFloat(item.SalePrice);
+          }
+        });
+        return "￥ " + t.toFixed(2) + " 元";
+      }
+    },
     methods: {
       //单个选中事件
-      check(product){
+      check(product) {
         if (typeof product.ischecked == "undefined") {
           this.$set(product, "ischecked", true);
         } else {
           product.ischecked = !product.ischecked;
         }
 
-        let chkCount=0;
+        let chkCount = 0;
         this.calcTotalMoney();
-         this.productlist.forEach(function (item) {
-            if (item.ischecked) {
-              chkCount++;
-            }
-          });
-          if(chkCount==this.productlist.length){
-            this.allCheck=true;
-          } else{
-            this.allCheck=false;
+        this.productlist.forEach(function (item) {
+          if (item.ischecked) {
+            chkCount++;
           }
+        });
+        if (chkCount == this.productlist.length) {
+          this.allCheck = true;
+        } else {
+          this.allCheck = false;
+        }
       },
       //商品数量变化
       changeNum(product, way) {
@@ -105,29 +124,29 @@
         this.axios({
           url: this.url + '/api/ShoppingCar/UpdateCount',
           method: 'post',
-          data:{shoppingCarId:product.ShoppingCarId,type:way},
-          headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
+          data: {shoppingCarId: product.ShoppingCarId, type: way},
+          headers: {'Authorization': 'BasicAuth ' + localStorage.lut}
 
-          }).then((res)=>{
-            if (res.data.Code == 200) {
+        }).then((res) => {
+          if (res.data.Code == 200) {
 
-              } else {
-                Toast(res.data.Data);
-              }
-          }) .catch((err)=>{
-          if(err.response.status==401){
-              let instance = Toast('还未登录，请先登录');
-              setTimeout(() => {
-                instance.close();
-                this.$router.replace({
-                      path: '/login/',
-                      query: {redirect: this.$router.currentRoute.fullPath}
-                    })
-              }, 1000);
+          } else {
+            Toast(res.data.Data);
+          }
+        }).catch((err) => {
+          if (err.response.status == 401) {
+            let instance = Toast('还未登录，请先登录');
+            setTimeout(() => {
+              instance.close();
+              this.$router.replace({
+                path: '/login/',
+                query: {redirect: this.$router.currentRoute.fullPath}
+              })
+            }, 1000);
 
-            }else{
-                Toast('网络请求错误');
-            }
+          } else {
+            Toast('网络请求错误');
+          }
         });
 
         this.calcTotalMoney();
@@ -138,7 +157,7 @@
         let totalNum = 0;
         this.productlist.forEach(function (item) {
           if (item.ischecked) {
-            totalMoney += item.SalePrice * item.Count;
+            totalMoney += parseFloat(item.SalePrice) * parseInt(item.Count);
             totalNum++
           }
         });
@@ -148,7 +167,7 @@
       //选中所有
       checkAll(isCheck) {
         this.allCheck = isCheck;
-        this.productlist.forEach((item) =>{
+        this.productlist.forEach((item) => {
           if (typeof item.checked == "undefined") {
             this.$set(item, "ischecked", isCheck);
           } else {
@@ -158,122 +177,91 @@
         this.calcTotalMoney();
       },
       //获取购车商品列表
-      getCarInfo(){
+      getCarInfo() {
         this.axios({
-        url: this.url + '/api/ShoppingCar/UserShoppingCar',
-        method: 'get',
-        headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
+          url: this.url + '/api/ShoppingCar/UserShoppingCar',
+          method: 'get',
+          headers: {'Authorization': 'BasicAuth ' + localStorage.lut}
 
-        }).then((res)=>{
+        }).then((res) => {
           if (res.data.Code == 200) {
-              this.productlist = res.data.Data;
-            } else {
-              Toast(res.data.Data);
-            }
-        }).catch((err)=>{
-          if(err.response.status==401){
-              let instance = Toast('还未登录，请先登录');
-              setTimeout(() => {
-                instance.close();
-                this.$router.replace({
-                      path: '/login/',
-                      query: {redirect: this.$router.currentRoute.fullPath}
-                    })
-              }, 1000);
-
-            }else{
-                Toast('网络请求错误');
-            }
-        });
-      },
-      //删除购物车中的商品
-      deleteProduct(carId){
-         this.axios({
-          url: this.url + '/api/ShoppingCar/RemoveProduct',
-          method: 'post',
-          data:{shoppingCarId:carId},
-          headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
-
-          }).then((res)=>{
-            if (res.data.Code == 200) {
-              //移除删除的商品
-               this.productlist = this.productlist.filter(p => p.ShoppingCarId != carId);
-               Toast(res.data.Data);
-              } else {
-                Toast(res.data.Data);
-              }
-          }) .catch((err)=>{
-          if(err.response.status==401){
-              let instance = Toast('还未登录，请先登录');
-              setTimeout(() => {
-                instance.close();
-                this.$router.replace({
-                      path: '/login/',
-                      query: {redirect: this.$router.currentRoute.fullPath}
-                    })
-              }, 1000);
-
-            }else{
-                Toast('网络请求错误');
-            }
-        });
-      },
-      //提交订单
-      addOrder(){
-         let skus=[];
-          this.productlist.forEach(function (item) {
-            if (item.ischecked) {
-            let sku={
-                    ShoppingCarId:item.ShoppingCarId,
-                    ProductSpecId:item.ProductSpecId,
-                    ProductName:item.ShortName,
-                    ProductCount:item.Count,
-                    ProductSpecPrice:item.SalePrice*item.Count
-                    }
-                    skus.push(sku);
-            }
-          });
-        if(skus.length==0){
-          Toast("请选择商品");
-          return;
-        }
-        //定义参数
-        var sc={
-          TotalPrice:this.totalMoney,
-          PayType:-1,//支付类型 -1 标识全部
-          ProductCount:this.totalNum,
-          OrderFrom:2,//订单来源  2标识商城
-          ProductSkus:skus
-        }
-        this.axios({
-        url: this.url + '/api/Order/AddOrder',
-        method: 'post',
-        data:{strSc:JSON.stringify(sc)},
-        headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
-        }).then((res) =>{
-          if (res.data.Code == 200) {
-            let instance = Toast(res.data.Data);
-            setTimeout(() =>{
-              instance.close();
-              this.$router.push({ path: '/Payment/'+res.data.ExData})
-            }, 1000);
+            this.productlist = res.data.Data;
           } else {
             Toast(res.data.Data);
           }
-        }).catch((err) =>{
-          if(err.response.status==401){
+        }).catch((err) => {
+          if (err.response.status == 401) {
+            let instance = Toast('还未登录，请先登录');
+            setTimeout(() => {
+              instance.close();
+              this.$router.replace({
+                path: '/login/',
+                query: {redirect: this.$router.currentRoute.fullPath}
+              })
+            }, 1000);
+
+          } else {
+            Toast('网络请求错误');
+          }
+        });
+      },
+      //删除购物车中的商品
+      deleteProduct(carId) {
+        MessageBox.confirm('确认删除么?').then(action => {
+          this.axios({
+            url: this.url + '/api/ShoppingCar/RemoveProduct',
+            method: 'post',
+            data: {shoppingCarId: carId},
+            headers: {'Authorization': 'BasicAuth ' + localStorage.lut}
+
+          }).then((res) => {
+            if (res.data.Code == 200) {
+              //移除删除的商品
+              this.productlist = this.productlist.filter(p => p.ShoppingCarId != carId);
+              Toast(res.data.Data);
+            } else {
+              Toast(res.data.Data);
+            }
+          }).catch((err) => {
+            if (err.response.status == 401) {
               let instance = Toast('还未登录，请先登录');
               setTimeout(() => {
                 instance.close();
                 this.$router.replace({
-                      path: '/login/',
-                      query: {redirect: this.$router.currentRoute.fullPath}
-                    })
-              }, 1000);}
-              else{
-                Toast('网络请求错误');
+                  path: '/login/',
+                  query: {redirect: this.$router.currentRoute.fullPath}
+                })
+              }, 1000);
+
+            } else {
+              Toast('网络请求错误');
             }
+          });
+        })
+      },
+      //提交订单
+      addOrder() {
+        let skus = [];
+        this.productlist.forEach(function (item) {
+          if (item.ischecked) {
+            let sku = {
+              ShoppingCarId: item.ShoppingCarId,
+              ProductSpecId: item.ProductSpecId,
+              ProductName: item.ShortName,
+              ProductCount: item.Count,
+              ProductImg: item.HeadImg,
+              ProductSpecPrice: item.SalePrice
+            }
+            skus.push(sku);
+          }
         });
+        if (skus.length == 0) {
+          Toast("请选择商品");
+          return;
+        }
+        localStorage.setItem("cars", JSON.stringify(skus));
+        this.$router.push({path: '/Payment'})
+
       }
     },
     mounted: function () {
@@ -401,5 +389,18 @@
     width: 4.5rem;
     height: 100%;
     background-color: #B4282D;
+  }
+
+  .cartno {
+    /*border-radius: 0.2rem;*/
+    /*background-color: #B4282D;*/
+    width: 100%;
+    text-align: center;
+    color: #B4282D;
+    padding: 0.2rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 </style>

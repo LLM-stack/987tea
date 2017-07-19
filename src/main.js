@@ -15,9 +15,9 @@ Vue.prototype.axios = axios
 
 Vue.prototype.user_Id = '0'
 //内网地址： 'http://192.168.1.110:8088'
-//本地地址： 'http://localhost:55400'
+//本地地址： 'http://localhost:55400'  //'http://localhost:8088'
 //正式地址： 'http://api.987tea.com'
-Vue.prototype.url='http://api.987tea.com'
+Vue.prototype.url='http://192.168.1.110:8088'
 
 Vue.config.productionTip = false
 

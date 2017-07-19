@@ -92,11 +92,10 @@
 
 
 
-    <Mdialog :dialog="dialog">
+    <Mdialog :dialog="dialog" :prompt="true">
       <div slot="title">请输入手机号</div>
       <div slot="content">系统会在开抢前给您的手机发送短信提醒。</div>
       <div slot="prompt"><input type="text"></div>
-
       <div slot="btn">提醒我</div>
       <div slot="cancel" @click="cancel">取消</div>
     </Mdialog>

@@ -47,7 +47,15 @@
     data() {
       return {
         classIndex: '',
-        classList:[],
+        classList:[      
+          {             
+            Name:'茶叶',
+            ProductClassifyId:'7c3f558606074157b9ee4f131c073e3a'
+          },{            
+            Name:'茶具',
+            ProductClassifyId:'7c95c107a7424fdcb6c9561e8fb3679c'
+          }
+        ],
         productList:[]
       }
     },
@@ -64,7 +72,6 @@
       getClassInfo(){
          this.axios.get(this.url+'/api/ProductClassify/GetProductClassify',{}).then((res)=>{
            if(res.data.Code==200){
-             this.classList=res.data.ExData;
              this.getProducts(this.classList[0].ProductClassifyId);
             }else{
               Toast(res.data.Data);

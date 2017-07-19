@@ -133,16 +133,16 @@
                 Toast(res.data.Data);
               }
           }) .catch((err)=>{
-          if(err.response.status==401){             
+          if(err.response.status==401){
               let instance = Toast('还未登录，请先登录');
               setTimeout(() => {
-                instance.close(); 
+                instance.close();
                 this.$router.replace({
                       path: '/login/',
                       query: {redirect: this.$router.currentRoute.fullPath}
                     })
               }, 1000);
-             
+
             }else{
                 Toast('网络请求错误');
             }
@@ -151,7 +151,6 @@
 
     },
     mounted:function(){
-          
       this.getUserInfo();
     }
   }
