@@ -6,7 +6,7 @@
 
       <div class="address" :class="{checked:item.IsDefault==0}" v-for="(item,index) in userAllAddress" >
         <div>
-          <div class="name">收货地址</div>
+          <div class="name">{{item.ConsigneeName}}</div>
           <div class="mr" v-if="item.IsDefault==0">默认</div>
         </div>
         <div @click.stop="checkAddress(index)">

@@ -1,12 +1,44 @@
 <template>
   <div id="app">
       <router-view></router-view>
+
+
+
+
+
+    <div class="gotop" v-show="top>700" @click="gotop">
+      <img src="./assets/images/gotop.png" />
+    </div>
   </div>
+
+
 </template>
 
 <script>
 export default {
-  name: 'app'
+  name: 'app',
+  data(){
+    return {
+      top: ''
+    }
+  },
+  methods:{
+    scrollTop() {
+      this.top = document.body.scrollTop;
+    },
+    gotop(){
+      document.body.scrollTop = 0
+    }
+  },
+  mounted: function () {
+    this.$nextTick(() => {
+      this.getProduct();
+      this.getParams();
+      this.getProductEstimates();
+      this.isFavourite();
+    });
+    window.addEventListener('scroll', this.scrollTop)
+  }
 }
 </script>
 
@@ -80,6 +112,9 @@ export default {
   }
   /*工具样式*/
   .container {
+    margin-bottom: 2rem;
+  }
+  .containerbig{
     margin-bottom: 2.4rem;
   }
   .lm-text-grey{
@@ -158,7 +193,21 @@ export default {
     align-items: center;
     justify-content: space-between;
   }
-
+  image[lazy=loading] {
+    width: 40px;
+    height: 30px;
+    margin: auto;
+    background-color: #eee;
+  }
+  .gotop{
+    bottom: 3rem;
+    right: 1rem;
+    position: fixed;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    background-color: rgba(255,255,255,0.4);
+  }
 
   /*路由过渡动画*/
 

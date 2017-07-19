@@ -1,6 +1,6 @@
 <template>
   <div class="cont">
-    <Mheader :show=true>
+    <Mheader :show='true'>
       <div slot="title">注册</div>
     </Mheader>
     <div class="box">
@@ -11,14 +11,14 @@
         <mt-field placeholder="请输入手机号" type="tel" v-model="phone"></mt-field>
 
         <div class="code">
-          <mt-field placeholder="请输入验证码" type="number" v-model="imgNumber">
+          <mt-field placeholder="请输入验证码" type="text" v-model="imgNumber">
           </mt-field>
           <div class="seconding">
-            <img src="../../assets/images/noimg.png" />
+            <img :src="verifyCode" alt="看不清？点击更换" @click="getVCode"/>
           </div>
         </div>
 
-        <div class="code">
+        <div v-if="vcBool" class="code">
           <mt-field placeholder="请输入验证码" type="number" v-model="number">
           </mt-field>
           <div :class="fetchCodeMsg?'seconds':'seconding'" @click="sendCode">{{timerCodeMsg}}</div>
@@ -27,7 +27,7 @@
         <div class="register-btn" @click="sendRegister">注册</div>
         <div class=" lm-font-sm lm-margin-t-sm">注册即视为同意 <span class="tips lm-text-red" @click="open">《服务协议》</span></div>
       </div>
-      <Mdialog :dialog="dialog" >
+      <Mdialog :dialog="dialog">
         <div slot="title">九八七茶网用户网络协议</div>
         <div slot="content">
           <div class="lm-margin-t">一、前言</div>
@@ -157,9 +157,19 @@
         number: null,
         imgNumber: null,
         password: null,
+        verifyCode: null,
+        vcBool: false,
+        vcToken: null,
         dialog: null,
         timerCodeMsg: '获取验证码',
         fetchCodeMsg: false
+      }
+    },
+    watch: {
+      imgNumber: function (value) {
+        if(value.length >= 4){
+          this.chkVCode()
+        }
       }
     },
     methods: {
@@ -169,7 +179,7 @@
       close() {
         this.dialog = false
       },
-      sendCode(){//发送短信验证码
+      sendCode() {//发送短信验证码
         if (!!!this.phone) {
           Toast('手机号不能为空');
           return;
@@ -180,19 +190,20 @@
         }
         this.axios.post(this.url + '/api/Login/SendSMSCode', {phone: this.phone}).then((res) => {
           this.timeOut();//发送成功开始倒计时
-        if (res.data.Code == 200) {
-          Toast(res.data.Data);
-        } else {
-          Toast(res.data.Data);
-        }
-      }).catch((err) => {
-          Toast('网络请求超时');})
+          if (res.data.Code == 200) {
+            Toast(res.data.Data);
+          } else {
+            Toast(res.data.Data);
+          }
+        }).catch((err) => {
+          Toast('网络请求超时');
+        })
       },
       isPhoneNo(phone) {  //手机号验证
         var pattern = /^1[34578]\d{9}$/;
         return pattern.test(phone);
       },
-      timeOut(){//倒计时
+      timeOut() {//倒计时
         let self = this;
         self.fetchCodeMsg = true
         let sec = 60;
@@ -209,7 +220,7 @@
           }, i * 1000)
         }
       },
-      sendRegister(){//注册
+      sendRegister() {//注册
         if (!!!this.phone) {
           Toast('手机号不能为空');
           return;
@@ -242,30 +253,65 @@
           phone: this.phone,
           code: this.number,
           password: this.password
-        }).then((res) =>
-        {
-          if (res.data.Code == 200) {
-            let instance = Toast(res.data.Data);
-            setTimeout(() =>
-            {
-              instance.close();
-              this.$router.push({path: '/login'})
-            },1000);
+        }).then((res) => {
+            if (res.data.Code == 200) {
+              let instance = Toast(res.data.Data);
+              setTimeout(() => {
+                instance.close();
+                this.$router.push({path: '/login'})
+              }, 1000);
 
+            } else {
+              Toast(res.data.Data);
+            }
+          }
+        ).catch((err) => {
+            Toast('网络请求超时');
+          }
+        )
+      },
+      verifyPassword(pwd) {//密码验证
+        let pattern = /^[A-Za-z_0-9]{6,16}$/;
+        return pattern.test(pwd);
+      },
+      getVCode() {
+        this.axios.get(this.url + '/api/Login/CreateVCode', {}).then((res) => {
+          this.verifyCode = res.data.Data.imgUrl;
+          this.vcToken = res.data.Data.randVCode;
+        }).catch((err) => {
+          Toast('网络请求超时');
+        })
+      },
+      chkVCode() {
+        if (!!!this.imgNumber) {
+          Toast('请输入图片中的字符');
+          return;
+        }
+        if (this.imgNumber.length != 4) {
+          Toast('输入的字符长度不对');
+          return;
+        }
+        let strs = this.verifyCode.split('/');
+        let imgName = strs[strs.length - 1];
+        this.axios.post(this.url + '/api/Login/CheckVCode', {
+          vCode: this.imgNumber,
+          token: this.vcToken,
+          imgName: imgName
+        }).then((res) => {
+          if (res.data.Code == 200) {
+            this.vcBool = true;
           } else {
             Toast(res.data.Data);
           }
-        }
-      ).catch((err) =>
-        {
+        }).catch((err) => {
           Toast('网络请求超时');
-        }
-      )
-      },
-      verifyPassword(pwd){//密码验证
-        let pattern = /^[A-Za-z_0-9]{6,16}$/;
-        return pattern.test(pwd);
+        })
       }
+    },
+    mounted: function () {
+      this.$nextTick(() => {
+        this.getVCode();
+      })
     }
   }
 </script>
@@ -282,7 +328,7 @@
     align-items: center;
     justify-content: space-between;
   }
-
+  
   .code .seconds {
     height: 2.1rem;
     width: 5.5rem;
@@ -304,6 +350,10 @@
     border: 1px solid #B4282D;
     border-radius: 0.2rem;
     margin-top: 0.8rem;
+  }
+
+  .code .seconding > img {
+    border-radius: 0.2rem;
   }
 
   .code a {

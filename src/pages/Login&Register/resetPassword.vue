@@ -10,6 +10,14 @@
       <div class="msg-login-box">
         <mt-field placeholder="请输入手机号" type="tel" v-model="phone"></mt-field>
         <div class="code">
+          <mt-field placeholder="请输入验证码" type="text" v-model="imgNumber">
+          </mt-field>
+          <div class="seconding" >
+            <img :src="verifyCode" alt="看不清？点击更换" @click="getVCode"/>
+          </div>
+        </div>
+
+        <div v-if="vcBool" class="code">
           <mt-field placeholder="请输入验证码" type="number" v-model="number">
           </mt-field>
           <div :class="fetchCodeMsg?'seconds':'seconding'"   @click="sendCode">{{timerCodeMsg}}</div>
@@ -37,8 +45,18 @@
         phone: null,
         number: null,
         password: null,
+        imgNumber:null,
+        verifyCode:null,
+        vcBool:false,
         timerCodeMsg:'获取验证码',
         fetchCodeMsg:false
+      }
+    },
+    watch: {
+      imgNumber: function (value) {
+        if(value.length >= 4){
+          this.chkVCode()
+        }
       }
     },
     methods: {
@@ -130,9 +148,45 @@
           }).catch((err)=>{
             Toast('网络请求超时');
           })
+      },
+      getVCode(){
+
+          this.axios.get(this.url + '/api/Login/CreateVCode', {}).then((res) => {
+           this.verifyCode=res.data.Data.imgUrl;
+           this.vcToken=res.data.Data.randVCode;
+          }).catch((err)=>{
+             Toast('网络请求超时');
+          })
+
+      },
+      chkVCode(){
+        if(!!!this.imgNumber){
+          Toast('请输入图片中的字符');
+          return;
+        }
+        if(this.imgNumber.length!=4){
+          Toast('输入的字符长度不对');
+          return;
+        }
+        let strs=this.verifyCode.split('/');
+        let imgName=strs[strs.length-1];
+        this.axios.post(this.url + '/api/Login/CheckVCode', {vCode:this.imgNumber,token:this.vcToken,imgName:imgName}).then((res) => {
+           if(res.data.Code == 200){
+              this.vcBool=true;
+           }else{
+             Toast(res.data.Data);
+           }
+          }).catch((err)=>{
+             Toast('网络请求超时');
+          })
       }
 
-    }
+    },
+     mounted: function () {
+        this.$nextTick(()=>{
+          this.getVCode();
+        })
+     }
   }
 </script>
 
@@ -216,6 +270,9 @@
     border: 1px solid #B4282D;
     border-radius: 0.2rem;
     margin-top: 0.8rem;
+  }
+  .code .seconding > img{
+    border-radius: 0.2rem;
   }
   .code a{
 

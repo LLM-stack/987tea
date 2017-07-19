@@ -12,7 +12,7 @@
       </div>
       <div class="tip">
         <div class="lm-text-red">什么是茶币？</div>
-        <div class="lm-margin-t-sm tip-text">茶币是指茶七网为茶友提供的虚拟货币。茶币可兑换赠品、茶样等。茶币为非
+        <div class="lm-margin-t-sm tip-text">茶币是指987茶网为茶友提供的虚拟货币。茶币可兑换赠品、茶样等。茶币为非
           真实货币，不可兑现。</div>
       </div>
 

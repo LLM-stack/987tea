@@ -24,8 +24,8 @@
             <div class="hr"></div>
           </div>
           <div class="tea-list">
-            <div v-for="item in productList">
-              <img :src="item.HeadImg" alt="">
+            <div class="tea-product" v-for="item in productList" @click="chkDetail(item.ProductId)">
+              <img v-lazy="item.HeadImg" />
               <div class="lm-font-sm">{{ item.Name }}</div>
             </div>
           </div>
@@ -83,17 +83,23 @@
           }).catch((err)=>{
              Toast('网络请求超时');
           })
+      },
+      chkDetail(val){
+          this.$router.push({path: '/ProductDetails/'+val})
       }
     },
     created:function(){
       this.getClassInfo();
-      console.log(this.$store.state.user_id);
+
     }
   }
 </script>
 
 <style scoped>
   header {
+    position: fixed;
+    top:0;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -119,29 +125,35 @@
   }
 
   .category {
+    margin-top: 1.8rem;
     display: flex;
     height: 100%;
     background-color: #fff;
   }
 
   .category .tabs {
+    top:1.8rem;
+    left: 0;
+    position: fixed;
     padding-top: 0.7rem;
     width: 30%;
+    height: 100%;
   }
 
   .category .tabs-cont {
-    padding: 1rem 0.5rem;
+    margin-left: 30%;
+    padding: 1rem 0.22rem;
     width: 70%;
-
   }
 
   .tabs {
     font-size: 0.7rem;
+    background-color: #fff;
     border-right: 1px solid #ccc;
   }
 
   .tabs .tab {
-    padding: 0.3rem 0;
+    padding: 0.15rem 0;
     margin: 0.3rem 0;
     text-align: center;
   }
@@ -177,13 +189,24 @@
   .tea-box .tea-list{
     display: flex;
     align-items: center;
+    justify-content: space-between;
     flex-direction: row;
     flex-wrap: wrap;
   }
-  .tea-box .tea-list > div{
-    padding: 0 0.3rem;
-    width: 3.4rem;
+  .tea-box .tea-list .tea-product{
+    width: 49%;
     margin-top: 0.3rem;
-    text-align: center;
+    height: 7.8rem;
+  }
+  .tea-box .tea-list .tea-product >div {
+    font-size: 0.55rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .tea-box .tea-list .tea-product >img{
+    width: 100%;
+    height: 6rem;
   }
 </style>

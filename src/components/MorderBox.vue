@@ -1,16 +1,19 @@
 <template>
     <div>
-      <div class="cont" @click="chkOrder(orderId)">
+      <div class="cont">
         <div class="top">
           <span>订单编号: <slot name="number"></slot></span>
           <span class="lm-text-red"><slot name="state"></slot></span>
         </div>
-        <div class="mid">
-          <img :src="imgSrc" alt="">
+        <div class="mid">        
+          <slot name="img"></slot>
           <slot name="name"></slot>
+          x
+          <slot name="count"></slot>
         </div>
         <div class="btm">
           <span>实付: <slot name="price"></slot>元</span>
+          <slot name="time"></slot>
           <span>
             <span></span>
             <span></span>
@@ -23,19 +26,11 @@
 <script>
 
 	export default {
-    props: {
-      imgSrc: {
-      	type: String,
-        default: require('../assets/images/noimg.png')
-      },
-      orderId:{
-        type:String
-      }
+    props: {      
+      
     },
     methods:{
-      chkOrder(orderId){
-        this.$router.push({ path: '/Payment/'+orderId})
-      }
+     
     }
   }
   </script>

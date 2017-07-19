@@ -72,25 +72,25 @@
         人气热卖 <span></span>
       </div>
       <!--<router-link :to="{path:'/OnSale'}">-->
-        <div class="box-block box-block-one" @click="chkDetail('46436dd188d54e8993427c364099a66d')">
+        <div class="box-block box-block-one" @click.stop="chkDetail('46436dd188d54e8993427c364099a66d')">
           <div class="box-block-title">折扣好茶推荐</div>
           <div class="box-block-time"><span>{{hour}}</span>：<span>{{minute}}</span>：<span>{{second}}</span></div>
           <!--<div class="rmtime">下一场19:00开始</div>-->
         </div>
       <!--</router-link>-->
-      <div class="flex-between" @click="chkDetail('0c41ebacf33448488c006ca55b5f0b76')">
+      <div class="flex-between" @click.stop="chkDetail('0c41ebacf33448488c006ca55b5f0b76')">
         <div class="box-block box-block-two">
           <div class="xl-title">2017早春碧螺春</div>
           <div class="buy_one">99元买一送一</div>
           <div class="hot"></div>
         </div>
-        <div class="box-block-four" @click="chkDetail('1fe433212fd240d998abc63de01bcd37')">
+        <div class="box-block-four" @click.stop="chkDetail('1fe433212fd240d998abc63de01bcd37')">
           <div class="box-block box-block-three">
-            <div class="xl-title">2017手工紫砂壶</div>
+            <div class="xl-title">手工紫砂壶</div>
             <div class="buy_one">99元</div>
           </div>
-          <div class="box-block box-block-five" @click="chkDetail('cb77b03361744feb89c21b5abf03a576')">
-            <div class="xl-title">2017西施壶·紫砂壶</div>
+          <div class="box-block box-block-five" @click.stop="chkDetail('cb77b03361744feb89c21b5abf03a576')">
+            <div class="xl-title">西施壶·紫砂壶</div>
             <div class="buy_one">298元</div>
           </div>
         </div>
@@ -132,7 +132,7 @@
         <div class="mode-list" v-for="(item,index) in ownTea" :class="{'mode-left': index % 2 !== 0}">
           <router-link :to="{path:'/ProductDetails/'+item.ProductId}">
             <div class="mode-img">
-              <img :src="item.HeadImg"/>
+              <img  v-lazy="item.HeadImg"/>
             </div>
             <div class="mode-dp">{{ item.SaleComment }}</div>
             <div class="mode-title">{{ item.Name }}</div>
@@ -248,6 +248,7 @@
                }
            },
            chkDetail(val){
+             console.log(val);
              this.$router.push({path: '/ProductDetails/'+val})
            }
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="containerbig">
     <Mheader :show=true>
       <div slot="title">购物车</div>
     </Mheader>
@@ -10,7 +10,7 @@
         <div class="product-img">
           <img :src="item.HeadImg" alt="">
         </div>
-        <div>
+        <div class="product-dts">
           <div>
             <div class="product-name">
               <router-link :to="{path:'/ProductDetails/'+item.ProductId}">
@@ -235,6 +235,7 @@
           });
         if(skus.length==0){
           Toast("请选择商品");
+          return;
         }
         //定义参数
         var sc={
@@ -299,7 +300,7 @@
     margin-right: 0.4rem;
   }
 
-  .product > div:last-child {
+  .product .product-dts {
     position: relative;
     width: 10rem;
     height: 3.5rem;
@@ -309,15 +310,19 @@
     align-content: space-between;
   }
 
-  .product > div:last-child > div {
+  .product .product-dts > div {
     display: flex;
     align-items: center;
     justify-content: space-between;
   }
 
   .product .product-name {
-    font-size: 0.7rem;
+    max-width: 8.6rem;
+    font-size: 0.65rem;
     color: #000;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
   .product .product-delete {

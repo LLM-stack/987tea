@@ -13,8 +13,11 @@
       <MorderBox>
         <span slot="number">{{ item.OrderNo }}</span>
         <span slot="state">{{ item.OrderStateStr }}</span>
+        <span slot="img"><img :src="item.HeadImg" alt=""></span>
         <span slot="name">{{ item.ProductName }}</span>
+        <span slot="count">{{ item.ProductCount}}</span>
         <span slot="price">{{ item.TotalPrice }}</span>
+        <span slot="time">{{ item.CreateTime }}</span>
       </MorderBox>
     </div>
 
@@ -67,6 +70,9 @@
         orderList: []
       }
     },
+     filters: {
+     
+    },
     methods: {
       tabActive(i) {
         this.tabList.forEach(function (value, index, array) {
@@ -116,7 +122,8 @@
             Toast('网络请求错误');
           }
         });
-      }
+      },
+      
     },
     created() {
       let index = this.$route.params.tabNum

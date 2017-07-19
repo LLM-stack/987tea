@@ -12,8 +12,8 @@ const state = {
   // 购物车
   product_num: 0,
   //订单的收货地址
-  receiveAddress:''
- 
+  receiveAddress:'',
+
 }
 
 // 定义方法

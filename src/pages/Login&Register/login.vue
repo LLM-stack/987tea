@@ -79,7 +79,6 @@
             if(res.data.Code==200){
               this.$store.state.user_id=res.data.ExData;//将用户id赋值给数据源
               localStorage.setItem("lut", res.data.ExData);
-              console.log(localStorage.lut)
               let instance = Toast(res.data.Data);
               setTimeout(() => {
                 instance.close();

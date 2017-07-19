@@ -6,7 +6,7 @@
       <router-link :to="{path:'/MyAddress'}">
         <div class="address lm-margin-b-sm">
         <div>
-          <div class="name">收货地址</div>
+          <div class="name">{{defaultAddress.ConsigneeName}}</div>
           <div class="mr" v-if="defaultAddress.IsDefault==0">默认</div>
         </div>
         <div v-if="!!!defaultAddress">
@@ -171,7 +171,6 @@
      },
      //提交订单支付
      oncePayment(){
-
        this.axios({
         url: this.url + '/api/Order/OncePayment',
         method: 'post',
@@ -179,8 +178,11 @@
         headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
         }).then((res)=>{
           if (res.data.Code == 200) {
-             this.alipay=res.data.ExData;
-             if(!!this.alipay){
+             if(this.payType==0){
+               this.$router.push({path: '/MyOrder/全部/0'})
+             }
+             if(this.payType==2){
+               this.alipay=res.data.ExData;
                document.forms['alipaysubmit'].submit();
              }
             }else {

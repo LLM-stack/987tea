@@ -14,8 +14,10 @@ Vue.use(Mint)
 Vue.prototype.axios = axios
 
 Vue.prototype.user_Id = '0'
-//https://bird.ioliu.cn/v1?url=http://114.55.178.84:81
-Vue.prototype.url='http://114.55.178.84:81'
+//内网地址： 'http://192.168.1.110:8088'
+//本地地址： 'http://localhost:55400'
+//正式地址： 'http://api.987tea.com'
+Vue.prototype.url='http://api.987tea.com'
 
 Vue.config.productionTip = false
 
