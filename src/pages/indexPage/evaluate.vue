@@ -17,12 +17,10 @@
 
 <script>
   import Mheader from '../../components/Mheader'
-  import Mfooter from '../../components/Mfooter'
-  import {Toast} from 'mint-ui'
+
   export default {
     components: {
-      Mheader,
-      Mfooter
+      Mheader
     },data(){
       return {
         content:null
@@ -97,11 +95,12 @@
     border: 1px solid #ccc;
   }
   .box .btn{
-    padding: 0.3rem 0;
+    padding: 0.4rem 0;
     text-align: center;
     border-radius: 0.2rem;
-    color: #ffffff;
-    background-color: #B4282D;
+    color: #B4282D;
+    border:1px solid #B4282D;
+    background-color: #fff;
   }
 
 

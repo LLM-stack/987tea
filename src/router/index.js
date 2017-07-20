@@ -31,6 +31,9 @@ import MyAddress from '@/pages/mine/myAddress'
 import EditAddress from '@/pages/mine/editAddress'
 import CommentsBox from '@/pages/mine/commentsBox'
 import Preferences from '@/pages/mine/preferences'
+import Logistics from '@/pages/mine/logistics'
+
+
 
 
 // 商城
@@ -119,6 +122,9 @@ export default new Router({
     }, {
       path: '/Preferences/:title/:id',
       component: Preferences
+    }, {
+      path: '/Logistics',
+      component: Logistics
     },
     // 商城
     {
