@@ -134,30 +134,18 @@
         headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
 
         }).then((res)=>{
-          if (res.data.Code == 200) {
-              let instance = Toast(res.data.Data);
-              setTimeout(() => {
-                instance.close();
-                this.$router.push({ path: '/MyAddress'});
-              }, 1000);
-            } else {
-              Toast(res.data.Data);
+            if(!!res){
+              if (res.data.Code == 200) {
+                let instance = Toast(res.data.Data);
+                setTimeout(() => {
+                  instance.close();
+                  this.$router.push({ path: '/MyAddress'});
+                }, 1000);
+              } else {
+                Toast(res.data.Data);
+              }
             }
-        }) .catch((err)=>{
-          if(err.response.status==401){             
-              let instance = Toast('还未登录，请先登录');
-              setTimeout(() => {
-                instance.close(); 
-                this.$router.replace({
-                      path: '/login/',
-                      query: {redirect: this.$router.currentRoute.fullPath}
-                    })
-              }, 1000);
-             
-            }else{
-                Toast('网络请求错误');
-            }
-        });
+        }) 
       },
     },
     mounted() {
@@ -174,31 +162,19 @@
             headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
 
             }).then((res)=>{
-              if (res.data.Code == 200) {
-                  let a=res.data.ExData;
-                  this.username=a.ConsigneeName;
-                  this.phone=a.Mobile;
-                  this.address=a.Province+' '+a.City+' '+a.Area;
-                  this.detailAddress=a.Detail;
-                  this.isDefault=a.IsDefault==0?true:false;
-                } else {
-                  Toast(res.data.Data);
-                }
-            }) .catch((err)=>{
-          if(err.response.status==401){             
-              let instance = Toast('还未登录，请先登录');
-              setTimeout(() => {
-                instance.close(); 
-                this.$router.replace({
-                      path: '/login/',
-                      query: {redirect: this.$router.currentRoute.fullPath}
-                    })
-              }, 1000);
-             
-            }else{
-                Toast('网络请求错误');
-            }
-        });
+               if(!!res){
+                 if (res.data.Code == 200) {
+                    let a=res.data.ExData;
+                    this.username=a.ConsigneeName;
+                    this.phone=a.Mobile;
+                    this.address=a.Province+' '+a.City+' '+a.Area;
+                    this.detailAddress=a.Detail;
+                    this.isDefault=a.IsDefault==0?true:false;
+                  } else {
+                    Toast(res.data.Data);
+                  }
+               }
+            }) 
         }
 
         this.initAddress();

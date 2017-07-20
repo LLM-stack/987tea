@@ -11,6 +11,7 @@
 </template>
 
 <script>
+
   export default {
     name: 'app',
     data() {
@@ -29,6 +30,8 @@
     mounted: function () {
       this.$nextTick(() => {
         window.addEventListener('scroll', this.scrollTop)
+
+  
       })
     }
 

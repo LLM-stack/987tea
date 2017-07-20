@@ -117,41 +117,19 @@
         headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
 
         }).then((res)=>{
-          if (res.data.Code == 200) {
+          if(!!res){
+            if (res.data.Code == 200) {
               this.defaultAddress = res.data.ExData;
             } else {
               Toast(res.data.Data);
             }
-        }) .catch((err)=>{
-          if(err.response.status==401){
-              let instance = Toast('还未登录，请先登录');
-              setTimeout(() => {
-                instance.close();
-                this.$router.replace({
-                      path: '/login/',
-                      query: {redirect: this.$router.currentRoute.fullPath}
-                    })
-              }, 1000);
-
-            }else{
-                Toast('网络请求错误');
-            }
-        });
+          }
+        }) 
      },
 
      //支付类型选择
      checkType(val){
-        this.payType=val;
-        //  this.axios({
-        //    url: this.url + '/api/Order/OncePayment',
-        //    method: 'post',
-        //    data:{orderId:this.$route.params.orderID,payType:this.payType,addressId:this.defaultAddress.AdressId},
-        //    headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
-        //  }).then((res)=>{
-        //    if (res.data.Code == 200) {
-        //      this.alipay=res.data.ExData;
-        //    }
-        //  })
+        this.payType=val;      
      },
      //提交订单支付
      oncePayment(){
@@ -170,53 +148,47 @@
         data:{strSc:JSON.stringify(sc)},
         headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
         }).then((res)=>{
-          if (res.data.Code == 200) {
+          if(!!res)
+             if (res.data.Code == 200) {
              if(this.payType==0){
                this.$router.push({path: '/MyOrder/全部/0'})
              }
              if(this.payType==2){
-               this.alipay=res.data.ExData;
-               //setTimeout(document.forms['alipaysubmit'].submit(),500);
-               //document.forms['alipaysubmit'].submit();
-               this.onSubmit();
+               this.alipay=res.data.ExData; 
+               setTimeout(function() {
+                 document.forms['alipaysubmit'].submit();
+               },0)
+
+               //this.onSubmit();
                localStorage.removeItem("cars");
              }
             }else {
               Toast(res.data.Data);
             }
-        }).catch((err)=>{
-          if(err.response.status==401){
-              let instance = Toast('还未登录，请先登录');
-              setTimeout(() => {
-                instance.close();
-                this.$router.replace({
-                      path: '/login/',
-                      query: {redirect: this.$router.currentRoute.fullPath}
-                    })
-              }, 1000)
-            }else{
-                Toast('网络请求错误');
-            }
-        });
-     },
-     onSubmit(){
-       document.forms['alipaysubmit'].submit();
+
+        })
      },
      selectAddress() {
        this.$router.push({ path: '/MyAddress/', query: { from: 'pay'}})
      }
    },
    mounted:function(){
-     //收货地址展示
-     if(!!!this.$store.state.receiveAddress){
-        this.getDefaultAddress();
-     }else{
-       this.defaultAddress=this.$store.state.receiveAddress;
-     }
-     if(!!localStorage.cars){
-       this.orderDetails=JSON.parse(localStorage.cars);
-       this.ProductCount=this.orderDetails.length;
-     }
+     this.$nextTick(()=>{
+       //收货地址展示
+        if(!!!this.$store.state.receiveAddress){
+            this.getDefaultAddress();
+        }else{
+          this.defaultAddress=this.$store.state.receiveAddress;
+        }
+        
+        if(!!localStorage.cars){       
+          this.orderDetails=JSON.parse(localStorage.cars);
+          this.ProductCount=this.orderDetails.length;
+        }
+        
+
+     })
+    
    }
   }
 </script>

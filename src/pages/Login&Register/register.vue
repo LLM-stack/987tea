@@ -18,10 +18,10 @@
           </div>
         </div>
 
-        <div v-if="vcBool" class="code">
+        <div class="code">
           <mt-field placeholder="请输入验证码" type="number" v-model="number">
           </mt-field>
-          <div :class="fetchCodeMsg?'seconds':'seconding'" @click="sendCode">{{timerCodeMsg}}</div>
+          <div :class="{disabled_btn:vcBool,seconds:fetchCodeMsg,seconding:!fetchCodeMsg}"   @click="sendCode">{{timerCodeMsg}}</div>
         </div>
         <mt-field placeholder="请输入密码" type="password" v-model="password"></mt-field>
         <div class="register-btn" @click="sendRegister">注册</div>
@@ -158,11 +158,11 @@
         imgNumber: null,
         password: null,
         verifyCode: null,
-        vcBool: false,
+        vcBool: true,
         vcToken: null,
         dialog: null,
         timerCodeMsg: '获取验证码',
-        fetchCodeMsg: false
+        fetchCodeMsg: true
       }
     },
     watch: {
@@ -278,6 +278,8 @@
         this.axios.get(this.url + '/api/Login/CreateVCode', {}).then((res) => {
           this.verifyCode = res.data.Data.imgUrl;
           this.vcToken = res.data.Data.randVCode;
+           this.vcBool=true;
+           this.fetchCodeMsg=true;
         }).catch((err) => {
           Toast('网络请求超时');
         })
@@ -299,7 +301,8 @@
           imgName: imgName
         }).then((res) => {
           if (res.data.Code == 200) {
-            this.vcBool = true;
+            this.vcBool = false;
+            this.fetchCodeMsg=false;
           } else {
             Toast(res.data.Data);
           }
@@ -317,6 +320,11 @@
 </script>
 
 <style scoped>
+   .disabled_btn{
+    pointer-events: none;
+    color: gainsboro;
+    border-color: gainsboro;
+   }
   .cont {
     height: 100vh;
     padding-bottom: 1rem;

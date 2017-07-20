@@ -5,16 +5,13 @@
           <span>订单编号: <slot name="number"></slot></span>
           <span class="lm-text-red"><slot name="state"></slot></span>
         </div>
-        <div class="mid">
+        <div class="mid" v-for="pitem in orderProductList">
           <div>
-            <slot name="img"></slot>
+            <span><img :src="pitem.HeadImg" alt=""></span>
             <div class="mid-cont">
-              <slot name="name"></slot>
-              <slot name="count"></slot>
-              <div class="btn-group">
-                <div class="cancel"><slot name="cancel"></slot></div>
-                <div class="btn"><slot name="btn"></slot></div>
-              </div>
+              <span class="product-name">{{ pitem.ProductName }}</span>
+              <span class="lm-text-grey lm-margin-t-sm" >数量：{{ pitem.ProductCount}}</span>
+
             </div>
           </div>
         </div>
@@ -22,6 +19,10 @@
           <span>实付: <slot name="price"></slot>元</span>
           <span><slot name="time"></slot></span>
         </div>
+        <div class="btn-group">
+               <div class="cancel"><slot name="cancel"></slot></div>
+               <div class="btn"><slot name="btn"></slot></div>
+             </div>
       </div>
     </div>
 </template>
@@ -30,7 +31,7 @@
 
 	export default {
     props: {
-
+      orderProductList: ''
     },
     methods:{
 
@@ -51,7 +52,6 @@
     justify-content: space-between;
     padding: 0.4rem 0;
     border-top:1px solid #eee;
-    border-bottom:1px solid #eee;
   }
   .mid > div:first-child{
     width: 100%;
@@ -67,17 +67,26 @@
     width: 100%;
   }
   .top,.btm{
+    border-top:1px solid #eee;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0.4rem 0;
   }
-  .mid .btn-group{
-    margin-top: 0.5rem;
+  .btn-group{
+    border-top:1px solid #eee;
+    padding: 0.4rem 0;
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: flex-end;
+  }
+
+  .product-name{
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
   .btn-group > div >span {
     min-width: 3rem;

@@ -22,10 +22,6 @@
       </mt-radio>
     </div>
 
-测试
-    {{ value1 }}
-    {{ value2 }}
-    {{ value3 }}
     <div class="btn">提交</div>
   </div>
 </template>

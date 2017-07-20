@@ -3,83 +3,34 @@
     <Mheader :show=true>
       <div slot="title">我的收藏</div>
     </Mheader>
-    <div class="product">
+    <div class="product" v-for="(item,index) in productlist">
       <div class="product-img">
-        <img src="../../assets/images/goods/987tea_16.png" alt="">
+        <img :src="item.HeadImg" alt="">
       </div>
       <div>
         <div>
-          <div class="product-name">正宗铁观音</div>
-          <div class="product-delete"></div>
+          <div class="product-name">
+              <router-link :to="{path:'/ProductDetails/'+item.ProductId}">
+              {{ item.Name }}
+              </router-link>
+            </div>
+          <div class="product-delete" @click="deleteFavourite(item.FavouriteId)"></div>
         </div>
         <div class="product-price">
-          <div>￥123</div>
-          <div class="go-buy">去下单</div>
+          <div>￥{{ item.Price }}</div>
+          <div class="go-buy">
+              <router-link :to="{path:'/ProductDetails/'+item.ProductId}">
+                去下单
+              </router-link>
+          
+          </div>
         </div>
       </div>
     </div>
-    <div class="product">
-      <div class="product-img">
-        <img src="../../assets/images/goods/987tea_16.png" alt="">
-      </div>
-      <div>
-        <div>
-          <div class="product-name">正宗铁观音</div>
-          <div class="product-delete"></div>
-        </div>
-        <div class="product-price">
-          <div>￥123</div>
-          <div class="go-buy">去下单</div>
-        </div>
-      </div>
-    </div>
-    <div class="product">
-      <div class="product-img">
-        <img src="../../assets/images/goods/987tea_16.png" alt="">
-      </div>
-      <div>
-        <div>
-          <div class="product-name">正宗铁观音</div>
-          <div class="product-delete"></div>
-        </div>
-        <div class="product-price">
-          <div>￥123</div>
-          <div class="go-buy">去下单</div>
-        </div>
-      </div>
-    </div>
-    <div class="product">
-      <div class="product-img">
-        <img src="../../assets/images/goods/987tea_16.png" alt="">
-      </div>
-      <div>
-        <div>
-          <div class="product-name">正宗铁观音</div>
-          <div class="product-delete"></div>
-        </div>
-        <div class="product-price">
-          <div>￥123</div>
-          <div class="go-buy">去下单</div>
-        </div>
-      </div>
-    </div>
-    <div class="product">
-      <div class="product-img">
-        <img src="../../assets/images/goods/987tea_16.png" alt="">
-      </div>
-      <div>
-        <div>
-          <div class="product-name">正宗铁观音</div>
-          <div class="product-delete"></div>
-        </div>
-        <div class="product-price">
-          <div>￥123</div>
-          <div class="go-buy">去下单</div>
-        </div>
-      </div>
-    </div>
-
-    <Mfooter :myCenterCurrent=true></Mfooter>
+    
+    
+    <Mfooter :myCenterCurrent="true"></Mfooter>
+    
   </div>
 
 </template>
@@ -87,11 +38,88 @@
 <script>
   import Mheader from '../../components/Mheader'
   import Mfooter from '../../components/Mfooter'
+  import {Toast} from 'mint-ui'
 
   export default {
     components: {
       Mheader,
       Mfooter
+    },
+    data(){
+      return{
+        productlist:[]
+      }
+    },
+    //获取收藏商品列表
+    methods:{
+      getFavouriteInfo(){
+        this.axios({
+        url: this.url + '/api/Product/UserFavourite',
+        method: 'get',
+        headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
+
+        }).then((res)=>{
+          if (res.data.Code == 200) {
+              this.productlist = res.data.Data;
+            } else {
+              Toast(res.data.Data);
+            }
+        }).catch((err)=>{
+          if(err.response.status==401){
+              let instance = Toast('还未登录，请先登录');
+              setTimeout(() => {
+                instance.close();
+                this.$router.replace({
+                      path: '/login/',
+                      query: {redirect: this.$router.currentRoute.fullPath}
+                    })
+              }, 1000);
+
+            }else{
+                Toast('网络请求错误');
+            }
+        });
+      },
+
+      //删除收藏的商品
+      deleteFavourite(FavouriteId){
+         this.axios({
+          url: this.url + '/api/Product/RemoveFavourite',
+          method: 'post',
+          data:{FavouriteId:FavouriteId},
+          headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
+
+          }).then((res)=>{
+            if (res.data.Code == 200) {
+              //移除删除的商品
+               this.productlist = this.productlist.filter(p => p.FavouriteId != FavouriteId);
+               Toast(res.data.Data);
+              } else {
+                Toast(res.data.Data);
+              }
+          }) .catch((err)=>{
+          if(err.response.status==401){
+              let instance = Toast('还未登录，请先登录');
+              setTimeout(() => {
+                instance.close();
+                this.$router.replace({
+                      path: '/login/',
+                      query: {redirect: this.$router.currentRoute.fullPath}
+                    })
+              }, 1000);
+
+            }else{
+                Toast('网络请求错误');
+            }
+        });
+      },
+    },
+
+      mounted: function () {
+      this.$nextTick(function () {
+        this.getFavouriteInfo();
+
+      })
     }
   }
 </script>

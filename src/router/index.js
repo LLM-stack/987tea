@@ -7,6 +7,7 @@ import ProductDetails from '@/pages/indexPage/productDetails'
 import SearchPage from '@/pages/indexPage/searchPage'
 import Category from '@/pages/CBmall/category'
 import OnSale from '@/pages/indexPage/onSale'
+import Evaluate from '@/pages/indexPage/evaluate'
 
 // 购物车
 import Cart from '@/pages/cartPage/cart'
@@ -58,6 +59,9 @@ export default new Router({
     }, {
       path: '/onSale',
       component: OnSale
+    },{
+      path: '/Evaluate',
+      component: Evaluate
     },
     // 购物车
     {

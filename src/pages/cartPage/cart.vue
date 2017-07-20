@@ -20,7 +20,7 @@
             <div class="product-delete" @click="deleteProduct(item.ShoppingCarId)"></div>
           </div>
           <div class="product-price">
-            <div>{{ item.SalePrice }}</div>
+            <div>￥ {{ item.SalePrice }} 元</div>
             <div class="product-num">
               <span @click="changeNum(item,-1)">-</span>
               <input type="text" v-model="item.Count">
@@ -128,26 +128,14 @@
           headers: {'Authorization': 'BasicAuth ' + localStorage.lut}
 
         }).then((res) => {
-          if (res.data.Code == 200) {
+         if(!!res){
+            if (res.data.Code == 200) {
 
-          } else {
-            Toast(res.data.Data);
-          }
-        }).catch((err) => {
-          if (err.response.status == 401) {
-            let instance = Toast('还未登录，请先登录');
-            setTimeout(() => {
-              instance.close();
-              this.$router.replace({
-                path: '/login/',
-                query: {redirect: this.$router.currentRoute.fullPath}
-              })
-            }, 1000);
-
-          } else {
-            Toast('网络请求错误');
-          }
-        });
+            } else {
+              Toast(res.data.Data);
+            }
+         }
+        })
 
         this.calcTotalMoney();
       },
@@ -184,26 +172,15 @@
           headers: {'Authorization': 'BasicAuth ' + localStorage.lut}
 
         }).then((res) => {
-          if (res.data.Code == 200) {
-            this.productlist = res.data.Data;
-          } else {
-            Toast(res.data.Data);
-          }
-        }).catch((err) => {
-          if (err.response.status == 401) {
-            let instance = Toast('还未登录，请先登录');
-            setTimeout(() => {
-              instance.close();
-              this.$router.replace({
-                path: '/login/',
-                query: {redirect: this.$router.currentRoute.fullPath}
-              })
-            }, 1000);
-
-          } else {
-            Toast('网络请求错误');
-          }
-        });
+          if(!!res){
+            if (res.data.Code == 200) {
+              this.productlist = res.data.Data;
+            } else {
+              Toast(res.data.Data);
+            }
+          } 
+                 
+        })
       },
       //删除购物车中的商品
       deleteProduct(carId) {
@@ -215,28 +192,16 @@
             headers: {'Authorization': 'BasicAuth ' + localStorage.lut}
 
           }).then((res) => {
-            if (res.data.Code == 200) {
-              //移除删除的商品
-              this.productlist = this.productlist.filter(p => p.ShoppingCarId != carId);
-              Toast(res.data.Data);
-            } else {
-              Toast(res.data.Data);
+            if(!!res){
+              if (res.data.Code == 200) {
+                //移除删除的商品
+                this.productlist = this.productlist.filter(p => p.ShoppingCarId != carId);
+                Toast(res.data.Data);
+              } else {
+                Toast(res.data.Data);
+              }
             }
-          }).catch((err) => {
-            if (err.response.status == 401) {
-              let instance = Toast('还未登录，请先登录');
-              setTimeout(() => {
-                instance.close();
-                this.$router.replace({
-                  path: '/login/',
-                  query: {redirect: this.$router.currentRoute.fullPath}
-                })
-              }, 1000);
-
-            } else {
-              Toast('网络请求错误');
-            }
-          });
+          })
         })
       },
       //提交订单
@@ -256,7 +221,11 @@
           }
         });
         if (skus.length == 0) {
-          Toast("请选择商品");
+          let instance = Toast('购物车空空如也，去逛逛吧！');
+              setTimeout(() => {
+                instance.close();
+                this.$router.push({ path: '/'})
+              }, 1000);
           return;
         }
         localStorage.setItem("cars", JSON.stringify(skus));

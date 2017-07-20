@@ -228,27 +228,15 @@
           data: {ProductId: this.$route.params.productID},
           headers: {'Authorization': 'BasicAuth ' + localStorage.lut}
         }).then((res) => {
-          if (res.data.Code == 200) {
+          if(!!res){
+            if (res.data.Code == 200) {
             this.sc = !this.sc
             Toast(res.data.Data);
-          } else {
-            Toast(res.data.Data);
+            } else {
+              Toast(res.data.Data);
+            }
           }
-        }).catch((err) => {
-          if (err.response.status == 401) {
-            let instance = Toast('还未登录，请先登录');
-            setTimeout(() => {
-              instance.close();
-              this.$router.replace({
-                path: '/login/',
-                query: {redirect: this.$router.currentRoute.fullPath}
-              })
-            }, 1000);
-
-          } else {
-            Toast('网络请求错误');
-          }
-        });
+        })
 
       }
     },
@@ -307,31 +295,20 @@
           headers: {'Authorization': 'BasicAuth ' + localStorage.lut}
 
         }).then((res) => {
-          if (res.data.Code == 200) {
+          if(!!res){
+            if (res.data.Code == 200) {
             this.choiceShow = !this.choiceShow
-            let instance = Toast(res.data.Data);
-            setTimeout(() => {
-              instance.close();
-              this.$router.push({path: '/Cart'})
-            }, 1000);
-          } else {
             Toast(res.data.Data);
+            // let instance = Toast(res.data.Data);
+            // setTimeout(() => {
+            //   instance.close();
+            //   this.$router.push({path: '/Cart'})
+            // }, 1000);
+            } else {
+              Toast(res.data.Data);
+            }
           }
-        }).catch((err) => {
-          if (err.response.status == 401) {
-            let instance = Toast('还未登录，请先登录');
-            setTimeout(() => {
-              instance.close();
-              this.$router.replace({
-                path: '/login/',
-                query: {redirect: this.$router.currentRoute.fullPath}
-              })
-            }, 1000);
-
-          } else {
-            Toast('网络请求错误');
-          }
-        });
+        })
       }
         if(this.isCar==2){
           let sku=[{
@@ -367,8 +344,10 @@
           headers: {'Authorization': 'BasicAuth ' + localStorage.lut}
 
         }).then((res) => {
-          if (res.data.Code == 200) {
+          if(!!res){
+            if (res.data.Code == 200) {
             this.sc = !this.sc
+            }
           }
         })
       }

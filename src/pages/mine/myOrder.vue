@@ -9,19 +9,30 @@
       </div>
     </div>
 
-    <div v-for="(item,index) in orderList">
-      <MorderBox>
+    <div class="order-box" v-infinite-scroll="loadMore"
+         infinite-scroll-disabled="loading"
+         infinite-scroll-distance="10">
+      <MorderBox v-for="(item,index) in orderList" :orderProductList="item.ProductList">
         <span slot="number">{{ item.OrderNo }}</span>
         <span slot="state">{{ item.OrderStateStr }}</span>
-        <span slot="img"><img :src="item.HeadImg" alt=""></span>
-        <span class="product-name" slot="name">{{ item.ProductName }}</span>
-        <span class="lm-text-grey lm-margin-t-sm" slot="count">数量：{{ item.ProductCount}}</span>
+
+        <!--<span slot="img"><img :src="item.HeadImg" alt=""></span>-->
+        <!--<span class="product-name" slot="name">{{ item.ProductName }}</span>-->
+        <!--<span class="lm-text-grey lm-margin-t-sm" slot="count">数量：{{ item.ProductCount}}</span>-->
+
         <span class="lm-text-red" slot="price">{{ item.TotalPrice }}</span>
         <span slot="cancel" v-if="tabNum == 1">取消订单</span>
         <span slot="btn">去付款</span>
-        <span slot="time">{{ item.CreateTime | removeT }}</span>
+        <span slot="time">{{ item.CreateTime | format }}</span>
       </MorderBox>
+
     </div>
+
+    <div class="noorder" v-show="orderList.length == 0">
+      <img src="../../assets/images/myInfo/order_03.png"/>
+      <p>没有相关的订单</p>
+    </div>
+
 
     <Mfooter :myCenterCurrent='true'></Mfooter>
   </div>
@@ -41,13 +52,13 @@
     },
     data() {
       return {
-        tabNum:this.$route.params.tabNum,
+        tabNum: this.$route.params.tabNum,
         number: 12313,
         price: 500,
         typeId: 1,
         pageIndex: 1,
-        pageSeze: 100,
-
+        pageSeze: 5,
+        loading: false,
         tabList: [
           {
             tabName: '全部',
@@ -73,12 +84,29 @@
         orderList: []
       }
     },
-     filters: {
-      removeT(val){
-        return val.replace('T',' ');
+    filters: {
+      format(val){
+          let date=new Date(val);
+          let y = date.getFullYear();  
+          let m = date.getMonth() + 1;  
+          m = m < 10 ? ('0' + m) : m;  
+          let d = date.getDate();  
+          d = d < 10 ? ('0' + d) : d;  
+          let h = date.getHours();  
+          let minute = date.getMinutes();  
+          minute = minute < 10 ? ('0' + minute) : minute;  
+          return y + '-' + m + '-' + d+' '+h+':'+minute;  
       }
     },
     methods: {
+      loadMore() {
+        this.loading = true;
+        // setTimeout(() => {
+        //   this.pageIndex++;
+        //   this.getOrderByType();         
+        //   this.loading = false;
+        // }, 2000);
+      },
       tabActive(i) {
         this.tabList.forEach(function (value, index, array) {
           array[index].isactive = false;
@@ -91,7 +119,7 @@
         this.getOrderByType();
       },
       //获取订单信息
-      getOrderByType(){
+      getOrderByType() {
         this.axios({
           url: this.url + '/api/Order/OrderList',
           method: 'post',
@@ -101,10 +129,10 @@
         }).then((res) => {
           if (res.data.Code == 200) {
             if (this.pageIndex == 1) {
-              this.orderList = res.data.Data.List;
+              this.orderList = res.data.Data;
             } else {
-              if (res.data.Data.List.length > 0) {
-                res.data.Data.List.forEach(function (item) {
+              if (res.data.Data.length > 0) {
+                res.data.Data.forEach(function (item) {
                   this.orderList.push(item);
                 });
               }
@@ -141,7 +169,17 @@
 </script>
 
 <style scoped>
+  header, .tabs {
+    width: 100%;
+    position: fixed !important;
+  }
+
+  header {
+    top: 0;
+  }
+
   .tabs {
+    top: 1.8rem;
     display: flex;
     align-items: center;
     height: 1.6rem;
@@ -149,6 +187,10 @@
     line-height: 1.6rem;
     background-color: #ffffff;
     border-bottom: 1px solid #eeeeee;
+  }
+
+  .order-box {
+    margin-top: 3.6rem;
   }
 
   .tabs .tab {
@@ -159,13 +201,21 @@
   }
 
   .tabs .active {
+    color: #B4282D;
     border-bottom: 3px solid #B4282D;
   }
 
-  .product-name{
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+  .noorder {
+    position: absolute;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #C8C8C8;
+  }
+
+  .noorder > img {
+    width: 4rem;
+    height: 4.5rem;
   }
 </style>
