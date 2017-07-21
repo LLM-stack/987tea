@@ -21,8 +21,11 @@
         <!--<span class="lm-text-grey lm-margin-t-sm" slot="count">数量：{{ item.ProductCount}}</span>-->
 
         <span class="lm-text-red" slot="price">{{ item.TotalPrice }}</span>
-        <span slot="cancel" v-if="tabNum == 1">取消订单</span>
-        <span slot="btn">去付款</span>
+        <span slot="cancel" v-if="tabNum == 1" @click="cancelOrder(item.ProductOrderId)">取消订单</span>
+        <span slot="btn" v-if="tabNum==1" @click="goToPay(index)">去付款</span>
+        <span slot="btn" v-else-if="tabNum==2">去催单</span>
+        <span slot="btn" v-else-if="tabNum==3" @click="logistics(item.LogisticsNo)">查看物流</span>
+        <span slot="btn" v-else-if="tabNum==4">去评价</span>
         <span slot="time">{{ item.CreateTime | format }}</span>
       </MorderBox>
 
@@ -43,6 +46,7 @@
   import Mfooter from '../../components/Mfooter'
   import MorderBox from '../../components/MorderBox'
   import {Toast} from 'mint-ui'
+  import { MessageBox } from 'mint-ui'
 
   export default {
     components: {
@@ -87,15 +91,15 @@
     filters: {
       format(val){
           let date=new Date(val);
-          let y = date.getFullYear();  
-          let m = date.getMonth() + 1;  
-          m = m < 10 ? ('0' + m) : m;  
-          let d = date.getDate();  
-          d = d < 10 ? ('0' + d) : d;  
-          let h = date.getHours();  
-          let minute = date.getMinutes();  
-          minute = minute < 10 ? ('0' + minute) : minute;  
-          return y + '-' + m + '-' + d+' '+h+':'+minute;  
+          let y = date.getFullYear();
+          let m = date.getMonth() + 1;
+          m = m < 10 ? ('0' + m) : m;
+          let d = date.getDate();
+          d = d < 10 ? ('0' + d) : d;
+          let h = date.getHours();
+          let minute = date.getMinutes();
+          minute = minute < 10 ? ('0' + minute) : minute;
+          return y + '-' + m + '-' + d+' '+h+':'+minute;
       }
     },
     methods: {
@@ -103,7 +107,7 @@
         this.loading = true;
         // setTimeout(() => {
         //   this.pageIndex++;
-        //   this.getOrderByType();         
+        //   this.getOrderByType();
         //   this.loading = false;
         // }, 2000);
       },
@@ -127,37 +131,70 @@
           headers: {'Authorization': 'BasicAuth ' + localStorage.lut}
 
         }).then((res) => {
-          if (res.data.Code == 200) {
-            if (this.pageIndex == 1) {
-              this.orderList = res.data.Data;
-            } else {
-              if (res.data.Data.length > 0) {
-                res.data.Data.forEach(function (item) {
-                  this.orderList.push(item);
-                });
+          if(!!res){
+            if (res.data.Code == 200) {
+              if (this.pageIndex == 1) {
+                this.orderList = res.data.Data;
+              } else {
+                if (res.data.Data.length > 0) {
+                  res.data.Data.forEach(function (item) {
+                    this.orderList.push(item);
+                  });
+                }
               }
             }
-          }
-          else {
-            Toast(res.data.Data);
-          }
-        }).catch((err) => {
-          if (err.response.status == 401) {
-            let instance = Toast('还未登录，请先登录');
-            setTimeout(() => {
-              instance.close();
-              this.$router.replace({
-                path: '/login/',
-                query: {redirect: this.$router.currentRoute.fullPath}
-              })
-            }, 1000);
-          }
-          else {
-            Toast('网络请求错误');
+            else {
+              Toast(res.data.Data);
+            }
           }
         });
       },
-
+      //取消订单
+      cancelOrder(oId){
+            MessageBox.confirm('确认删除么?').then(action => {
+            this.axios({
+              url: this.url + '/api/Order/CancelOrder',
+              method: 'post',
+              data: {orderId: oId},
+              headers: {'Authorization': 'BasicAuth ' + localStorage.lut}
+            }).then((res) => {
+              if(!!res){
+                if (res.data.Code == 200) {
+                  //移除删除的订单
+                  this.orderList = this.orderList.filter(o => o.ProductOrderId != oId);
+                  Toast(res.data.Data);
+                } else {
+                  Toast(res.data.Data);
+                }
+              }
+            })
+        });
+      },
+      //去下单
+      goToPay(index){
+          let skus = [];
+          this.orderList[index].ProductList.forEach(function (item) {
+              let sku = {
+                ShoppingCarId: 0,
+                ProductSpecId: item.ProductSpecId,
+                ProductName: item.ProductName,
+                ProductCount: item.ProductCount,
+                ProductImg: item.HeadImg,
+                ProductSpecPrice: item.SalePrice
+              }
+              skus.push(sku);
+          });
+          let sc={
+            productOrderId:this.orderList[index].ProductOrderId,
+            skus:skus
+          }
+          localStorage.setItem("cars", JSON.stringify(sc));
+          this.$router.push({path: '/Payment'})
+      },
+//      查看物流
+      logistics(info){
+       this.$router.push({ path: '/Logistics', query: { express: info }})
+      }
     },
     created() {
       let index = this.$route.params.tabNum

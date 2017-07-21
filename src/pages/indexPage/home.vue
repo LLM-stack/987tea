@@ -60,7 +60,7 @@
         <span>茶友圈</span>
       </div>
       <div>
-        <router-link :to="{path:'/MyCB'}">
+        <router-link :to="{path:'/MyOrder/待收货/3'}">
           <img src="../../assets/images/myInfo/icon.3.png" alt="">
         </router-link>
         <span>物流信息</span>

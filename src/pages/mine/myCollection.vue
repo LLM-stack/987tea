@@ -11,26 +11,30 @@
         <div>
           <div class="product-name">
               <router-link :to="{path:'/ProductDetails/'+item.ProductId}">
-              {{ item.Name }}
+
+
+                <p> {{ item.Name }}</p>
+
+                <p class="lm-text-grey lm-font-xs">{{ item.Name }}</p>
               </router-link>
             </div>
           <div class="product-delete" @click="deleteFavourite(item.FavouriteId)"></div>
         </div>
         <div class="product-price">
-          <div>￥{{ item.Price }}</div>
+          <div>￥ <span class="lm-text-red">{{ item.Price }}</span> 元</div>
           <div class="go-buy">
               <router-link :to="{path:'/ProductDetails/'+item.ProductId}">
                 去下单
               </router-link>
-          
+
           </div>
         </div>
       </div>
     </div>
-    
-    
+
+
     <Mfooter :myCenterCurrent="true"></Mfooter>
-    
+
   </div>
 
 </template>
@@ -156,8 +160,14 @@
   }
 
   .product .product-name{
-    font-size: 0.7rem;
+    max-width: 8.6rem;
+    font-size: 0.65rem;
     color: #000;
+  }
+  .product .product-name p{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
   .product .product-delete{
     width: 0.8rem;

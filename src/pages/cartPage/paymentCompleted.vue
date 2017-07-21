@@ -1,6 +1,6 @@
 <template>
     <div>
-      <Mheader :show=true>
+      <Mheader :show=true :back="false">
         <div slot="title">支付完成</div>
       </Mheader>
       <div class="completed">

@@ -6,8 +6,6 @@
       <img src="./assets/images/gotop.png"/>
     </div>
   </div>
-
-
 </template>
 
 <script>
@@ -31,7 +29,7 @@
       this.$nextTick(() => {
         window.addEventListener('scroll', this.scrollTop)
 
-  
+
       })
     }
 
@@ -118,15 +116,21 @@
     height: 100%;
   }
   #cnzz_stat_icon_1262960756{
+    top:-20px;
+    z-index: -999;
+    position: fixed;
     width: 0;
+    height: 0;
     opacity: 0;
   }
   /*工具样式*/
   .container {
+    height: 100%;
     margin-bottom: 2rem;
   }
 
   .containerbig {
+    height: 100%;
     margin-bottom: 2.4rem;
   }
 
@@ -150,6 +154,9 @@
     color: #B4282D !important;
   }
 
+  .lm-font-xs {
+    font-size: 0.5rem;
+  }
   .lm-font-sm {
     font-size: 0.6rem;
   }

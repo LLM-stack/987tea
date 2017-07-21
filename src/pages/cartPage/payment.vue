@@ -93,7 +93,8 @@
         orderDetails:[],
         freight:0,
         payType:0,
-        alipay:''
+        alipay:'',
+        productOrderId:"0"
       }
     },
     computed: {
@@ -140,7 +141,8 @@
           ProductCount:this.ProductCount,
           OrderFrom:2,//订单来源  2标识商城
           AddressId:this.defaultAddress.AdressId,
-          ProductSkus:this.orderDetails
+          ProductSkus:this.orderDetails,
+          ProductOrderId:this.productOrderId
         }
        this.axios({
         url: this.url + '/api/Order/OncePayment',
@@ -181,8 +183,10 @@
           this.defaultAddress=this.$store.state.receiveAddress;
         }
         
-        if(!!localStorage.cars){       
-          this.orderDetails=JSON.parse(localStorage.cars);
+        if(!!localStorage.cars){  
+          var sc=JSON.parse(localStorage.cars);
+          this.productOrderId=sc.productOrderId;     
+          this.orderDetails=sc.skus;
           this.ProductCount=this.orderDetails.length;
         }
         

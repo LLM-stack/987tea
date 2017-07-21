@@ -14,13 +14,15 @@
           <div>
             <div class="product-name">
               <router-link :to="{path:'/ProductDetails/'+item.ProductId}">
-                {{ item.ShortName }}
+                <p>{{ item.Name }}212121</p>
+
+              <p class="lm-text-grey lm-font-xs">{{ item.ShortName }}</p>
               </router-link>
             </div>
             <div class="product-delete" @click="deleteProduct(item.ShoppingCarId)"></div>
           </div>
           <div class="product-price">
-            <div>￥ {{ item.SalePrice }} 元</div>
+            <div>￥ <span class="lm-text-red">{{ item.SalePrice }}</span> 元</div>
             <div class="product-num">
               <span @click="changeNum(item,-1)">-</span>
               <input type="text" v-model="item.Count">
@@ -178,8 +180,8 @@
             } else {
               Toast(res.data.Data);
             }
-          } 
-                 
+          }
+
         })
       },
       //删除购物车中的商品
@@ -228,7 +230,11 @@
               }, 1000);
           return;
         }
-        localStorage.setItem("cars", JSON.stringify(skus));
+        let sc={
+           productOrderId:"0",
+           skus:skus
+        }
+        localStorage.setItem("cars", JSON.stringify(sc));
         this.$router.push({path: '/Payment'})
 
       }
@@ -269,7 +275,7 @@
 
   .product .product-dts > div {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
   }
 
@@ -281,7 +287,11 @@
     white-space: nowrap;
     text-overflow: ellipsis;
   }
-
+  .product .product-name p{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
   .product .product-delete {
     width: 0.8rem;
     height: 0.8rem;

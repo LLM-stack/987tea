@@ -112,9 +112,9 @@
         <div class="choice-num">
           <div>购买数量</div>
           <div>
-            <span @click="minus">-</span>
+            <span @click="changeNum(-1)">-</span>
             <input readonly="readonly" type="text" v-model="productNum">
-            <span @click="add">+</span>
+            <span @click="changeNum(1)">+</span>
           </div>
         </div>
 
@@ -240,8 +240,7 @@
 
       }
     },
-    checkSpec(index)
-    {//选中商品规格
+    checkSpec(index) {//选中商品规格
       this.checkIndex = index;
       this.specId = this.productSpec[index].ProductSpecId;
       this.specName = this.productSpec[index].ShortName;
@@ -250,25 +249,25 @@
       this.specStock = this.productSpec[index].Stock;
       this.checkMsg = '已选：' + this.productSpec[index].ShortName;
     },
-    add()
-    {//加
-      if (parseInt(this.productNum) < parseInt(this.specStock)) {
-        this.productNum++;
-      } else {
-        Toast('已经加到顶啦！');
-      }
-    },
-    minus()
-    {//减
-      if (parseInt(this.productNum) > 1) {
-        this.productNum--;
-      } else {
-        Toast('已经减到底啦！');
+    changeNum(val){
+//      加
+      if(val>0){
+        if (parseInt(this.productNum) < parseInt(this.specStock)) {
+          this.productNum++;
+        } else {
+          Toast('已经加到顶啦！');
+        }
+      }else {
+//        减
+        if (parseInt(this.productNum) > 1) {
+          this.productNum--;
+        } else {
+          Toast('已经减到底啦！');
+        }
       }
     },
     //确定的加入购物车或下单
-    addCar()
-    {
+    addCar() {
       if (this.checkIndex == -1) {
         Toast('请选择商品规格');
         return;
@@ -320,7 +319,11 @@
               ProductSpecPrice:this.specPrice
             }]
           if(!!localStorage.lut){
-            localStorage.setItem("cars", JSON.stringify(sku));
+             let sc={
+                productOrderId:"0",
+                skus:sku
+              }
+            localStorage.setItem("cars", JSON.stringify(sc));
             this.$router.push({ path: '/Payment'})
           }else{
             let instance = Toast('还未登录，请先登录');
@@ -342,7 +345,6 @@
           method: 'post',
           data: {productId: this.$route.params.productID},
           headers: {'Authorization': 'BasicAuth ' + localStorage.lut}
-
         }).then((res) => {
           if(!!res){
             if (res.data.Code == 200) {
@@ -383,8 +385,13 @@
 </script>
 
 <style scoped>
-
+header{
+  top:0;
+  width: 100%;
+  position: fixed!important;
+}
   .img-box {
+    margin-top: 1.8rem;
     height: 13.6rem;
   }
 

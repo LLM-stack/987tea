@@ -5,13 +5,13 @@
           <span>订单编号: <slot name="number"></slot></span>
           <span class="lm-text-red"><slot name="state"></slot></span>
         </div>
-        <div class="mid" v-for="pitem in orderProductList">
+        <div class="mid" v-for="(pitem,index) in orderProductList">
           <div>
             <span><img :src="pitem.HeadImg" alt=""></span>
             <div class="mid-cont">
               <span class="product-name">{{ pitem.ProductName }}</span>
+              <span class="product-name lm-text-grey lm-font-xs">{{ pitem.ProductName }}</span>
               <span class="lm-text-grey lm-margin-t-sm" >数量：{{ pitem.ProductCount}}</span>
-
             </div>
           </div>
         </div>

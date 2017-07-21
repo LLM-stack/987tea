@@ -1,6 +1,6 @@
 <template>
     <header class="bar-nav">
-      <a @click="backHistory" class="arrow" ></a>
+      <a v-if="back" @click="backHistory" class="arrow" ></a>
       <div class="title">
         <slot name="title"></slot>
       </div>
@@ -19,11 +19,15 @@
       show: {
         type: Boolean,
         default: false
+      },
+      back: {
+        type: Boolean,
+        default: true
       }
     },
     methods: {
       backHistory(){
-        window.history.go(-1)
+        this.$router.go(-1)
       }
     }
   }
