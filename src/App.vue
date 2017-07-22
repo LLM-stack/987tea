@@ -26,32 +26,32 @@
         document.body.scrollTop = 0
       }
     },
-    created(){
-
-      //添加一个返回拦截器
-      this.axios.interceptors.response.use(function(response){
-        //对返回的数据进行一些处理
-        return response;
-      },function(err){
-        //对返回的错误进行一些处理
-
-        if (err.response.status == 401) {
-          let instance = Toast('还未登录，请先登录');
-          setTimeout(() => {
-            instance.close();
-            router.replace({
-              path: '/login/',
-              query: {redirect: router.currentRoute.fullPath}
-            })
-          }, 1000);
-
-        } else {
-          //Toast('网络请求错误');
-          return Promise.reject(error);
-        }
-
-      });
-    },
+//    created(){
+//
+//      //添加一个返回拦截器
+//      this.axios.interceptors.response.use(function(response){
+//        //对返回的数据进行一些处理
+//        return response;
+//      },function(err){
+//        //对返回的错误进行一些处理
+//
+//        if (err.response.status == 401) {
+//          let instance = Toast('还未登录，请先登录');
+//          setTimeout(() => {
+//            instance.close();
+//            router.replace({
+//              path: '/login/',
+//              query: {redirect: router.currentRoute.fullPath}
+//            })
+//          }, 1000);
+//
+//        } else {
+//          //Toast('网络请求错误');
+//          return Promise.reject(error);
+//        }
+//
+//      });
+//    },
     mounted: function () {
       this.$nextTick(() => {
         window.addEventListener('scroll', this.scrollTop)
@@ -269,7 +269,7 @@
     height: 100%;
     background-repeat: no-repeat;
     background-position:center center;
-    background-size: 3rem 2rem;
+    background-size: 60% 40%;
     background-image: url("assets/images/login&register/login_03.png");
     background-color: #fff;
   }

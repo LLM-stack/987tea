@@ -7,7 +7,7 @@
         </div>
         <div class="mid" v-for="(pitem,index) in orderProductList">
           <div>
-            <span><img :src="pitem.HeadImg" alt=""></span>
+            <span><img alt="" v-lazy="pitem.HeadImg"></span>
             <div class="mid-cont">
               <span class="product-name">{{ pitem.Name }}</span>
               <span class="product-name lm-text-grey lm-font-xs lm-margin-t-xs">规格：{{ pitem.ProductName }}</span>
