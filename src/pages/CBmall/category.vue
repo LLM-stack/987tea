@@ -25,7 +25,7 @@
           </div>
           <div class="tea-list">
             <div class="tea-product" v-for="item in productList" @click="chkDetail(item.ProductId)">
-              <img v-lazy="item.HeadImg" />
+              <img v-lazy="item.HeadImg"/>
               <div class="lm-font-sm">{{ item.Name }}</div>
             </div>
           </div>
@@ -47,11 +47,11 @@
     data() {
       return {
         classIndex: '',
-        classList:[      
-          {             
+        classList:[
+          {
             Name:'茶叶',
             ProductClassifyId:'7c3f558606074157b9ee4f131c073e3a'
-          },{            
+          },{
             Name:'茶具',
             ProductClassifyId:'7c95c107a7424fdcb6c9561e8fb3679c'
           }

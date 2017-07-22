@@ -222,21 +222,23 @@
             skus.push(sku);
           }
         });
-        if (skus.length == 0) {
+        if (skus.length == 0 && this.productlist.length == 0) {
           let instance = Toast('购物车空空如也，去逛逛吧！');
               setTimeout(() => {
                 instance.close();
                 this.$router.push({ path: '/'})
               }, 1000);
           return;
+        } else if(!this.totalNum){
+          Toast('还未选择商品');
+        } else {
+          let sc={
+            productOrderId:"0",
+            skus:skus
+          }
+          localStorage.setItem("cars", JSON.stringify(sc));
+          this.$router.push({path: '/Payment'})
         }
-        let sc={
-           productOrderId:"0",
-           skus:skus
-        }
-        localStorage.setItem("cars", JSON.stringify(sc));
-        this.$router.push({path: '/Payment'})
-
       }
     },
     mounted: function () {

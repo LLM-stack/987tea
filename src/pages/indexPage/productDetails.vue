@@ -65,13 +65,13 @@
         <div class="evaluate-list">
           <div class="evaluate" v-for="(item,index) in productSpec">
             <div>
-              <span class="lm-margin-l-sm lm-text-grey">{{item.UserName}}</span>
+              <span class=" lm-text-grey">{{item.UserName}}</span>
             </div>
             <div class="content lm-margin-t-sm">
               {{item.Content}}
             </div>
             <div class="evaluate-time lm-margin-t-xs">
-              {{item.CrateTime}}
+              {{item.CrateTime | removeT}}
             </div>
           </div>
 
@@ -161,7 +161,19 @@
     filters: {
       teaB: function (value) {
         return (Math.floor(value) * 0.1);
-      }
+      },
+        removeT(val){
+          let date=new Date(val);
+          let y = date.getFullYear();
+          let m = date.getMonth() + 1;
+          m = m < 10 ? ('0' + m) : m;
+          let d = date.getDate();
+          d = d < 10 ? ('0' + d) : d;
+          let h = date.getHours();
+          let minute = date.getMinutes();
+          minute = minute < 10 ? ('0' + minute) : minute;
+          return y + '-' + m + '-' + d+' '+h+':'+minute;
+        }
     },
   methods: {
     selected(i){

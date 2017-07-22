@@ -44,7 +44,7 @@
     },
     filters:{
       timeA(val){
-        return val.substring(11,19)
+        return val.substring(11,16)
       },
       timeB(val){
         return val.substring(0,10)
