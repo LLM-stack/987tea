@@ -9,7 +9,7 @@
     </header>
     <div class="category">
       <div class="tabs">
-        <div class="tab" :class="{active:classIndex == index}" v-for="(cl,index) in classList" @click="checked(index,cl.ProductClassifyId)">{{
+        <div class="tab" :class="{active:classIndex == index}" v-for="(cl,index) in classList" @click="checked(index,cl.ProductTagId)">{{
           cl.Name }}
         </div>
       </div>
@@ -47,13 +47,34 @@
     data() {
       return {
         classIndex: '',
-        classList:[
+        classList:[         
+           {
+            Name:'绿茶',
+            ProductTagId:'e72bbaa5b578449a8a42def3ef086599'
+          },
           {
-            Name:'茶叶',
-            ProductClassifyId:'7c3f558606074157b9ee4f131c073e3a'
-          },{
+            Name:'红茶',
+            ProductTagId:'ded2fe1e606c40f3a546cc8d3c5fb9af'
+          },
+           {
+            Name:'乌龙茶',
+            ProductTagId:'21e97d03d88f433085126b22cc9f21e5'
+          },
+           {
+            Name:'白茶',
+            ProductTagId:'93843e7fcccd4ffa9ede6ad3b20aac2c'
+          },
+          {
+            Name:'黄茶',
+            ProductTagId:'2c17126c02774e95bdd22e7f88662008'
+          },
+           {
+            Name:'黑茶',
+            ProductTagId:'4e82223c669e462d8877324ad6f7fcf4'
+          },
+          {
             Name:'茶具',
-            ProductClassifyId:'7c95c107a7424fdcb6c9561e8fb3679c'
+            ProductTagId:'6dd8eae89c9a4fdeac8ebd67aae6ad41'
           }
         ],
         productList:[]
@@ -68,7 +89,7 @@
       goBack() {
         window.history.go(-1)
       },
-      //获取类别
+      //获取所有的类别
       getClassInfo(){
          this.axios.get(this.url+'/api/ProductClassify/GetProductClassify',{}).then((res)=>{
            if(res.data.Code==200){
@@ -80,6 +101,7 @@
              Toast('网络请求超时');
           })
       },
+      //获取类别商品
       getProducts(cId){
         this.axios.post(this.url+'/api/Product/GetCategoryProducts',{categoryId:cId}).then((res)=>{
            if(res.data.Code==200){
@@ -91,12 +113,13 @@
              Toast('网络请求超时');
           })
       },
+      //商品详情
       chkDetail(val){
           this.$router.push({path: '/ProductDetails/'+val})
       }
     },
     created:function(){
-      this.getClassInfo();
+      this.getProducts('e72bbaa5b578449a8a42def3ef086599');
 
     }
   }

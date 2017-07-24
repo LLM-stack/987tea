@@ -20,7 +20,7 @@
           <img src="../../assets/images/banner/banner1.jpg" alt="" @click.stop="chkDetail('dae874c59c56448f99c8045753b5cf0f')">
         </mt-swipe-item>
         <mt-swipe-item>
-          <img src="../../assets/images/banner/banner2.jpg" alt="" @click.stop="chkDetail('98a0b370bd49446eae702610a19d004')">
+          <img src="../../assets/images/banner/banner2.jpg" alt="" @click.stop="chkDetail('98a0b370bd49446eae702610a19d004f')">
         </mt-swipe-item>
         <mt-swipe-item>
           <img src="../../assets/images/banner/banner3.jpg" alt="" @click.stop="chkDetail('4795f6b55ba747919a406b71593080d0')">

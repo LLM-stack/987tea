@@ -1,10 +1,10 @@
 <template>
   <div class="container">
     <Mheader>
-      <div slot="title">{{ this.$route.params.title }}</div>
+      <div slot="title">我的订单</div>
     </Mheader>
     <div class="tabs">
-      <div class="tab" v-for="(item,index) in tabList" :class="{active:item.isactive}" @click="tabActive(index)">{{
+      <div class="tab" v-for="(item,index) in tabList" :class="{active:activeIdx == index}" @click="tabActive(index)">{{
         item.tabName }}
       </div>
     </div>
@@ -23,9 +23,9 @@
         <span class="lm-text-red" slot="price">{{ item.TotalPrice }}</span>
         <span slot="cancel" v-if="tabNum == 1" @click="cancelOrder(item.ProductOrderId)">取消订单</span>
         <span slot="btn" v-if="tabNum==1" @click="goToPay(index)">去付款</span>
-        <span slot="btn" v-else-if="tabNum==2">去催单</span>
+        <span slot="btn" v-else-if="tabNum==2" @click="addOrderUrged(item.ProductOrderId)">去催单</span>
         <span slot="btn" v-else-if="tabNum==3" @click="logistics(item.LogisticsNo)">查看物流</span>
-        <span slot="btn" v-else-if="tabNum==4">去评价</span>
+        <span slot="btn" v-else-if="tabNum==4" @click="goToEvaluate(item.ProductOrderId)" :class="{already:item.OrderState==3}"><span v-if="item.OrderState==3" >已评价</span><span v-else>去评价</span></span>
         <span slot="time">{{ item.CreateTime | format }}</span>
       </MorderBox>
 
@@ -60,29 +60,25 @@
         number: 12313,
         price: 500,
         typeId: 1,
-        pageIndex: 1,
-        pageSeze: 5,
+        pageIndex: 0,
+        pageSeze: 10,
         loading: false,
+        activeIdx: 0,
         tabList: [
           {
-            tabName: '全部',
-            isactive: false
+            tabName: '全部'
           },
           {
-            tabName: '待付款',
-            isactive: false
+            tabName: '待付款'
           },
           {
-            tabName: '待发货',
-            isactive: false
+            tabName: '待发货'
           },
           {
-            tabName: '待收货',
-            isactive: false
+            tabName: '待收货'
           },
           {
-            tabName: '待评价',
-            isactive: false
+            tabName: '待评价'
           }
         ],
         orderList: []
@@ -105,13 +101,11 @@
     methods: {
       loadMore() {
         this.loading = true;
-        // setTimeout(() => {
-        //   this.pageIndex++;
-        //   this.getOrderByType();
-        //   this.loading = false;
-        // }, 2000);
+        this.pageIndex++;
+        this.getOrderByType();
       },
       tabActive(i) {
+        this.activeIdx = i;
         this.tabList.forEach(function (value, index, array) {
           array[index].isactive = false;
         });
@@ -135,11 +129,15 @@
             if (res.data.Code == 200) {
               if (this.pageIndex == 1) {
                 this.orderList = res.data.Data;
+                this.loading = false;
               } else {
                 if (res.data.Data.length > 0) {
-                  res.data.Data.forEach(function (item) {
-                    this.orderList.push(item);
-                  });
+                  for (let i = 0; i < res.data.Data.length; i++) {
+                      this.orderList.push(res.data.Data[i])
+                  }
+                  this.loading = false;
+                }else{
+                  this.loading = true;
                 }
               }
             }
@@ -151,7 +149,7 @@
       },
       //取消订单
       cancelOrder(oId){
-            MessageBox.confirm('确认删除么?').then(action => {
+            MessageBox.confirm('确认取消订单么?').then(action => {
             this.axios({
               url: this.url + '/api/Order/CancelOrder',
               method: 'post',
@@ -191,16 +189,37 @@
           localStorage.setItem("cars", JSON.stringify(sc));
           this.$router.push({path: '/Payment'})
       },
-//      查看物流
+      //去评价
+      goToEvaluate(val){
+        this.$router.push({path: '/evaluate/'+val})
+      },
+      // 查看物流
       logistics(info){
        this.$router.push({ path: '/Logistics', query: { express: info }})
+      },
+      //催单
+      addOrderUrged(oId){
+        this.axios({
+              url: this.url + '/api/OrderUrged/AddOrderUrged',
+              method: 'post',
+              data: {OrderId: oId},
+              headers: {'Authorization': 'BasicAuth ' + localStorage.lut}
+            }).then((res) => {
+              if(!!res){
+                if (res.data.Code == 200) {
+                  Toast(res.data.Data);
+                } else {
+                  Toast(res.data.Data);
+                }
+              }
+            })
       }
     },
     created() {
       let index = this.$route.params.tabNum
       this.tabList[index].isactive = true
       this.typeId = parseInt(index) + 1;
-      this.getOrderByType();
+      // this.getOrderByType();
     }
   }
 </script>
@@ -254,5 +273,11 @@
   .noorder > img {
     width: 4rem;
     height: 4.5rem;
+  }
+  /*按钮操作后*/
+  .already{
+    pointer-events: none;
+    color: #9d9d9d!important;
+    border-color: #9d9d9d!important;
   }
 </style>

@@ -30,6 +30,7 @@
 
 <script>
   import Mheader from '../../components/Mheader'
+  import {Toast} from 'mint-ui'
 
   export default {
     components: {

@@ -11,7 +11,7 @@
         <div class="name lm-margin-l-sm">{{user.UserName}}</div>
         <div class="cb lm-margin-t-xs">
           <router-link :to="{path:'/MyCB'}">
-            <i class="lm-margin-r-xs"></i>茶币：{{user.TeaNum}}
+            <i class="lm-margin-r-xs"></i>茶币：{{user.Score}}
           </router-link>
         </div>
       </div>
@@ -139,7 +139,9 @@
 
     },
     mounted:function(){
-      this.getUserInfo();
+      this.$nextTick(()=>{
+         this.getUserInfo();
+       })
     }
   }
 </script>

@@ -63,7 +63,7 @@
       </div>
       <div v-if="tabIndex == 2">
         <div class="evaluate-list">
-          <div class="evaluate" v-for="(item,index) in productSpec">
+          <div class="evaluate" v-for="(item,index) in productDesc">
             <div>
               <span class=" lm-text-grey">{{item.UserName}}</span>
             </div>
@@ -71,11 +71,11 @@
               {{item.Content}}
             </div>
             <div class="evaluate-time lm-margin-t-xs">
-              {{item.CrateTime | removeT}}
+              {{item.CrateTime | formatTime}}
             </div>
           </div>
-
         </div>
+        <div class="more-comment"><span>点击查看更多...</span></div>
       </div>
     </div>
 
@@ -146,7 +146,12 @@
         ],
         product: '',
         productSpec: '',
+        productDesc: [],
         productParams: '',
+        //评论下拉加载
+        pageIndex: 1,
+        pageSize: 10,
+        loading: false,
         //规格参数
         checkMsg: '请选择 规格',
         specId: '',
@@ -160,248 +165,275 @@
     },
     filters: {
       teaB: function (value) {
-        return (Math.floor(value) * 0.1);
+        return ((value) * 0.1).toFixed(2);
       },
-        removeT(val){
-          let date=new Date(val);
-          let y = date.getFullYear();
-          let m = date.getMonth() + 1;
-          m = m < 10 ? ('0' + m) : m;
-          let d = date.getDate();
-          d = d < 10 ? ('0' + d) : d;
-          let h = date.getHours();
-          let minute = date.getMinutes();
-          minute = minute < 10 ? ('0' + minute) : minute;
-          return y + '-' + m + '-' + d+' '+h+':'+minute;
-        }
-    },
-  methods: {
-    selected(i){
-      this.tabIndex = i
-    },
-    choice(val){
-      if (this.isCar == 0) {//首次点击加载sku信息
-        this.getProductSKU();
+      formatTime(val) {
+        let date = new Date(val);
+        let y = date.getFullYear();
+        let m = date.getMonth() + 1;
+        m = m < 10 ? ('0' + m) : m;
+        let d = date.getDate();
+        d = d < 10 ? ('0' + d) : d;
+        let h = date.getHours();
+        let minute = date.getMinutes();
+        minute = minute < 10 ? ('0' + minute) : minute;
+        return y + '-' + m + '-' + d;
       }
-      this.isCar = val;
-      this.choiceShow = !this.choiceShow
     },
-    getProduct(){//获取商品信息
-      this.axios.post(this.url + '/api/Product/ProductDetail', {productId: this.$route.params.productID}).then((res) => {
-        if (res.data.Code == 200) {
-          this.product = res.data.Data;
-          //设置选择商品规格的默认参数
-          this.specImg = this.product.HeadImg;
-          this.specPrice = this.product.Price;
-          this.specStock = this.product.AllStock;
-        } else {
-          Toast(res.data.Data);
+    methods: {
+      loadMore() {
+        this.loading = true;
+        this.pageIndex++;
+        this.getProductEstimates();
+      },
+      selected(i) {
+        this.tabIndex = i
+      },
+      choice(val) {
+        //首次点击加载sku信息
+        if (this.isCar == 0) {
+          this.getProductSKU();
         }
-      }).catch((err) => {
-        Toast('网络请求超时');
-      })
-    },
-    getProductSKU(){//获取商品SKU
-      this.axios.post(this.url + '/api/Product/ProductSpecs', {productId: this.$route.params.productID}).then((res) => {
-        if (res.data.Code == 200) {
-          this.productSpec = res.data.Data;
-          //设置默认选中第一个
-          this.checkIndex = 0;
-          this.specId = this.productSpec[0].ProductSpecId;
-          this.specName = this.productSpec[0].ShortName;
-          this.specImg = this.productSpec[0].HeadImg;
-          this.specPrice = this.productSpec[0].SalePrice;
-          this.specStock = this.productSpec[0].Stock;
-          this.checkMsg = '已选：' + this.productSpec[0].ShortName;
-        } else {
-          Toast(res.data.Data);
-        }
-      }).catch((err) => {
-        Toast('网络请求超时');
-      })
-    },
-    getParams(){//获取商品参数
-      this.axios.post(this.url + '/api/Product/ProductParameters', {productId: this.$route.params.productID}).then((res) => {
-        if (res.data.Code == 200) {
-          this.productParams = res.data.Data;
-        } else {
-          Toast(res.data.Data);
-        }
-      }).catch((err) => {
-        Toast('网络请求超时');
-      })
-    },
-    favouriteProduct()
-    {//收藏商品
-      if (!this.sc) {
-        this.axios({
-          url: this.url + '/api/Product/FavouriteProduct',
-          method: 'post',
-          data: {ProductId: this.$route.params.productID},
-          headers: {'Authorization': 'BasicAuth ' + localStorage.lut}
-        }).then((res) => {
-          if(!!res){
-            if (res.data.Code == 200) {
-            this.sc = !this.sc
+        this.isCar = val;
+        this.choiceShow = !this.choiceShow
+      },
+      //获取商品信息
+      getProduct() {
+        this.axios.post(this.url + '/api/Product/ProductDetail', {productId: this.$route.params.productID}).then((res) => {
+          if (res.data.Code == 200) {
+            this.product = res.data.Data;
+            //设置选择商品规格的默认参数
+            this.specImg = this.product.HeadImg;
+            this.specPrice = this.product.Price;
+            this.specStock = this.product.AllStock;
+          } else {
             Toast(res.data.Data);
-            } else {
-              Toast(res.data.Data);
-            }
           }
+        }).catch((err) => {
+          Toast('网络请求超时');
         })
-
-      }
-    },
-    checkSpec(index) {//选中商品规格
-      this.checkIndex = index;
-      this.specId = this.productSpec[index].ProductSpecId;
-      this.specName = this.productSpec[index].ShortName;
-      this.specImg = this.productSpec[index].HeadImg;
-      this.specPrice = this.productSpec[index].SalePrice;
-      this.specStock = this.productSpec[index].Stock;
-      this.checkMsg = '已选：' + this.productSpec[index].ShortName;
-    },
-    changeNum(val){
-//      加
-      if(val>0){
-        if (parseInt(this.productNum) < parseInt(this.specStock)) {
-          this.productNum++;
-        } else {
-          Toast('已经加到顶啦！');
-        }
-      }else {
-//        减
-        if (parseInt(this.productNum) > 1) {
-          this.productNum--;
-        } else {
-          Toast('已经减到底啦！');
-        }
-      }
-    },
-    //确定的加入购物车或下单
-    addCar() {
-      if (this.checkIndex == -1) {
-        Toast('请选择商品规格');
-        return;
-      }
-      //判断是否userId是否空
-      if (!!!localStorage.lut) {
-        // var url=window.location.pathname;//获取当前路径名称
-        var url = window.location.href
-        let instance = Toast('还未登录，请先登录');
-        setTimeout(() => {
-          this.$router.replace({
-            path: '/login/',
-            query: {redirect: this.$router.currentRoute.fullPath}
-          })
-        }, 1000);
-        return;
-      }
-      if (this.isCar == 1) {
-        //加入购物车
-        this.axios({
-          url: this.url + '/api/ShoppingCar/AddToShoppingCar',
-          method: 'post',
-          data: {productSpecId: this.specId, userId: this.$store.state.user_id, count: this.productNum},
-          headers: {'Authorization': 'BasicAuth ' + localStorage.lut}
-
-        }).then((res) => {
-          if(!!res){
-            if (res.data.Code == 200) {
-            this.choiceShow = !this.choiceShow
+      },
+      //获取商品SKU
+      getProductSKU() {
+        this.axios.post(this.url + '/api/Product/ProductSpecs', {productId: this.$route.params.productID}).then((res) => {
+          if (res.data.Code == 200) {
+            this.productSpec = res.data.Data;
+            //设置默认选中第一个
+            this.checkIndex = 0;
+            this.specId = this.productSpec[0].ProductSpecId;
+            this.specName = this.productSpec[0].ShortName;
+            this.specImg = this.productSpec[0].HeadImg;
+            this.specPrice = this.productSpec[0].SalePrice;
+            this.specStock = this.productSpec[0].Stock;
+            this.checkMsg = '已选：' + this.productSpec[0].ShortName;
+          } else {
             Toast(res.data.Data);
-            // let instance = Toast(res.data.Data);
-            // setTimeout(() => {
-            //   instance.close();
-            //   this.$router.push({path: '/Cart'})
-            // }, 1000);
-            } else {
-              Toast(res.data.Data);
-            }
           }
+        }).catch((err) => {
+          Toast('网络请求超时');
         })
-      }
-        if(this.isCar==2){
-          let sku=[{
-              ShoppingCarId:0,
-              ProductSpecId:this.specId,
-              ProductName:this.specName,
-              ProductCount:this.productNum,
-              ProductImg:this.specImg,
-              ProductSpecPrice:this.specPrice
-            }]
-          if(!!localStorage.lut){
-             let sc={
-                productOrderId:"0",
-                skus:sku
+      },
+      //获取商品参数
+      getParams() {
+        this.axios.post(this.url + '/api/Product/ProductParameters', {productId: this.$route.params.productID}).then((res) => {
+          if (res.data.Code == 200) {
+            this.productParams = res.data.Data;
+          } else {
+            Toast(res.data.Data);
+          }
+        }).catch((err) => {
+          Toast('网络请求超时');
+        })
+      },
+      //收藏商品
+      favouriteProduct() {
+        if (!this.sc) {
+          this.axios({
+            url: this.url + '/api/Product/FavouriteProduct',
+            method: 'post',
+            data: {ProductId: this.$route.params.productID},
+            headers: {'Authorization': 'BasicAuth ' + localStorage.lut}
+          }).then((res) => {
+            if (!!res) {
+              if (res.data.Code == 200) {
+                this.sc = !this.sc
+                Toast(res.data.Data);
+              } else {
+                Toast(res.data.Data);
               }
+            }
+          })
+
+        }
+      },
+      //选中商品规格
+      checkSpec(index) {
+        this.checkIndex = index;
+        this.specId = this.productSpec[index].ProductSpecId;
+        this.specName = this.productSpec[index].ShortName;
+        this.specImg = this.productSpec[index].HeadImg;
+        this.specPrice = this.productSpec[index].SalePrice;
+        this.specStock = this.productSpec[index].Stock;
+        this.checkMsg = '已选：' + this.productSpec[index].ShortName;
+      },
+      //数量变化
+      changeNum(val) {
+        //加
+        if (val > 0) {
+          if (parseInt(this.productNum) < parseInt(this.specStock)) {
+            this.productNum++;
+          } else {
+            Toast('已经加到顶啦！');
+          }
+        } else {
+          //减
+          if (parseInt(this.productNum) > 1) {
+            this.productNum--;
+          } else {
+            Toast('已经减到底啦！');
+          }
+        }
+      },
+      //确定的加入购物车或下单
+      addCar() {
+        if (this.checkIndex == -1) {
+          Toast('请选择商品规格');
+          return;
+        }
+        //判断是否userId是否空
+        if (!!!localStorage.lut) {
+          // var url=window.location.pathname;//获取当前路径名称
+          var url = window.location.href
+          let instance = Toast('还未登录，请先登录');
+          setTimeout(() => {
+            this.$router.replace({
+              path: '/login/',
+              query: {redirect: this.$router.currentRoute.fullPath}
+            })
+          }, 1000);
+          return;
+        }
+        if (this.isCar == 1) {
+          //加入购物车
+          this.axios({
+            url: this.url + '/api/ShoppingCar/AddToShoppingCar',
+            method: 'post',
+            data: {productSpecId: this.specId, userId: this.$store.state.user_id, count: this.productNum},
+            headers: {'Authorization': 'BasicAuth ' + localStorage.lut}
+
+          }).then((res) => {
+            if (!!res) {
+              if (res.data.Code == 200) {
+                this.choiceShow = !this.choiceShow
+                Toast(res.data.Data);
+                // let instance = Toast(res.data.Data);
+                // setTimeout(() => {
+                //   instance.close();
+                //   this.$router.push({path: '/Cart'})
+                // }, 1000);
+              } else {
+                Toast(res.data.Data);
+              }
+            }
+          })
+        }
+        if (this.isCar == 2) {
+          let sku = [{
+            ShoppingCarId: 0,
+            ProductSpecId: this.specId,
+            ProductName: this.specName,
+            ProductCount: this.productNum,
+            ProductImg: this.specImg,
+            ProductSpecPrice: this.specPrice
+          }]
+          if (!!localStorage.lut) {
+            let sc = {
+              productOrderId: "0",
+              skus: sku
+            }
             localStorage.setItem("cars", JSON.stringify(sc));
-            this.$router.push({ path: '/Payment'})
-          }else{
+            this.$router.push({path: '/Payment'})
+          } else {
             let instance = Toast('还未登录，请先登录');
-              setTimeout(() => {
-                instance.close();
-                this.$router.replace({
-                      path: '/login/',
-                      query: {redirect: this.$router.currentRoute.fullPath}
-                    })
-              }, 1000);
+            setTimeout(() => {
+              instance.close();
+              this.$router.replace({
+                path: '/login/',
+                query: {redirect: this.$router.currentRoute.fullPath}
+              })
+            }, 1000);
           }
 
         }
       },
-      isFavourite(){//该商品是否收藏了
-      if (!!localStorage.lut) {
-        this.axios({
-          url: this.url + '/api/Product/IsFavourite',
-          method: 'post',
-          data: {productId: this.$route.params.productID},
-          headers: {'Authorization': 'BasicAuth ' + localStorage.lut}
-        }).then((res) => {
-          if(!!res){
-            if (res.data.Code == 200) {
-            this.sc = !this.sc
+      isFavourite() {//该商品是否收藏了
+        if (!!localStorage.lut) {
+          this.axios({
+            url: this.url + '/api/Product/IsFavourite',
+            method: 'post',
+            data: {productId: this.$route.params.productID},
+            headers: {'Authorization': 'BasicAuth ' + localStorage.lut}
+          }).then((res) => {
+            if (!!res) {
+              if (res.data.Code == 200) {
+                this.sc = !this.sc
+              }
             }
+          }).catch((err) => {
+
+          })
+
+        }
+      },
+      //获取商品评论
+      getProductEstimates() {
+        this.axios.post(this.url + '/api/Product/ProductEstimates', {
+          productId: this.$route.params.productID,
+          rows: this.pageSize,
+          page: this.pageIndex
+        }).then((res) => {
+          if (res.data.Code == 200) {
+            if (this.pageIndex == 1) {
+              this.productDesc = res.data.Data.List;
+              this.loading = false;
+            } else {
+              if (res.data.Data.List.length > 0) {
+                for (let i = 0; i < res.data.Data.List.length; i++) {
+                  this.productDesc.push(res.data.Data.List[i])
+                }
+                this.loading = false;
+              } else {
+                this.loading = true;
+              }
+            }
+
+            this.tab[2].tabName = "评论(" + res.data.Data.records + ")"
+          } else {
+            Toast(res.data.Data);
           }
+        }).catch((err) => {
+          Toast('网络请求超时');
         })
       }
     },
-    //获取商品评论
-    getProductEstimates()
-    {
-      this.axios.post(this.url + '/api/Product/ProductEstimates', {
-        productId: this.$route.params.productID,
-        rows: 10,
-        page: 1
-      }).then((res) => {
-        if (res.data.Code == 200) {
-          this.productSpec = res.data.Data.List;
-          this.tab[2].tabName = "评论(" + res.data.Data.total + ")"
-        } else {
-          Toast(res.data.Data);
-        }
-      }).catch((err) => {
-        Toast('网络请求超时');
-      })
+    mounted: function () {
+      this.$nextTick(() => {
+        this.getProduct();
+        this.getParams();
+        this.getProductEstimates();
+        this.isFavourite();
+      });
     }
-  },
-  mounted: function () {
-    this.$nextTick(() => {
-      this.getProduct();
-      this.getParams();
-      this.getProductEstimates();
-      this.isFavourite();
-    });
-  }
   }
 </script>
 
 <style scoped>
-header{
-  top:0;
-  width: 100%;
-  position: fixed!important;
-}
+  header {
+    top: 0;
+    width: 100%;
+    position: fixed !important;
+  }
+
   .img-box {
     margin-top: 1.8rem;
     height: 13.6rem;
@@ -713,6 +745,12 @@ header{
   .evaluate .evaluate-time {
     width: 100%;
     justify-content: flex-end;
+  }
+
+ .more-comment {
+   color: #aaa;
+    padding: 0.6rem 0;
+    text-align: center;
   }
 
   .fade-enter-active, .fade-leave-active {

@@ -20,21 +20,24 @@ Vue.prototype.axios = axios
             return response;
         },function(err){
             //对返回的错误进行一些处理
+            
+          if(err.response.config.url.includes('/api/Product/IsFavourite')){
+                 //过滤商品详情页的登录跳转进行处理
+          }
+          else if (err.response.status == 401) {
+              let instance = Toast('还未登录，请先登录');
+              setTimeout(() => {
+                instance.close();
+                router.replace({
+                  path: '/login/',
+                  query: {redirect: router.currentRoute.fullPath}
+                })
+              }, 1000);
 
-            if (err.response.status == 401) {
-                    let instance = Toast('还未登录，请先登录');
-                    setTimeout(() => {
-                      instance.close();
-                      router.replace({
-                        path: '/login/',
-                        query: {redirect: router.currentRoute.fullPath}
-                      })
-                    }, 1000);
-
-                  } else {
-                    //Toast('网络请求错误');
-                    return Promise.reject(error);
-                  }
+            } else {
+              //Toast('网络请求错误');
+              return Promise.reject(error);
+            }
 
         });
 
@@ -42,9 +45,9 @@ Vue.prototype.user_Id = '0'
 //内网地址： 'http://192.168.1.110:8088'
 //本地地址： 'http://localhost:55400'  //'http://localhost:8088'
 //正式地址： 'http://api.987tea.com'
-Vue.prototype.url='http://192.168.1.110:8088'
-// Vue.prototype.url='http://localhost:8088'
-// Vue.prototype.url='http://api.987tea.com'
+// Vue.prototype.url='http://192.168.1.110:8088'
+Vue.prototype.url='http://localhost:8088'
+//  Vue.prototype.url='http://api.987tea.com'
 
 
 Vue.config.productionTip = false

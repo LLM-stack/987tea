@@ -12,10 +12,9 @@
           <div class="product-name">
               <router-link :to="{path:'/ProductDetails/'+item.ProductId}">
 
-
                 <p> {{ item.Name }}</p>
 
-                <p class="lm-text-grey lm-font-xs">{{ item.Name }}</p>
+                <!--<span class="lm-text-grey lm-font-xs">{{ item.Name }}</span>-->
               </router-link>
             </div>
           <div class="product-delete" @click="deleteFavourite(item.FavouriteId)"></div>
@@ -63,26 +62,14 @@
         headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
 
         }).then((res)=>{
-          if (res.data.Code == 200) {
+          if(!!res){
+            if (res.data.Code == 200) {
               this.productlist = res.data.Data;
             } else {
               Toast(res.data.Data);
             }
-        }).catch((err)=>{
-          if(err.response.status==401){
-              let instance = Toast('还未登录，请先登录');
-              setTimeout(() => {
-                instance.close();
-                this.$router.replace({
-                      path: '/login/',
-                      query: {redirect: this.$router.currentRoute.fullPath}
-                    })
-              }, 1000);
-
-            }else{
-                Toast('网络请求错误');
-            }
-        });
+          }
+        })
       },
 
       //删除收藏的商品
@@ -94,28 +81,16 @@
           headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
 
           }).then((res)=>{
-            if (res.data.Code == 200) {
-              //移除删除的商品
-               this.productlist = this.productlist.filter(p => p.FavouriteId != FavouriteId);
-               Toast(res.data.Data);
-              } else {
+            if(!!res){
+                if (res.data.Code == 200) {
+                //移除删除的商品
+                this.productlist = this.productlist.filter(p => p.FavouriteId != FavouriteId);
                 Toast(res.data.Data);
-              }
-          }) .catch((err)=>{
-          if(err.response.status==401){
-              let instance = Toast('还未登录，请先登录');
-              setTimeout(() => {
-                instance.close();
-                this.$router.replace({
-                      path: '/login/',
-                      query: {redirect: this.$router.currentRoute.fullPath}
-                    })
-              }, 1000);
-
-            }else{
-                Toast('网络请求错误');
+                } else {
+                  Toast(res.data.Data);
+                }
             }
-        });
+          }) 
       },
     },
 

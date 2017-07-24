@@ -26,37 +26,9 @@
         document.body.scrollTop = 0
       }
     },
-//    created(){
-//
-//      //添加一个返回拦截器
-//      this.axios.interceptors.response.use(function(response){
-//        //对返回的数据进行一些处理
-//        return response;
-//      },function(err){
-//        //对返回的错误进行一些处理
-//
-//        if (err.response.status == 401) {
-//          let instance = Toast('还未登录，请先登录');
-//          setTimeout(() => {
-//            instance.close();
-//            router.replace({
-//              path: '/login/',
-//              query: {redirect: router.currentRoute.fullPath}
-//            })
-//          }, 1000);
-//
-//        } else {
-//          //Toast('网络请求错误');
-//          return Promise.reject(error);
-//        }
-//
-//      });
-//    },
     mounted: function () {
       this.$nextTick(() => {
         window.addEventListener('scroll', this.scrollTop)
-
-
       })
     }
 
@@ -141,15 +113,19 @@
   img {
     width: 100%;
     height: 100%;
+    vertical-align: bottom;
   }
-  #cnzz_stat_icon_1262960756{
-    top:-20px;
+
+  /*cnzz*/
+  #cnzz_stat_icon_1262960756 {
+    top: -20px;
     z-index: -999;
     position: fixed;
     width: 0;
     height: 0;
     opacity: 0;
   }
+
   /*工具样式*/
   .container {
     height: 100%;
@@ -184,12 +160,19 @@
   .lm-font-xs {
     font-size: 0.5rem;
   }
+
   .lm-font-sm {
     font-size: 0.6rem;
   }
 
   .lm-font-defult {
     font-size: 0.7rem;
+  }
+  .lm-font-lg {
+    font-size: 0.8rem;
+  }
+  .lm-font-xxxl {
+    font-size: 1.3rem;
   }
 
   .lm-margin-t {
@@ -264,18 +247,19 @@
     justify-content: space-between;
   }
 
+  /*图片懒加载*/
   img[lazy=loading] {
     width: 100%;
     height: 100%;
     background-repeat: no-repeat;
-    background-position:center center;
+    background-position: center center;
     background-size: 60% 40%;
     background-image: url("assets/images/login&register/login_03.png");
     background-color: #fff;
   }
 
   .gotop {
-    bottom: 3rem;
+    bottom: 4rem;
     right: 1rem;
     position: fixed;
     width: 1.5rem;

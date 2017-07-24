@@ -48,7 +48,7 @@
                   let instance = Toast(res.data.Data);
                   setTimeout(() => {
                     instance.close();
-                    this.$router.replace({ path: '/MyInfo/'});
+                    this.$router.replace({ path: '/MyInfo'});
                   }, 1000);
                 } else {
                   Toast(res.data.Data);

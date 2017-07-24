@@ -14,8 +14,7 @@
           <div>
             <div class="product-name">
               <router-link :to="{path:'/ProductDetails/'+item.ProductId}">
-                <p>{{ item.Name }}212121</p>
-
+                <p>{{ item.Name }}</p>
               <p class="lm-text-grey lm-font-xs">{{ item.ShortName }}</p>
               </router-link>
             </div>
@@ -223,11 +222,7 @@
           }
         });
         if (skus.length == 0 && this.productlist.length == 0) {
-          let instance = Toast('购物车空空如也，去逛逛吧！');
-              setTimeout(() => {
-                instance.close();
-                this.$router.push({ path: '/'})
-              }, 1000);
+          Toast('请选择商品后再进行购买！');
           return;
         } else if(!this.totalNum){
           Toast('还未选择商品');

@@ -1,23 +1,20 @@
 <template>
   <div>
-    <Mheader :show=true>
+    <Mheader :show='true'>
       <div slot="title">商品评价</div>
     </Mheader>
 
     <div class="box">
       <textarea class="box-text" placeholder="亲，记得评价得茶币哦~" maxlength="300" v-model="content"></textarea>
-      <div class="btn" @click="submit">提交</div>
+      <div class="btn" @click="submitEvaluate">提交</div>
     </div>
-
-
-    <Mfooter :myCenterCurrent='true'></Mfooter>
-
   </div>
 </template>
 
 <script>
   import Mheader from '../../components/Mheader'
-
+  import {Toast} from 'mint-ui'
+  
   export default {
     components: {
       Mheader
@@ -28,48 +25,31 @@
     },
     methods: {
 
-      submitSuggest(){
+      submitEvaluate(){
         if(!!!this.content){
-          Toast('请填写您的意见或建议后再提交！');
+          Toast('请填写您的评价后再提交！');
           return;
         }
-        let text = {Content:this.content};
+        
         this.axios({
-          url:this.url + '/api/Suggest/saveSuggestion',
+          url:this.url + '/api/Order/AddEvaluate',
           method:'post',
-          data:text,
+          data:{content:this.content,orderId:this.$route.params.orderId},
           headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
         }).then((res)=>{
           if (res.data.Code == 200) {
             let instance = Toast(res.data.Data);
             setTimeout(() => {
               instance.close();
-              this.$router.replace({ path: '/MyInfo/'});
+              this.$router.replace({ path: '/MyInfo'});
             }, 1000);
           } else {
             Toast(res.data.Data);
           }
-        }).catch((err)=>{
-          if(err.response.status==401){
-            let instance = Toast('还未登录，请先登录');
-            setTimeout(() => {
-              instance.close();
-              this.$router.replace({
-                path: '/login/',
-                query: {redirect: this.$router.currentRoute.fullPath}
-              })
-            }, 1000);
-
-          }else{
-            Toast('网络请求错误');
-          }
-        });
-      },
-
-      submit(){
-        this.submitSuggest()
+        })
       }
-    },
+
+    }
   }
 </script>
 

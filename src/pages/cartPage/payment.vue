@@ -153,7 +153,7 @@
           if(!!res)
              if (res.data.Code == 200) {
              if(this.payType==0){
-               this.$router.push({path: '/MyOrder/全部/0'})
+               this.$router.push({path: '/paymentCompleted'})
              }
              if(this.payType==2){
                this.alipay=res.data.ExData; 

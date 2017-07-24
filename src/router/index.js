@@ -6,13 +6,16 @@ import Home from '@/pages/indexPage/home'
 import ProductDetails from '@/pages/indexPage/productDetails'
 import SearchPage from '@/pages/indexPage/searchPage'
 import Category from '@/pages/CBmall/category'
-import OnSale from '@/pages/indexPage/onSale'
 import Evaluate from '@/pages/indexPage/evaluate'
 
 // 购物车
 import Cart from '@/pages/cartPage/cart'
 import Payment from '@/pages/cartPage/payment'
 import PaymentCompleted from '@/pages/cartPage/paymentCompleted'
+
+// 活动页
+import OnSale from '@/pages/activities/onSale'
+import Promotion from '@/pages/activities/promotion'
 
 //登录注册
 import Register from '@/pages/Login&Register/register'
@@ -32,8 +35,6 @@ import EditAddress from '@/pages/mine/editAddress'
 import CommentsBox from '@/pages/mine/commentsBox'
 import Preferences from '@/pages/mine/preferences'
 import Logistics from '@/pages/mine/logistics'
-
-
 
 
 // 商城
@@ -60,10 +61,7 @@ export default new Router({
       path: '/ProductDetails/:productID',
       component: ProductDetails
     }, {
-      path: '/onSale',
-      component: OnSale
-    },{
-      path: '/Evaluate',
+      path: '/Evaluate/:orderId',
       component: Evaluate
     },
     // 购物车
@@ -76,6 +74,14 @@ export default new Router({
     }, {
       path: '/PaymentCompleted',
       component: PaymentCompleted
+    },
+    // 活动页
+    {
+      path: '/onSale',
+      component: OnSale
+    },{
+      path: '/Promotion',
+      component: Promotion
     },
     //登录注册
     {

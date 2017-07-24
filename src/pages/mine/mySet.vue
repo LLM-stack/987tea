@@ -2,33 +2,35 @@
   <div class="container">
     <Mheader>
       <div slot="title">个人信息</div>
-      <div slot="info">保存</div>
+      <div slot="info" @click='saveUserInfo'>保存</div>
     </Mheader>
-    <div class="avatar">
-      <img src="../../assets/images/myInfo/toux.jpg"/>
+    <form>
+    <div class="avatar">     
+      <img :src="user.HeadImg"/>
       <span class="lm-margin-t-xs">点击修改头像</span>
-      <input class="upImg" type="file"/>
+      <input class="upImg" name="file" accept="image/png,image/gif,image/jpeg" type="file" @change="updateHeadImg"/>      
     </div>
+    </form>
     <div class="info">
       <div class="info-list name">
-        昵称 <input class="lm-margin-l-xxl" type="text">
+        昵称 <input class="lm-margin-l-xxl" type="text" v-model="user.UserName">
       </div>
       <div class="info-list">
         性别
         <div class="sex lm-margin-l-xxl">
           <div class="lm-margin-r-lg">
-            <input type="radio" v-model="sex" value="男">
-            <div class="sex-select" :class="{sexSelected: sex == '男'}"></div>男
-          </div>
+            <input type="radio" v-model="user.Sex" value="0">
+            <div class="sex-select" :class="{sexSelected: user.Sex == 0}"></div>男
+          </div> 
           <div class="lm-margin-l-lg">
-            <input type="radio" v-model="sex" value="女">
-            <div class="sex-select" :class="{sexSelected: sex == '女'}"></div>女
+            <input type="radio" v-model="user.Sex" value="1">
+            <div class="sex-select" :class="{sexSelected: user.Sex == 1}"></div>女
           </div>
         </div>
       </div>
 
       <div class="info-list" @click="openPicker">
-        生日  <div class="lm-margin-l-xxl">{{ pickerValue | intercept }}</div>
+        生日  <div class="lm-margin-l-xxl">{{ user.Birthday | intercept }}</div>
       </div>
     </div>
     <div class="info">
@@ -69,7 +71,7 @@
     <mt-datetime-picker
       ref="picker"
       type="date"
-      v-model="pickerValue"
+      v-model="user.Birthday"
       :startDate="startYear"
       :endDate="endYear"
       year-format="{value} 年"
@@ -83,6 +85,7 @@
 
 <script>
   import Mheader from '../../components/Mheader'
+  import {Toast} from 'mint-ui'
 
   export default {
     components: {
@@ -90,18 +93,18 @@
     },
     data() {
     	return {
-        pickerValue:'',
     		value: '',
-        sex: null,
         startYear: new Date(new Date().getFullYear() - 70, 0, 1),
-        endYear: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDay())
+        endYear: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDay()),
+        user:''
       }
     },
     filters:{
       intercept(value){
-        let birthday = new Date(value.toString().substring(0,33));
-        birthday = birthday.getFullYear() +'年'+ (birthday.getMonth()+ 1)  +'月'+ birthday.getDate()+'日'
-          return birthday
+          let birthday = new Date(value);
+          birthday = birthday.getFullYear() +'年'+ (birthday.getMonth()+ 1)  +'月'+ birthday.getDate()+'日'
+            return birthday
+        
       }
     },
     methods: {
@@ -109,10 +112,71 @@
         this.$refs.picker.open();
       },
       signOut() {
-        localStorage.clear();
+        localStorage.removeItem('lut');
         this.$router.push({path: '/Login'});
+      },
+      //获取用户信息
+      getUserInfo(){
+          this.axios({
+          url: this.url + '/api/User/GetUserInfoByUserId',
+          method: 'get',
+          headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
+
+          }).then((res)=>{
+            if(!!res){
+              if (res.data.Code == 200) {
+              this.user=res.data.ExData;
+              } else {
+                Toast(res.data.Data);
+              }
+            }
+          }) 
+      },
+      //更新头像
+      updateHeadImg(e){
+         let file = e.target.files[0];                    
+          let param = new FormData(); //创建form对象
+          param.append('file',file,file.name);//通过append向form对象添加数据
+          param.append('chunk','0');//添加form表单中其他数据
+                
+          let config = {
+            headers:{'Content-Type':'multipart/form-data','Authorization': 'BasicAuth ' + localStorage.lut}
+          };  //添加请求头
+          this.axios.post(this.url + '/api/User/SaveHeadImg',param,config)
+          .then(res=>{
+            if(res.data.Code=200){
+              this.user.HeadImg=res.data.ExData;
+              Toast(res.data.Data);
+            }else{
+              Toast(res.data.Data);
+            }
+          })        
+      },
+      //保存用户信息
+      saveUserInfo(){
+          this.axios({
+          url: this.url + '/api/User/SaveUserInfo',
+          method: 'post',
+          data:{UserName:this.user.UserName,Sex:this.user.Sex,Birthday:this.user.Birthday},
+          headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
+
+          }).then((res)=>{
+            if(!!res){
+              if (res.data.Code == 200) {
+                Toast(res.data.Data);
+              } else {
+                Toast(res.data.Data);
+              }
+            }
+          }) 
       }
-    }
+
+    },
+     mounted:function(){
+       this.$nextTick(()=>{
+         this.getUserInfo();
+       })
+     }
   }
 </script>
 
