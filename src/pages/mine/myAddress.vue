@@ -14,13 +14,13 @@
         <div class="add">{{item.Province + item.City + item.Area + item.Detail}}</div>
       </div>
       <div>
-        <router-link :to="{path:'/EditAddress/'+item.AdressId}">
+        <router-link :to="{path:'/EditAddress/'+item.AdressId}" replace>
           <img src="../../assets/images/myInfo/edit.png"/>
         </router-link>
       </div>
     </div>
 
-    <router-link :to="{path:'/EditAddress/0'}">
+    <router-link :to="{path:'/EditAddress/0'}" replace>
       <div class="new-address">
         +新建地址
       </div>
@@ -76,11 +76,9 @@
         });
       },
       //选中收货地址
-      checkAddress(index) {
+      checkAddress(index) {        
         this.$store.state.receiveAddress = this.userAllAddress[index];
-        if (this.$route.query.from == 'pay') {
-          this.$router.push('/payment');
-        }
+        this.$router.go(-1);
       }
     },
     mounted: function () {

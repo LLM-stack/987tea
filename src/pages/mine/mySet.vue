@@ -5,10 +5,10 @@
       <div slot="info" @click='saveUserInfo'>保存</div>
     </Mheader>
     <form>
-    <div class="avatar">     
+    <div class="avatar">
       <img :src="user.HeadImg"/>
       <span class="lm-margin-t-xs">点击修改头像</span>
-      <input class="upImg" name="file" accept="image/png,image/gif,image/jpeg" type="file" @change="updateHeadImg"/>      
+      <input class="upImg" name="file" accept="image/png,image/gif,image/jpeg" type="file" @change="updateHeadImg"/>
     </div>
     </form>
     <div class="info">
@@ -21,7 +21,7 @@
           <div class="lm-margin-r-lg">
             <input type="radio" v-model="user.Sex" value="0">
             <div class="sex-select" :class="{sexSelected: user.Sex == 0}"></div>男
-          </div> 
+          </div>
           <div class="lm-margin-l-lg">
             <input type="radio" v-model="user.Sex" value="1">
             <div class="sex-select" :class="{sexSelected: user.Sex == 1}"></div>女
@@ -104,7 +104,6 @@
           let birthday = new Date(value);
           birthday = birthday.getFullYear() +'年'+ (birthday.getMonth()+ 1)  +'月'+ birthday.getDate()+'日'
             return birthday
-        
       }
     },
     methods: {
@@ -112,7 +111,7 @@
         this.$refs.picker.open();
       },
       signOut() {
-        localStorage.removeItem('lut');
+        localStorage.clear();//清楚全部的localStorage
         this.$router.push({path: '/Login'});
       },
       //获取用户信息
@@ -130,15 +129,15 @@
                 Toast(res.data.Data);
               }
             }
-          }) 
+          })
       },
       //更新头像
       updateHeadImg(e){
-         let file = e.target.files[0];                    
+         let file = e.target.files[0];
           let param = new FormData(); //创建form对象
           param.append('file',file,file.name);//通过append向form对象添加数据
           param.append('chunk','0');//添加form表单中其他数据
-                
+
           let config = {
             headers:{'Content-Type':'multipart/form-data','Authorization': 'BasicAuth ' + localStorage.lut}
           };  //添加请求头
@@ -150,7 +149,7 @@
             }else{
               Toast(res.data.Data);
             }
-          })        
+          })
       },
       //保存用户信息
       saveUserInfo(){
@@ -168,7 +167,7 @@
                 Toast(res.data.Data);
               }
             }
-          }) 
+          })
       }
 
     },

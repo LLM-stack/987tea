@@ -75,7 +75,7 @@
             </div>
           </div>
         </div>
-        <div class="more-comment"><span>点击查看更多...</span></div>
+        <div class="more-comment"><span @click="loadMore">{{moreContent}}</span></div>
       </div>
     </div>
 
@@ -93,8 +93,7 @@
         <div class="choice-p">
           <div>
             <div class="choice-p-price ">￥{{specPrice}}</div>
-            <div class="del" @click="choice"><img src="../../assets/images/productDetails/del.png" height="48"
-                                                  width="48"/></div>
+            <div class="del" @click="choice"><img src="../../assets/images/productDetails/del.png" /></div>
           </div>
           <div>库存 {{specStock}} 件</div>
           <div>{{checkMsg}}</div>
@@ -150,8 +149,9 @@
         productParams: '',
         //评论下拉加载
         pageIndex: 1,
-        pageSize: 10,
-        loading: false,
+        pageSize: 50,
+        loading:true,
+        moreContent:'点击查看更多...',
         //规格参数
         checkMsg: '请选择 规格',
         specId: '',
@@ -182,7 +182,6 @@
     },
     methods: {
       loadMore() {
-        this.loading = true;
         this.pageIndex++;
         this.getProductEstimates();
       },
@@ -325,12 +324,7 @@
             if (!!res) {
               if (res.data.Code == 200) {
                 this.choiceShow = !this.choiceShow
-                Toast(res.data.Data);
-                // let instance = Toast(res.data.Data);
-                // setTimeout(() => {
-                //   instance.close();
-                //   this.$router.push({path: '/Cart'})
-                // }, 1000);
+                Toast(res.data.Data);                
               } else {
                 Toast(res.data.Data);
               }
@@ -354,16 +348,9 @@
             localStorage.setItem("cars", JSON.stringify(sc));
             this.$router.push({path: '/Payment'})
           } else {
-            let instance = Toast('还未登录，请先登录');
-            setTimeout(() => {
-              instance.close();
-              this.$router.replace({
-                path: '/login/',
-                query: {redirect: this.$router.currentRoute.fullPath}
-              })
-            }, 1000);
+            localStorage.setItem("tourist", JSON.stringify(sc));
+            this.$router.push({path: '/noIdPayment'})
           }
-
         }
       },
       isFavourite() {//该商品是否收藏了
@@ -387,33 +374,35 @@
       },
       //获取商品评论
       getProductEstimates() {
-        this.axios.post(this.url + '/api/Product/ProductEstimates', {
-          productId: this.$route.params.productID,
-          rows: this.pageSize,
-          page: this.pageIndex
-        }).then((res) => {
-          if (res.data.Code == 200) {
-            if (this.pageIndex == 1) {
-              this.productDesc = res.data.Data.List;
-              this.loading = false;
-            } else {
-              if (res.data.Data.List.length > 0) {
-                for (let i = 0; i < res.data.Data.List.length; i++) {
-                  this.productDesc.push(res.data.Data.List[i])
+        if(this.loading){
+            this.axios.post(this.url + '/api/Product/ProductEstimates', {
+              productId: this.$route.params.productID,
+              rows: this.pageSize,
+              page: this.pageIndex
+            }).then((res) => {
+              if (res.data.Code == 200) {
+                if (this.pageIndex == 1) {
+                  this.productDesc = res.data.Data.List;
+                } else {
+                  if (res.data.Data.List.length > 0) {
+                    for (let i = 0; i < res.data.Data.List.length; i++) {
+                      this.productDesc.push(res.data.Data.List[i])
+                    }
+                  
+                  }else{
+                    this.loading=false;
+                    this.moreContent="已经查看了所有的评论了！！！";
+                  } 
                 }
-                this.loading = false;
+                this.tab[2].tabName = "评论(" + res.data.Data.records + ")"
               } else {
-                this.loading = true;
+                Toast(res.data.Data);
               }
-            }
-
-            this.tab[2].tabName = "评论(" + res.data.Data.records + ")"
-          } else {
-            Toast(res.data.Data);
-          }
-        }).catch((err) => {
-          Toast('网络请求超时');
-        })
+            }).catch((err) => {
+              Toast('网络请求超时');
+            })
+        }
+        
       }
     },
     mounted: function () {
@@ -753,13 +742,6 @@
     text-align: center;
   }
 
-  .fade-enter-active, .fade-leave-active {
-    transition: all .4s;
-  }
-
-  .fade-enter, .fade-leave-active {
-    opacity: 0;
-  }
 
   .drop-enter-active, .drop-leave-active {
     transition: all .4s;

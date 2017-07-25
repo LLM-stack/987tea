@@ -14,7 +14,7 @@
         </div>
         <div v-else>
           <div class="tel">{{defaultAddress.Mobile}}</div>
-          <div class="add">{{defaultAddress.Province+defaultAddress.City+defaultAddress.Area+defaultAddress.Detail}}</div>
+          <div class="add">{{addressDetail}}</div>
         </div>
         <div>
           <img src="../../assets/images/arrow.png"/>
@@ -107,6 +107,9 @@
       },
       total(){
         return  parseFloat(this.orderTotal)+parseFloat(this.freight);
+      },
+      addressDetail(){
+        return this.defaultAddress.Province+this.defaultAddress.City+this.defaultAddress.Area+this.defaultAddress.Detail;
       }
     },
    methods:{
@@ -125,24 +128,35 @@
               Toast(res.data.Data);
             }
           }
-        }) 
+        })
      },
 
      //支付类型选择
      checkType(val){
-        this.payType=val;      
+        this.payType=val;
      },
      //提交订单支付
      oncePayment(){
+       //定义地址参数
+        let address={
+          AddressId:this.defaultAddress.AdressId,
+          Province:this.defaultAddress.Province,
+          City:this.defaultAddress.City,
+          Area:this.defaultAddress.Area,
+          Detail:this.defaultAddress.Detail,
+          Phone:this.defaultAddress.Mobile,
+          Reciever:this.defaultAddress.ConsigneeName,
+        }
        //定义参数
-        var sc={
+        let sc={
           TotalPrice:this.total,
           PayType:this.payType,
           ProductCount:this.ProductCount,
           OrderFrom:2,//订单来源  2标识商城
           AddressId:this.defaultAddress.AdressId,
           ProductSkus:this.orderDetails,
-          ProductOrderId:this.productOrderId
+          ProductOrderId:this.productOrderId,
+          OrderAddress:address
         }
        this.axios({
         url: this.url + '/api/Order/OncePayment',
@@ -156,12 +170,11 @@
                this.$router.push({path: '/paymentCompleted'})
              }
              if(this.payType==2){
-               this.alipay=res.data.ExData; 
+               this.alipay=res.data.ExData;
                setTimeout(function() {
                  document.forms['alipaysubmit'].submit();
                },0)
-
-               //this.onSubmit();
+               
                localStorage.removeItem("cars");
              }
             }else {
@@ -171,28 +184,36 @@
         })
      },
      selectAddress() {
-       this.$router.push({ path: '/MyAddress/', query: { from: 'pay'}})
+       this.$router.push({ path: '/MyAddress/'})
      }
    },
    mounted:function(){
      this.$nextTick(()=>{
-       //收货地址展示
-        if(!!!this.$store.state.receiveAddress){
-            this.getDefaultAddress();
-        }else{
-          this.defaultAddress=this.$store.state.receiveAddress;
-        }
-        
         if(!!localStorage.cars){  
+          //继续付款
           var sc=JSON.parse(localStorage.cars);
-          this.productOrderId=sc.productOrderId;     
+          this.productOrderId=sc.productOrderId;
           this.orderDetails=sc.skus;
+          if(this.productOrderId!='0'){
+              this.payType=sc.payType;         
+              this.defaultAddress=sc.receive;
+          }           
           this.ProductCount=this.orderDetails.length;
+          //localStorage.removeItem("cars");
         }
-        
+        if(this.productOrderId=='0'){
+          //首次付款           
+          if(!!!this.$store.state.receiveAddress){
+              this.getDefaultAddress();
+          }
+        }
+        //判断选择的地址是否为空
+        if(!!this.$store.state.receiveAddress){
+          this.defaultAddress=this.$store.state.receiveAddress;
+           this.$store.state.receiveAddress='';
+        }
 
      })
-    
    }
   }
 </script>

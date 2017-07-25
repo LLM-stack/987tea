@@ -170,6 +170,7 @@
       },
       //去下单
       goToPay(index){
+         //定义商品信息参数
           let skus = [];
           this.orderList[index].ProductList.forEach(function (item) {
               let sku = {
@@ -182,8 +183,23 @@
               }
               skus.push(sku);
           });
+          //定义地址参数
+          let areas=this.orderList[index].ReceiveArea.split(' ');
+          let receiveArea={
+            AdressId:'0',
+            ConsigneeName:this.orderList[index].ReceiveUser,
+            Mobile:this.orderList[index].ReceivePhone,            
+            Province:areas[0],
+            City:areas[1],
+            Area:areas[2],
+            Detail:this.orderList[index].ReceiveAddress,
+            IsDefault:1
+          }
+          //订单参数
           let sc={
             productOrderId:this.orderList[index].ProductOrderId,
+            payType:this.orderList[index].PayType,
+            receive:receiveArea,          
             skus:skus
           }
           localStorage.setItem("cars", JSON.stringify(sc));

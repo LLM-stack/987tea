@@ -11,6 +11,7 @@ import Evaluate from '@/pages/indexPage/evaluate'
 // 购物车
 import Cart from '@/pages/cartPage/cart'
 import Payment from '@/pages/cartPage/payment'
+import NoIdPayment from '@/pages/cartPage/noIdPayment'
 import PaymentCompleted from '@/pages/cartPage/paymentCompleted'
 
 // 活动页
@@ -71,6 +72,9 @@ export default new Router({
     }, {
       path: '/Payment',
       component: Payment
+    },{
+      path: '/NoIdPayment',
+      component: NoIdPayment
     }, {
       path: '/PaymentCompleted',
       component: PaymentCompleted

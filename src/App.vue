@@ -430,4 +430,13 @@
   .primary-btn:active {
     color: #B4282D;
   }
+
+  .fade-enter-active, .fade-leave-active {
+    transition: all .4s;
+  }
+
+  .fade-enter, .fade-leave-active {
+    opacity: 0;
+  }
+
 </style>

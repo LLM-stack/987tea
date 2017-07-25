@@ -3,6 +3,7 @@
     <Mheader :show=true>
       <div slot="title">我的收藏</div>
     </Mheader>
+  
     <div class="product" v-for="(item,index) in productlist">
       <div class="product-img">
         <img :src="item.HeadImg" alt="">
@@ -30,7 +31,6 @@
         </div>
       </div>
     </div>
-
 
     <Mfooter :myCenterCurrent="true"></Mfooter>
 

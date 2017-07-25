@@ -1,8 +1,10 @@
 <template>
-    <div>
-      <Mheader>
-        <div slot="title">{{title}}</div>
-      </Mheader>
+  <div class="container">
+    <Mheader :show='true'>
+      <div slot="title">提交订单</div>
+    </Mheader>
+
+    <div class="info">
       <mt-field label="收货人" placeholder="请输入用户名" v-model="username"></mt-field>
       <mt-field label="手机号" placeholder="请输入手机号" type="tel" v-model="phone"></mt-field>
       <mt-field label="省市区" placeholder="请选择省市区" v-model="address"></mt-field>
@@ -19,39 +21,50 @@
         </div>
       </div>
       <mt-field label="详细地址" placeholder="请输入地址" v-model="detailAddress"></mt-field>
-      <mt-cell title="是否设为默认地址"><mt-switch v-model="isDefault"></mt-switch></mt-cell>
-      <div class="save" @click="save">{{btnName}}</div>
-      <Mfooter :myCenterCurrent='true'></Mfooter>
     </div>
+
+    <div class="product lm-margin-b-sm" v-for="(item,index) in orderDetails">
+      <img class="product-img" :src="item.ProductImg"/>
+      <div class="product-details">
+        <div>{{item.ProductName}}</div>
+        <div>
+          <span>￥{{item.ProductSpecPrice}}</span>
+          <span>x{{item.ProductCount}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="hide" v-html="alipay"></div>
+    <div class="pay">
+      <div>
+        <div>共选择 <span class="lm-text-red">{{ProductCount}}</span>件商品</div>
+        <div>总金额：<span class="lm-text-red">￥{{total}}</span> 元</div>
+      </div>
+      <div class="topay" @click="oncePayment">确认下单</div>
+    </div>
+  </div>
 </template>
 
 <script>
   import Mheader from '../../components/Mheader'
-  import Mfooter from '../../components/Mfooter'
   import {address, slots} from '../../components/linkage/address'
   import {Toast} from 'mint-ui'
 
-	export default {
+  export default {
     components: {
-      Mheader,
-      Mfooter
+      Mheader
     },
-    data () {
-    	return {
-        title:'编辑地址',
-        btnName:'修改',
-        username:'',
-        phone:'',
-        address_flag: false,
-        slots: slots,
-        temp_addr: '',
+    data() {
+      return {
+        username: '',
+        phone: '',
         address: '',
         detailAddress:'',
-        isDefault: false
+        address_flag: false,
+        slots: slots,
+        temp_addr: ''
       }
     },
-    methods: {
-      //TODO:编辑的时候已选择的省份没有省市区插件没有选中
+    methods:{
       fillAddress() {
         // 填入省市区
         this.address = this.temp_addr;
@@ -89,111 +102,19 @@
         }
       },
       isPhoneNo(phone) {  //手机号验证
-          var pattern = /^1[34578]\d{9}$/;
-          return pattern.test(phone);
-      },
-      //添加新地址
-      save(){
-        if(!!!this.username){
-            Toast('请填写收货人姓名');
-            return;
-        }
-        if(!!!this.phone){
-            Toast('请填写收货人手机号');
-            return;
-        }
-        if(!this.isPhoneNo){
-           Toast('手机号格式错误');
-            return;
-        }
-        if(!!!this.address){
-            Toast('请选择省市区');
-            return;
-        }
-        if(!!!this.detailAddress){
-            Toast('请填写详细的收货地址');
-            return;
-        }
-
-        let str=this.address.split(' ');
-
-        let nad={
-          AdressId:this.$route.params.aId,
-          Province:str[0],
-          City:str[1],
-          Area:str[2],
-          Detail:this.detailAddress,
-          ConsigneeName:this.username,
-          Mobile:this.phone,
-          IsDefault:this.isDefault==true?0:1
-        }
-        this.axios({
-        url: this.url + '/api/ReceiveAddress/AddAddress',
-        method: 'post',
-        data:nad,
-        headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
-
-        }).then((res)=>{
-            if(!!res){
-              if (res.data.Code == 200) {
-                let instance = Toast(res.data.Data);
-                setTimeout(() => {
-                  instance.close();
-                  this.$router.replace({ path: '/MyAddress'});
-                }, 1000);
-              } else {
-                Toast(res.data.Data);
-              }
-            }
-        })
-      },
+        var pattern = /^1[34578]\d{9}$/;
+        return pattern.test(phone);
+      }
     },
-    mounted() {
+    mounted(){
       this.$nextTick(function () {
-        if(this.$route.params.aId==0){//aid为0时是新增收货地址页面
-            this.title='添加地址';
-            this.btnName='保存';
-        }else{
-            //请求要编辑的地址信息
-            this.axios({
-            url: this.url + '/api/ReceiveAddress/GetAddressByAddressId',
-            method: 'post',
-            data:{addressId:this.$route.params.aId},
-            headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
-
-            }).then((res)=>{
-               if(!!res){
-                 if (res.data.Code == 200) {
-                    let a=res.data.ExData;
-                    this.username=a.ConsigneeName;
-                    this.phone=a.Mobile;
-                    this.address=a.Province+' '+a.City+' '+a.Area;
-                    this.detailAddress=a.Detail;
-                    this.isDefault=a.IsDefault==0?true:false;
-                  } else {
-                    Toast(res.data.Data);
-                  }
-               }
-            })
-        }
-
-        this.initAddress();
-      })
-
+      this.initAddress();
+    })
     }
   }
 </script>
 
-<style lang="scss" scoped>
-  .save{
-    margin: 1.5rem auto;
-    padding: 0.3rem 0;
-    border-radius: 0.2rem;
-    text-align: center;
-    width: 50%;
-    color: #ffffff;
-    background-color: #B4282D;
-  }
+<style scoped  lang="scss">
   .linkage-wrap {
     left: 4rem;
     width: 11rem;
@@ -280,5 +201,69 @@
   }
   }
   }
+  }
+  .product {
+    display: flex;
+    align-items: center;
+    padding: 0.4rem;
+    background-color: #ffffff;
+    .product-img {
+      width: 3.2rem;
+      height: 3.2rem;
+      border: 1px solid #eeeeee;
+      margin-right: 0.5rem;
+    }
+    .product-details {
+      width: 100%;
+      height: 3.2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      div:last-child {
+        display: flex;
+        justify-content: space-between;
+      }
+    }
+  }
+  .coupon {
+    padding: 0.4rem;
+    background-color: #ffffff;
+  }
+  .order-details {
+    padding: 0.4rem;
+    background-color: #ffffff;
+    .details {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.2rem;
+    }
+    .details > span:first-child {
+      color: #999999;
+      font-size: 0.6rem;
+    }
+  }
+  .pay {
+    width: 100%;
+    bottom: 0;
+    position: fixed;
+    height: 2.4rem;
+    padding-left: 0.4rem;
+    border-top: 1px solid #eeeeee;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .topay {
+      text-align: center;
+      line-height: 2.4rem;
+      color: #ffffff;
+      width: 4.5rem;
+      height: 100%;
+      background-color: #B4282D;
+    }
+  }
+  .info {
+    background-color: #ffffff;
   }
 </style>

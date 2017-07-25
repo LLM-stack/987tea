@@ -6,20 +6,13 @@
     <div class="banner">
       <mt-swipe :auto="3000">
         <mt-swipe-item>
-          <img src="../../assets/images/banner/banner1.jpg" alt=""
-               @click.stop="chkDetail('dae874c59c56448f99c8045753b5cf0f')">
+          <img src="../../assets/images/banner/banner01.jpg"/>
         </mt-swipe-item>
         <mt-swipe-item>
-          <img src="../../assets/images/banner/banner2.jpg" alt=""
-               @click.stop="chkDetail('98a0b370bd49446eae702610a19d004f')">
+          <img src="../../assets/images/banner/banner02.jpg"/>
         </mt-swipe-item>
         <mt-swipe-item>
-          <img src="../../assets/images/banner/banner3.jpg" alt=""
-               @click.stop="chkDetail('4795f6b55ba747919a406b71593080d0')">
-        </mt-swipe-item>
-        <mt-swipe-item>
-          <img src="../../assets/images/banner/banner4.jpg" alt=""
-               @click.stop="chkDetail('cb77b03361744feb89c21b5abf03a576')">
+          <img src="../../assets/images/banner/banner03.jpg"/>
         </mt-swipe-item>
       </mt-swipe>
     </div>
@@ -46,12 +39,12 @@
         <span class="bg-time">15</span>：<span class="bg-time">20</span>：<span class="bg-time">56</span>
       </div>
     </div>
-    <div class="tab-box">
+    <div class="tab-box" id="tabBox" v-if="isfixed">
       <div class="tab" :class="{active:activeIdx == index}" v-for="(item,index) in tabs" @click="select(index)">
         {{ item.tabName }}
       </div>
     </div>
-    <div class="title lm-margin-t-sm">
+    <div class="title" id="id1">
       <div>
         <img src="../../assets/images/activities/activities_03.png"/>
         <span class="lm-font-lg">限时特价</span>
@@ -183,7 +176,7 @@
       </div>
     </div>
     <div class="clear"></div>
-    <div class="title lm-margin-t-sm">
+    <div class="title" id="id2">
       <div>
         <img src="../../assets/images/activities/activities_03.png"/>
         <span class="lm-font-lg">爆款特价</span>
@@ -191,18 +184,107 @@
       </div>
       <div class="lm-font-sm lm-text-grey">热卖爆款 感恩放价</div>
     </div>
-    <div class="pro-box">
-
+    <div class="pro-list">
+      <div class="pro-box" v-for="(item,index) in productList" :class="{'pro-left' : index % 2 !== 0}">
+        <div class="pro-img">
+          <img :src="item.HeadImg"/>
+        </div>
+        <div class="pro-name">{{ item.Name }}</div>
+        <div class="pro-price">
+          <div class="new-price lm-margin-r-sm">￥{{ item.SalePrice }}</div>
+          <div class="old-price">￥{{ item.Price }}</div>
+        </div>
+        <div class="pro-btn-group">
+          <div class="pro-btn zhe">3.8折</div>
+          <div class="pro-btn gou">立即抢购</div>
+        </div>
+      </div>
     </div>
+    <div class="title"  id="id3">
+      <div>
+        <img src="../../assets/images/activities/activetis_03.png"/>
+        <span class="lm-font-lg">精装礼品</span>
+        <img src="../../assets/images/activities/activetis_05.png"/>
+      </div>
+      <div class="lm-font-sm lm-text-grey">独具风味 送礼佳品</div>
+    </div>
+    <div class="pro-list">
+      <div class="pro-box" v-for="(item,index) in productList" :class="{'pro-left' : index % 2 !== 0}">
+        <div class="pro-img">
+          <img :src="item.HeadImg"/>
+        </div>
+        <div class="pro-name">{{ item.Name }}</div>
+        <div class="pro-price">
+          <div class="new-price lm-margin-r-sm">￥{{ item.SalePrice }}</div>
+          <div class="old-price">￥{{ item.Price }}</div>
+        </div>
+        <div class="pro-btn-group">
+          <div class="pro-btn zhe">3.8折</div>
+          <div class="pro-btn gou" @click="choice(1)">立即抢购</div>
+        </div>
+      </div>
+    </div>
+    <div class="title"  id="id4">
+      <div>
+        <img src="../../assets/images/activities/activetis_03.png"/>
+        <span class="lm-font-lg">更多福利</span>
+        <img src="../../assets/images/activities/activetis_05.png"/>
+      </div>
+      <div class="lm-font-sm lm-text-grey">惊喜优惠 礼品多多</div>
+    </div>
+    <ul class="fl-list">
+      <li>买满98元送价值68元神秘礼品一份</li>
+      <li>买满398元送价值118元精美礼品一份</li>
+      <li>买满688元送价值298元精美礼品一份</li>
+    </ul>
+    <transition name="fade">
+      <div class="choice-model" v-if="choiceShow" @click="choice(isCar)">
 
+      </div>
+    </transition>
 
+    <transition name="drop">
+      <div class="choice" v-if="choiceShow">
+        <div class="choice-img">
+          <img :src="specImg" alt="">
+        </div>
+        <div class="choice-p">
+          <div>
+            <div class="choice-p-price ">￥{{specPrice}}</div>
+            <div class="del" @click="choice"><img src="../../assets/images/productDetails/del.png" height="48"
+                                                  width="48"/></div>
+          </div>
+          <div>库存 {{specStock}} 件</div>
+          <div>{{checkMsg}}</div>
+        </div>
+        <div class="choice-spec">
+          <div>规格</div>
+          <div class="spec-box">
 
+            <div class="spec" v-for="(item, index) in productSpec" @click="checkSpec(index)"
+                 :class="index == checkIndex?'spec-checked':''">{{item.ShortName}}
+            </div>
+
+          </div>
+        </div>
+        <div class="choice-num">
+          <div>购买数量</div>
+          <div>
+            <span @click="changeNum(-1)">-</span>
+            <input readonly="readonly" type="text" v-model="productNum">
+            <span @click="changeNum(1)">+</span>
+          </div>
+        </div>
+
+        <div class="choice-btn" @click="addCar">加入购物车</div>
+      </div>
+    </transition>
   </div>
 </template>
 
 <script>
   import Mheader from '../../components/Mheader'
-  import { Toast } from 'mint-ui'
+  import {Toast} from 'mint-ui'
 
   export default {
     components: {
@@ -210,6 +292,24 @@
     },
     data() {
       return {
+        top: '',
+        isfixed:false,
+        tabBox:'',
+        tab1:'',
+        tab2:'',
+        tab3:'',
+        tab4:'',
+
+        choiceShow: false,
+        checkMsg: '请选择 规格',
+        specId: '',
+        specName: '',
+        specImg: '',
+        specPrice: 0,
+        specStock: 0,
+        checkIndex: -1,
+        isCar: 0,
+        productNum: 1,
         activeIdx: 0,
         tabs: [
           {
@@ -224,13 +324,156 @@
           {
             tabName: '更多福利'
           }
-        ]
+        ],
+        //测试
+        giftsTag: '068cf06410bd48629a01a98fd514e9bc',
+        productSpec: '',
+        productList: []
       }
     },
     methods: {
       select(idx) {
-        this.activeIdx = idx
+        this.activeIdx = idx;
+        if(idx == 0){
+          document.body.scrollTop = this.tab1
+        }
+        if(idx == 1){
+          document.body.scrollTop = this.tab2
+        }
+        if(idx == 2){
+          document.body.scrollTop = this.tab3
+        }
+        if(idx == 3){
+          document.body.scrollTop = this.tab4
+        }
+
+
+      },
+      getProduct() {//获取送礼必备
+        this.axios.post(this.url + '/api/Product/HomeProducts', {tagId: this.giftsTag}).then((res) => {
+          if (res.data.Code == 200) {
+            this.productList = res.data.Data;
+          } else {
+            Toast(res.data.Data);
+          }
+        }).catch((err) => {
+          Toast('网络请求超时');
+        })
+      },
+      choice(val) {
+        //首次点击加载sku信息
+        if (this.isCar == 0) {
+          this.getProductSKU();
+        }
+        this.isCar = val;
+        this.choiceShow = !this.choiceShow
+      },
+      //数量变化
+      changeNum(val) {
+        //加
+        if (val > 0) {
+          if (parseInt(this.productNum) < parseInt(this.specStock)) {
+            this.productNum++;
+          } else {
+            Toast('已经加到顶啦！');
+          }
+        } else {
+          //减
+          if (parseInt(this.productNum) > 1) {
+            this.productNum--;
+          } else {
+            Toast('已经减到底啦！');
+          }
+        }
+      },
+      addCar() {
+        if (this.checkIndex == -1) {
+          Toast('请选择商品规格');
+          return;
+        }
+
+        if (this.isCar == 2) {
+          let sku = [{
+            ShoppingCarId: 0,
+            ProductSpecId: this.specId,
+            ProductName: this.specName,
+            ProductCount: this.productNum,
+            ProductImg: this.specImg,
+            ProductSpecPrice: this.specPrice
+          }]
+          if (!!localStorage.lut) {
+            let sc = {
+              productOrderId: "0",
+              skus: sku
+            }
+            localStorage.setItem("cars", JSON.stringify(sc));
+            this.$router.push({path: '/Payment'})
+          }
+
+        }
+      },
+      //选中商品规格
+      checkSpec(index) {
+        this.checkIndex = index;
+        this.specId = this.productSpec[index].ProductSpecId;
+        this.specName = this.productSpec[index].ShortName;
+        this.specImg = this.productSpec[index].HeadImg;
+        this.specPrice = this.productSpec[index].SalePrice;
+        this.specStock = this.productSpec[index].Stock;
+        this.checkMsg = '已选：' + this.productSpec[index].ShortName;
+      },
+      //获取商品SKU
+      getProductSKU() {
+        this.axios.post(this.url + '/api/Product/ProductSpecs', {productId: this.$route.params.productID}).then((res) => {
+          if (res.data.Code == 200) {
+            this.productSpec = res.data.Data;
+            //设置默认选中第一个
+            this.checkIndex = 0;
+            this.specId = this.productSpec[0].ProductSpecId;
+            this.specName = this.productSpec[0].ShortName;
+            this.specImg = this.productSpec[0].HeadImg;
+            this.specPrice = this.productSpec[0].SalePrice;
+            this.specStock = this.productSpec[0].Stock;
+            this.checkMsg = '已选：' + this.productSpec[0].ShortName;
+          } else {
+            Toast(res.data.Data);
+          }
+        }).catch((err) => {
+          Toast('网络请求超时');
+        })
+      },
+      //跳转锚点
+      scrollTop() {
+        this.tab1 = document.getElementById('id1').offsetTop - 150;
+        this.tab2 = document.getElementById('id2').offsetTop - 150;
+        this.tab3 = document.getElementById('id3').offsetTop - 150;
+        this.tab4 = document.getElementById('id4').offsetTop - 150;
+
+        this.top = document.body.scrollTop;
+
+        if(this.top >= this.tab1){
+        	this.isfixed = true;
+          this.activeIdx = 0
+        }else {
+          this.isfixed = false
+        };
+         if( this.top >= this.tab2 && this.tab3 > this.top){
+           this.activeIdx = 1
+        } if( this.top >= this.tab3 && this.tab4 > this.top){
+          this.activeIdx = 2
+        }if(this.top > this.tab4){
+          this.activeIdx = 3
+        }
+
       }
+    },
+    created() {
+      this.getProduct()
+    },
+    mounted() {
+      this.$nextTick(() => {
+        window.addEventListener('scroll', this.scrollTop);
+      })
     }
   }
 </script>
@@ -329,7 +572,10 @@
   }
 
   .tab-box {
+    position: fixed;
+    top:0;
     width: 100%;
+    z-index: 999;
     line-height: 1.8rem;
     height: 1.8rem;
     display: flex;
@@ -337,7 +583,6 @@
     color: #fff;
     background-color: #333333;
   }
-
   .tab-box .tab {
     position: relative;
     text-align: center;
@@ -396,7 +641,10 @@
     position: absolute;
     bottom: 0;
     color: #fff;
-    padding: 0.1rem 0;
+    padding: 0.1rem;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
     background-color: rgba(0, 0, 0, 0.4);
   }
 
@@ -407,12 +655,12 @@
     justify-content: space-around;
   }
 
-  .cont-price .new-price {
-    font-size: 0.75rem;
+  .new-price {
+    font-size: 0.7rem;
     color: #FF0000;
   }
 
-  .cont-price .old-price {
+  .old-price {
     font-size: 0.55rem;
     color: #999;
     text-decoration: line-through;
@@ -428,4 +676,214 @@
     background-color: #FF0000;
   }
 
+  .pro-list {
+    padding: 0 0.3rem;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .pro-list .pro-left {
+    margin-left: 2%;
+  }
+  .pro-box{
+    margin-top: 0.26rem;
+    font-size: 0.6rem;
+    background-color: #fff;
+    width: 49%;
+  }
+  .pro-box .pro-img {
+    width: 100%;
+    height: 7rem;
+  }
+  .pro-box .pro-name{
+    font-size: 0.55rem;
+    padding: 0.1rem;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .pro-box .pro-price{
+    margin: 0.2rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .pro-box .pro-btn-group{
+    margin: 0.4rem 0;
+    padding: 0 0.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .pro-box .pro-btn-group .pro-btn{
+    padding: 0.1rem 0;
+    border-radius: 0.1rem;
+    text-align: center;
+    width: 48%;
+    font-size: 0.55rem;
+  }
+  .pro-btn-group .zhe{
+    border: 1px solid #FE0000;
+    color: #FE0000;
+  }
+  .pro-btn-group .gou{
+    background-color: #FE0000;
+    color: #fff;
+  }
+  .fl-list{
+    color: #666;
+    padding-left: 1.4rem;
+    list-style: disc;
+    margin-bottom: 1.2rem;
+  }
+  .fl-list > li{
+    margin-bottom: 0.5rem;
+  }
+  /*选择规格*/
+  .choice-model {
+    top: 0;
+    left: 0;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 922;
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+
+  .choice {
+    width: 100%;
+    height: 19rem;
+    bottom: 0;
+    position: fixed;
+    padding: 0.5rem 0.5rem 0;
+    z-index: 933;
+    background-color: #fff;
+  }
+
+  .choice .choice-img {
+    width: 5rem;
+    height: 5rem;
+    border-radius: 0.2rem;
+    padding: 0.1rem;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    box-shadow: 0 0 3px #ddd;
+    top: -0.8rem;
+    left: 0.5rem;
+    position: absolute;
+  }
+
+  .choice .choice-p {
+    line-height: 1.1rem;
+    padding-left: 6rem;
+    height: 4.8rem;
+    font-size: 0.55rem;
+    border-bottom: 1px solid #eee;
+  }
+
+  .choice .choice-p > div:last-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .choice-p .choice-p-price {
+    font-weight: 600;
+    color: #d81e06;
+    font-size: 0.75rem;
+  }
+
+  .choice-p > div:first-child {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .choice-p .del {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .choice .choice-spec {
+    padding: 0.5rem 0 0.7rem;
+    height: 8.8rem;
+    overflow: auto;
+  }
+
+  .choice-spec .spec-box {
+    margin-top: 0.5rem;
+    font-size: 0.55rem;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .choice-spec .spec-box .spec {
+    padding: 0.2rem;
+    margin-left: 0.5rem;
+    font-size: 0.5rem;
+    border-radius: 0.2rem;
+    margin-bottom: 0.5rem;
+    background-color: #e8e8e8;
+  }
+
+  .choice-spec .spec-box .spec-checked {
+    color: #ffffff;
+    background-color: #d81e06;
+  }
+
+  .choice .choice-num {
+    padding: 0.8rem 0;
+    border-top: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .choice-num > div:last-child {
+    display: flex;
+    align-items: center;
+    border-radius: 0.1rem;
+    border: 1px solid #bbb;
+  }
+
+  .choice-num input {
+    text-align: center;
+    width: 1.8rem;
+    height: 1.2rem;
+    border-top: none;
+    border-bottom: none;
+    border-left: 1px solid #bbb;
+    border-right: 1px solid #bbb;
+  }
+
+  .choice-num span {
+    width: 1.4rem;
+    text-align: center;
+    line-height: 1.2rem;
+    height: 1.2rem;
+    padding: 0 0.4rem;
+    font-size: 0.8rem;
+  }
+
+  .choice .choice-btn {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    text-align: center;
+    padding: 0.6rem 0;
+    color: #ffffff;
+    background-color: #d81e06;
+    width: 100%;
+  }
+
+  .drop-enter-active, .drop-leave-active {
+    transition: all .4s;
+  }
+
+  .drop-enter, .drop-leave-active {
+    bottom: -100%;
+  }
 </style>
