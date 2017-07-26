@@ -27,10 +27,18 @@
       <img class="product-img" :src="item.ProductImg"/>
       <div class="product-details">
         <div>{{item.ProductName}}</div>
+        <p class="lm-text-grey lm-font-xs">{{ item.ShortName }}</p>
         <div>
           <span>￥{{item.ProductSpecPrice}}</span>
           <span>x{{item.ProductCount}}</span>
         </div>
+      </div>
+    </div>
+
+    <div class="lm-margin-b-sm lm-margin-t-sm">
+      <div class="coupon" v-for="(dis,index) in discount" @click="chkFavInfo(index)">
+        <div>{{dis.FavContent | discountContent}}</div>
+        <div class="product-select" :class="{checked:isChecked == index}" ></div>
       </div>
     </div>
 
@@ -167,14 +175,14 @@
           OrderToPrice:this.discount
         }
          this.axios.post(this.url + '/api/Order/SaveOrder', {strSc:JSON.stringify(sc)}).then((res) => {
-          if (res.data.Code == 200) {             
+          if (res.data.Code == 200) {
              localStorage.removeItem('unPay');
               let instance = Toast(res.data.Data);
               setTimeout(() => {
                 instance.close();
                 this.$router.replace({ path: '/'})
               }, 1000);
-            
+
           } else {
             Toast(res.data.Data);
           }
@@ -199,7 +207,7 @@
         this.axios.post(this.url + '/api/Order/LoadPreOrderFavInfo', {strSc:JSON.stringify(sc)}).then((res) => {
           if (res.data.Code == 200) {
             this.discount=res.data.Data;
-            
+
           } else {
             Toast(res.data.Data);
           }
@@ -340,10 +348,26 @@
     }
   }
 
-  .coupon {
+  .coupon{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.6rem;
+    border-top: 1px solid #eee;
     padding: 0.4rem;
     background-color: #ffffff;
   }
+  .product-select {
+    width: 0.8rem;
+    height: 0.8rem;
+    margin-right: 0.4rem;
+    background-image: url("../../assets/images/cart/unchecked.png");
+    background-size: 100% 100%;
+  }
+  .checked {
+    background-image: url("../../assets/images/cart/checked.png");
+  }
+
   .order-details {
     padding: 0.4rem;
     background-color: #ffffff;

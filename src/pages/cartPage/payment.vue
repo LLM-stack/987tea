@@ -32,7 +32,11 @@
       <div class="product" v-for="(item,index) in orderDetails">
         <img class="product-img" :src="item.ProductImg" />
         <div class="product-details">
-          <div>{{item.ProductName}}</div>
+          <div>
+            <p>{{item.ProductName}}</p>
+            <p class="lm-text-grey lm-font-xs">{{ item.ShortName }}</p>
+          </div>
+
           <div>
             <span>￥{{item.ProductSpecPrice}}</span>
             <span>x{{item.ProductCount}}</span>
@@ -60,7 +64,7 @@
           <span>{{freight}}</span>
         </div>
         <div class="details">
-          <span>优惠券</span>
+          <span>优惠</span>
           <span>{{subtract}}</span>
         </div>
         <div class="details">
@@ -152,7 +156,7 @@
      //提交订单支付
      oncePayment(){
        //定义地址参数
-        let address={
+        let str_address={
           AddressId:this.defaultAddress.AdressId,
           Province:this.defaultAddress.Province,
           City:this.defaultAddress.City,
@@ -170,10 +174,10 @@
           AddressId:this.defaultAddress.AdressId,
           ProductSkus:this.orderDetails,
           ProductOrderId:this.productOrderId,
-          OrderAddress:address
+          OrderAddress:str_address
         }
        this.axios({
-        url: this.url + '/api/Order/OncePayment',
+        url: this.url + '/api/Order/SaveOrder',
         method: 'post',
         data:{strSc:JSON.stringify(sc)},
         headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
@@ -217,6 +221,7 @@
         this.axios.post(this.url + '/api/Order/LoadPreOrderFavInfo', {strSc:JSON.stringify(sc)}).then((res) => {
           if (res.data.Code == 200) {
             this.discount=res.data.Data;
+            this.subtract='-'+this.discount[0].FavPrice;
           } else {
             Toast(res.data.Data);
           }

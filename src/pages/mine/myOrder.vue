@@ -176,7 +176,9 @@
               let sku = {
                 ShoppingCarId: 0,
                 ProductSpecId: item.ProductSpecId,
+                ProductId:item.ProductId,
                 ProductName: item.ProductName,
+                ShortName:item.ShortName,
                 ProductCount: item.ProductCount,
                 ProductImg: item.HeadImg,
                 ProductSpecPrice: item.SalePrice

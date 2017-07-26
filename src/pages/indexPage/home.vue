@@ -256,6 +256,7 @@
 
     },
     created(){
+       localStorage.clear()
        this.getOwnTea();
        this.getGiftsTea();
     }

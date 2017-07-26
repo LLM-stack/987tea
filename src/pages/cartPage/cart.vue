@@ -237,7 +237,7 @@
               ProductSpecId: item.ProductSpecId,
               ProductId:item.ProductId,
               ShortName:item.ShortName,
-              ProductName: item.productName,
+              ProductName: item.Name,
               ProductCount: item.Count,
               ProductImg: item.HeadImg,
               ProductSpecPrice: item.SalePrice

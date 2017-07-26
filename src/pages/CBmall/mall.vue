@@ -6,10 +6,11 @@
 
     <div class="banner">
       <img src="../../assets/images/cbmall/cbshop_02.png"/>
-      <div class="tabs">
+      <div class="tabs" id="tabs" :class="{fixed:isfixed}">
         <div class="tab" v-for="(item,index) in tabList" :class="{active:item.isactive}" @click="tabActive(index)">{{ item.tabName }}</div>
       </div>
     </div>
+    <div class="clear"></div>
     <div class="cont">
       <div class="mode-box">
         <div class="mode-list" v-for="(item,index) in modeList" :class="{'mode-left': index % 2 !== 0}">
@@ -61,6 +62,9 @@
     },
     data() {
       return {
+      	top:'',
+        tabs:'',
+        isfixed: false,
         tabList: [
           {
             tabName: '试喝好茶',
@@ -117,7 +121,26 @@
           array[index].isactive= false;
         });
     		this.tabList[i].isactive = true;
+      },
+      scroll() {
+
+        this.top = document.body.scrollTop;
+
+        if(this.top >= this.tabs){
+          this.isfixed = true
+        }else {
+          this.isfixed = false
+        };
       }
+    },
+    mounted() {
+      this.$nextTick(() => {
+        window.addEventListener('scroll', this.scroll);
+        this.tabs = document.getElementById('tabs').offsetTop +80;
+      })
+    },
+    beforeDestroy(){
+      window.removeEventListener('scroll', this.scroll);
     }
   }
 </script>
@@ -134,18 +157,29 @@
   .banner {
     background-color: #ffffff;
   }
-
+  .fixed{
+    position: fixed;
+    z-index: 999;
+    top:0;
+    left: 0;
+    width: 100%;
+  }
   .banner .tabs {
-    display: flex;
-    align-items: center;
+    width: 100%;
     height: 1.6rem;
     margin-bottom: 0.5rem;
     line-height: 1.6rem;
+    background-color: #fff;
     border-bottom: 1px solid #eeeeee;
+    white-space: nowrap;
+    overflow-x: scroll;
+    float: left;
+    overflow-y: hidden;
   }
 
   .banner .tabs .tab {
     text-align: center;
+    display: inline-block;
     width: 25%;
     height: 100%;
     border-bottom: 3px solid #fff;
@@ -176,5 +210,11 @@
     height: 0.9rem;
     background-size: 100% 100%;
     background-image: url("../../assets/images/home/987tea_01_03.png");
+  }
+  .clear {
+    clear: both;
+    height: 0;
+    line-height: 0;
+    font-size: 0
   }
 </style>

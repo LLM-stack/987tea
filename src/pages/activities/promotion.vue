@@ -55,7 +55,7 @@
     <div class="scroll-bar">
       <div class="scroll-cont" v-for="(item,index) in timeProducts" @click.stop="chkDetail(item.ProductId)">
         <div class="cont-img">
-          <img :src="item.HeadImg"/>
+          <img v-lazy="item.HeadImg"/>
           <div class="cont-name">{{item.Name}}</div>
         </div>
         <div class="cont-price">
@@ -78,7 +78,7 @@
     <div class="pro-list">
       <div class="pro-box" v-for="(item,index) in expProducts" :class="{'pro-left' : index % 2 !== 0}" @click.stop="chkDetail(item.ProductId)">
         <div class="pro-img">
-          <img :src="item.HeadImg"/>
+          <img v-lazy="item.HeadImg"/>
         </div>
         <div class="pro-name">{{ item.Name }}</div>
         <div class="pro-price">
@@ -102,7 +102,7 @@
     <div class="pro-list">
       <div class="pro-box" v-for="(item,index) in hadProducts" :class="{'pro-left' : index % 2 !== 0}" @click.stop="chkDetail(item.ProductId)">
         <div class="pro-img">
-          <img :src="item.HeadImg"/>
+          <img v-lazy="item.HeadImg"/>
         </div>
         <div class="pro-name">{{ item.Name }}</div>
         <div class="pro-price">
@@ -483,6 +483,7 @@
         }else {
           this.isfixed = false
         };
+
          if( this.top >= this.tab2 && this.tab3 > this.top){
            this.activeIdx = 1
         } if( this.top >= this.tab3 && this.tab4 > this.top){

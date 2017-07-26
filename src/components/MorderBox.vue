@@ -9,8 +9,8 @@
           <div>
             <span><img alt="" v-lazy="pitem.HeadImg"></span>
             <div class="mid-cont">
-              <span class="product-name">{{ pitem.Name }}</span>
-              <span class="product-name lm-text-grey lm-font-xs lm-margin-t-xs">规格：{{ pitem.ProductName }}</span>
+              <span class="product-name">{{ pitem.ProductName }}</span>
+              <span class="product-name lm-text-grey lm-font-xs lm-margin-t-xs">规格：{{ pitem.ShortName }}</span>
               <span class="lm-text-grey lm-margin-t-sm" >数量：{{ pitem.ProductCount}}</span>
             </div>
           </div>
