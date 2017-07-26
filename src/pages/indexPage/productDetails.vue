@@ -93,7 +93,7 @@
         <div class="choice-p">
           <div>
             <div class="choice-p-price ">￥{{specPrice}}</div>
-            <div class="del" @click="choice"><img src="../../assets/images/productDetails/del.png" /></div>
+            <div class="del" @click="close"><img src="../../assets/images/productDetails/del.png" /></div>
           </div>
           <div>库存 {{specStock}} 件</div>
           <div>{{checkMsg}}</div>
@@ -159,6 +159,8 @@
         specImg: '',
         specPrice: 0,
         specStock: 0,
+        productName:'',
+        productId:'',        
         checkIndex: -1,
         isCar: 0
       }
@@ -196,6 +198,9 @@
         this.isCar = val;
         this.choiceShow = !this.choiceShow
       },
+      close(){
+        this.choiceShow = !this.choiceShow
+      },
       //获取商品信息
       getProduct() {
         this.axios.post(this.url + '/api/Product/ProductDetail', {productId: this.$route.params.productID}).then((res) => {
@@ -219,6 +224,8 @@
             this.productSpec = res.data.Data;
             //设置默认选中第一个
             this.checkIndex = 0;
+            this.productId=this.productSpec[0].ProductId;
+            this.productName=this.productSpec[0].ProductName;
             this.specId = this.productSpec[0].ProductSpecId;
             this.specName = this.productSpec[0].ShortName;
             this.specImg = this.productSpec[0].HeadImg;
@@ -268,6 +275,8 @@
       //选中商品规格
       checkSpec(index) {
         this.checkIndex = index;
+        this.productId=this.productSpec[index].ProductId;
+        this.productName=this.productSpec[index].ProductName;
         this.specId = this.productSpec[index].ProductSpecId;
         this.specName = this.productSpec[index].ShortName;
         this.specImg = this.productSpec[index].HeadImg;
@@ -299,57 +308,137 @@
           Toast('请选择商品规格');
           return;
         }
-        //判断是否userId是否空
-        if (!!!localStorage.lut) {
-          // var url=window.location.pathname;//获取当前路径名称
-          var url = window.location.href
-          let instance = Toast('还未登录，请先登录');
-          setTimeout(() => {
-            this.$router.replace({
-              path: '/login/',
-              query: {redirect: this.$router.currentRoute.fullPath}
-            })
-          }, 1000);
-          return;
-        }
+        // //判断是否userId是否空
+        // if (!!!localStorage.lut) {
+        //   // var url=window.location.pathname;//获取当前路径名称
+        //   var url = window.location.href
+        //   let instance = Toast('还未登录，请先登录');
+        //   setTimeout(() => {
+        //     this.$router.replace({
+        //       path: '/login/',
+        //       query: {redirect: this.$router.currentRoute.fullPath}
+        //     })
+        //   }, 1000);
+        //   return;
+        // }
+       
         if (this.isCar == 1) {
-          //加入购物车
-          this.axios({
-            url: this.url + '/api/ShoppingCar/AddToShoppingCar',
-            method: 'post',
-            data: {productSpecId: this.specId, userId: this.$store.state.user_id, count: this.productNum},
-            headers: {'Authorization': 'BasicAuth ' + localStorage.lut}
+          
+          if(!!localStorage.lut){
+             //登录的用户加入购物车
+            this.axios({
+              url: this.url + '/api/ShoppingCar/AddToShoppingCar',
+              method: 'post',
+              data: {productSpecId: this.specId,  count: this.productNum},
+              headers: {'Authorization': 'BasicAuth ' + localStorage.lut}
 
-          }).then((res) => {
-            if (!!res) {
-              if (res.data.Code == 200) {
-                this.choiceShow = !this.choiceShow
-                Toast(res.data.Data);                
-              } else {
-                Toast(res.data.Data);
+            }).then((res) => {
+              if (!!res) {
+                if (res.data.Code == 200) {
+                  this.choiceShow = !this.choiceShow
+                  Toast(res.data.Data);                
+                } else {
+                  Toast(res.data.Data);
+                }
               }
+            })
+          }else{
+            //游客加入购物车
+            let skus=[];
+            //定义购物车商品参数
+            let sku = {
+                ShoppingCarId: 0,
+                Name:this.productName,
+                ProductId:this.productId,
+                ProductSpecId: this.specId,
+                ShortName: this.specName,
+                Count: this.productNum,
+                HeadImg: this.specImg,
+                SalePrice: this.specPrice,
+                AllStock:this.specStock
             }
-          })
+           if(!!localStorage.tourist){
+             //购物车的localStorage.tourist已经存在商品了
+              let sc=JSON.parse(localStorage.tourist);            
+              let pro=false;
+              sc.skus.forEach(function(item){
+                if(item.ProductSpecId==sku.ProductSpecId){
+                  item.Count+=sku.Count;//相同的商品就增加数量
+                  pro=true;
+                }
+              });
+              if(!pro){
+                sc.skus.push(sku);
+              }
+              localStorage.tourist=JSON.stringify(sc);
+              this.$router.push({path: '/cart'})
+           }else{
+             skus.push(sku);
+             let sc = {
+                productOrderId: "0",
+                skus: skus
+              }
+              localStorage.setItem("tourist", JSON.stringify(sc));
+              this.$router.push({path: '/cart'})  
+           }              
+          }
         }
-        if (this.isCar == 2) {
-          let sku = [{
-            ShoppingCarId: 0,
-            ProductSpecId: this.specId,
-            ProductName: this.specName,
-            ProductCount: this.productNum,
-            ProductImg: this.specImg,
-            ProductSpecPrice: this.specPrice
-          }]
-          if (!!localStorage.lut) {
+        if (this.isCar == 2) { 
+          if (!!localStorage.lut) {//用户登录的时候            
+            //定义下单参数
+            let sku = [{
+              ShoppingCarId: 0,
+              ProductSpecId: this.specId,
+              ProductName: this.specName,
+              ProductCount: this.productNum,
+              ProductImg: this.specImg,
+              ProductSpecPrice: this.specPrice
+            }];
             let sc = {
               productOrderId: "0",
               skus: sku
             }
-            localStorage.setItem("cars", JSON.stringify(sc));
+            localStorage.setItem("pay", JSON.stringify(sc));
             this.$router.push({path: '/Payment'})
           } else {
-            localStorage.setItem("tourist", JSON.stringify(sc));
-            this.$router.push({path: '/noIdPayment'})
+            //游客身份购买
+            let skus=[];
+            //定义购物车商品参数
+            let sku = {
+                ShoppingCarId: 0,
+                Name:this.productName,
+                ProductId:this.productId,
+                ProductSpecId: this.specId,
+                ShortName: this.specName,
+                Count: this.productNum,
+                HeadImg: this.specImg,
+                SalePrice: this.specPrice,
+                AllStock:this.specStock
+            }
+            if(!!localStorage.tourist){
+             //购物车的localStorage.tourist已经存在商品了
+              let sc=JSON.parse(localStorage.tourist);            
+              let pro=false;
+              sc.skus.forEach(function(item){
+                if(item.ProductSpecId==sku.ProductSpecId){
+                  item.Count+=sku.Count;//相同的商品就增加数量
+                  pro=true;
+                  }
+                });
+                if(!pro){
+                  sc.skus.push(sku);
+                }
+                localStorage.tourist=JSON.stringify(sc);
+                this.$router.push({path: '/cart'})
+              }else{
+                skus.push(sku);
+                let sc = {
+                    productOrderId: "0",
+                    skus: skus
+                  }
+                  localStorage.setItem("tourist", JSON.stringify(sc));
+                  this.$router.push({path: '/cart'})  
+              }           
           }
         }
       },

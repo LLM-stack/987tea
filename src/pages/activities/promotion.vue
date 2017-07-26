@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div id="pro">
     <Mheader :show='true'>
-      <div slot="title">987大促</div>
+      <div slot="title">{{activity.AcTitle}}</div>
     </Mheader>
     <div class="banner">
       <mt-swipe :auto="3000">
@@ -36,7 +36,7 @@
     <div class="title-z">
       <span>距离抢购结束还剩</span>
       <div class="lm-margin-t-xs">
-        <span class="bg-time">15</span>：<span class="bg-time">20</span>：<span class="bg-time">56</span>
+        <span class="bg-time">{{hour}}</span>：<span class="bg-time">{{minute}}</span>：<span class="bg-time">{{second}}</span>
       </div>
     </div>
     <div class="tab-box" id="tabBox" v-if="isfixed">
@@ -53,127 +53,18 @@
       <div class="lm-font-sm lm-text-grey">超值低价 多款茶类任你选</div>
     </div>
     <div class="scroll-bar">
-      <div class="scroll-cont">
+      <div class="scroll-cont" v-for="(item,index) in timeProducts" @click.stop="chkDetail(item.ProductId)">
         <div class="cont-img">
-          <img src="../../assets/images/goods/987tea_27.png"/>
-          <div class="cont-name">正品铁观音</div>
+          <img :src="item.HeadImg"/>
+          <div class="cont-name">{{item.Name}}</div>
         </div>
         <div class="cont-price">
-          <div class="new-price">￥88</div>
-          <div class="old-price">￥128</div>
+          <div class="new-price lm-margin-r-sm">￥{{item.SalePrice}}</div>
+          <div class="old-price">￥{{item.Price}}</div>
         </div>
-        <div class="cont-btn">立即抢购</div>
+        <div class="cont-btn" @click.stop="choice(item.ProductId)">立即抢购</div>
       </div>
-      <div class="scroll-cont">
-        <div class="cont-img">
-          <img src="../../assets/images/goods/987tea_27.png"/>
-          <div class="cont-name">正品铁观音</div>
-        </div>
-        <div class="cont-price">
-          <div class="new-price">￥88</div>
-          <div class="old-price">￥128</div>
-        </div>
-        <div class="cont-btn">立即抢购</div>
-      </div>
-      <div class="scroll-cont">
-        <div class="cont-img">
-          <img src="../../assets/images/goods/987tea_27.png"/>
-          <div class="cont-name">正品铁观音</div>
-        </div>
-        <div class="cont-price">
-          <div class="new-price">￥88</div>
-          <div class="old-price">￥128</div>
-        </div>
-        <div class="cont-btn">立即抢购</div>
-      </div>
-      <div class="scroll-cont">
-        <div class="cont-img">
-          <img src="../../assets/images/goods/987tea_27.png"/>
-          <div class="cont-name">正品铁观音</div>
-        </div>
-        <div class="cont-price">
-          <div class="new-price">￥88</div>
-          <div class="old-price">￥128</div>
-        </div>
-        <div class="cont-btn">立即抢购</div>
-      </div>
-      <div class="scroll-cont">
-        <div class="cont-img">
-          <img src="../../assets/images/goods/987tea_27.png"/>
-          <div class="cont-name">正品铁观音</div>
-        </div>
-        <div class="cont-price">
-          <div class="new-price">￥88</div>
-          <div class="old-price">￥128</div>
-        </div>
-        <div class="cont-btn">立即抢购</div>
-      </div>
-      <div class="scroll-cont">
-        <div class="cont-img">
-          <img src="../../assets/images/goods/987tea_27.png"/>
-          <div class="cont-name">正品铁观音</div>
-        </div>
-        <div class="cont-price">
-          <div class="new-price">￥88</div>
-          <div class="old-price">￥128</div>
-        </div>
-        <div class="cont-btn">立即抢购</div>
-      </div>
-      <div class="scroll-cont">
-        <div class="cont-img">
-          <img src="../../assets/images/goods/987tea_27.png"/>
-          <div class="cont-name">正品铁观音</div>
-        </div>
-        <div class="cont-price">
-          <div class="new-price">￥88</div>
-          <div class="old-price">￥128</div>
-        </div>
-        <div class="cont-btn">立即抢购</div>
-      </div>
-      <div class="scroll-cont">
-        <div class="cont-img">
-          <img src="../../assets/images/goods/987tea_27.png"/>
-          <div class="cont-name">正品铁观音</div>
-        </div>
-        <div class="cont-price">
-          <div class="new-price">￥88</div>
-          <div class="old-price">￥128</div>
-        </div>
-        <div class="cont-btn">立即抢购</div>
-      </div>
-      <div class="scroll-cont">
-        <div class="cont-img">
-          <img src="../../assets/images/goods/987tea_27.png"/>
-          <div class="cont-name">正品铁观音</div>
-        </div>
-        <div class="cont-price">
-          <div class="new-price">￥88</div>
-          <div class="old-price">￥128</div>
-        </div>
-        <div class="cont-btn">立即抢购</div>
-      </div>
-      <div class="scroll-cont">
-        <div class="cont-img">
-          <img src="../../assets/images/goods/987tea_27.png"/>
-          <div class="cont-name">正品铁观音</div>
-        </div>
-        <div class="cont-price">
-          <div class="new-price">￥88</div>
-          <div class="old-price">￥128</div>
-        </div>
-        <div class="cont-btn">立即抢购</div>
-      </div>
-      <div class="scroll-cont">
-        <div class="cont-img">
-          <img src="../../assets/images/goods/987tea_27.png"/>
-          <div class="cont-name">正品铁观音</div>
-        </div>
-        <div class="cont-price">
-          <div class="new-price">￥88</div>
-          <div class="old-price">￥128</div>
-        </div>
-        <div class="cont-btn">立即抢购</div>
-      </div>
+
     </div>
     <div class="clear"></div>
     <div class="title" id="id2">
@@ -185,7 +76,7 @@
       <div class="lm-font-sm lm-text-grey">热卖爆款 感恩放价</div>
     </div>
     <div class="pro-list">
-      <div class="pro-box" v-for="(item,index) in productList" :class="{'pro-left' : index % 2 !== 0}">
+      <div class="pro-box" v-for="(item,index) in expProducts" :class="{'pro-left' : index % 2 !== 0}" @click.stop="chkDetail(item.ProductId)">
         <div class="pro-img">
           <img :src="item.HeadImg"/>
         </div>
@@ -195,8 +86,8 @@
           <div class="old-price">￥{{ item.Price }}</div>
         </div>
         <div class="pro-btn-group">
-          <div class="pro-btn zhe">3.8折</div>
-          <div class="pro-btn gou">立即抢购</div>
+          <div class="pro-btn zhe">{{item.Price | discount(item.SalePrice)}}折</div>
+          <div class="pro-btn gou" @click.stop="choice(item.ProductId )">立即抢购</div>
         </div>
       </div>
     </div>
@@ -209,7 +100,7 @@
       <div class="lm-font-sm lm-text-grey">独具风味 送礼佳品</div>
     </div>
     <div class="pro-list">
-      <div class="pro-box" v-for="(item,index) in productList" :class="{'pro-left' : index % 2 !== 0}">
+      <div class="pro-box" v-for="(item,index) in hadProducts" :class="{'pro-left' : index % 2 !== 0}" @click.stop="chkDetail(item.ProductId)">
         <div class="pro-img">
           <img :src="item.HeadImg"/>
         </div>
@@ -220,7 +111,7 @@
         </div>
         <div class="pro-btn-group">
           <div class="pro-btn zhe">3.8折</div>
-          <div class="pro-btn gou" @click="choice(1)">立即抢购</div>
+          <div class="pro-btn gou" @click.stop="choice(item.ProductId )">立即抢购</div>
         </div>
       </div>
     </div>
@@ -238,7 +129,7 @@
       <li>买满688元送价值298元精美礼品一份</li>
     </ul>
     <transition name="fade">
-      <div class="choice-model" v-if="choiceShow" @click="choice(isCar)">
+      <div class="choice-model" v-if="choiceShow" >
 
       </div>
     </transition>
@@ -251,8 +142,7 @@
         <div class="choice-p">
           <div>
             <div class="choice-p-price ">￥{{specPrice}}</div>
-            <div class="del" @click="choice"><img src="../../assets/images/productDetails/del.png" height="48"
-                                                  width="48"/></div>
+            <div class="del" @click="close"><img src="../../assets/images/productDetails/del.png"/></div>
           </div>
           <div>库存 {{specStock}} 件</div>
           <div>{{checkMsg}}</div>
@@ -308,9 +198,9 @@
         specPrice: 0,
         specStock: 0,
         checkIndex: -1,
-        isCar: 0,
         productNum: 1,
         activeIdx: 0,
+        acId:1,
         tabs: [
           {
             tabName: '限时特价'
@@ -325,10 +215,29 @@
             tabName: '更多福利'
           }
         ],
-        //测试
-        giftsTag: '068cf06410bd48629a01a98fd514e9bc',
-        productSpec: '',
-        productList: []
+        explosionTag:'49039043e6ff4789a7dbddc566b58fa6',//爆款特价标签Id
+        timeTag:'d009610ae2f74d0fa72e83cffbddf00f',//限时特价标签Id
+        hardcoverTag:'ca482e57ed0e434f935e47872f69614a',//精装礼品特价Id
+        productSpec: [],//sku集合
+        expProducts:[],//爆款特价商品
+        timeProducts:[],//限时特价商品
+        hadProducts:[],//精装礼品商品
+        activity:'',
+        day:0,
+        hour:0,
+        minute:0,
+        second:0,
+        flag:false,
+        productId:'',
+        productName:''
+      }
+    },
+    computed:{
+
+    },
+    filters:{
+      discount(price,salePrice){
+        return (salePrice/(price!=0?price:1)).toFixed(1)
       }
     },
     methods: {
@@ -349,10 +258,12 @@
 
 
       },
-      getProduct() {//获取送礼必备
-        this.axios.post(this.url + '/api/Product/HomeProducts', {tagId: this.giftsTag}).then((res) => {
+      //获取活动信息
+      getActivity(){
+          this.axios.get(this.url + '/api/Activity/GetActivityById/'+this.acId, ).then((res) => {
           if (res.data.Code == 200) {
-            this.productList = res.data.Data;
+            this.activity = res.data.ExData;
+            this.timeDown();
           } else {
             Toast(res.data.Data);
           }
@@ -360,12 +271,78 @@
           Toast('网络请求超时');
         })
       },
-      choice(val) {
-        //首次点击加载sku信息
-        if (this.isCar == 0) {
-          this.getProductSKU();
-        }
-        this.isCar = val;
+      //获取限时特价商品
+      getTimelimit(){
+          this.axios.post(this.url + '/api/Activity/GetActivityProducts', {acId:this.acId,tagId: this.timeTag}).then((res) => {
+            if (res.data.Code == 200) {
+              this.timeProducts = res.data.ExData;
+            } else {
+              Toast(res.data.Data);
+            }
+          }).catch((err) => {
+            Toast('网络请求超时');
+          })
+      },
+      //获取爆款特价商品
+      getExplosion(){
+          this.axios.post(this.url + '/api/Activity/GetActivityProducts', {acId:this.acId,tagId: this.explosionTag}).then((res) => {
+          if (res.data.Code == 200) {
+            this.expProducts = res.data.ExData;
+          } else {
+            Toast(res.data.Data);
+          }
+        }).catch((err) => {
+          Toast('网络请求超时');
+        })
+      },
+      //获取精装礼品商品
+      getHardcover(){
+          this.axios.post(this.url + '/api/Activity/GetActivityProducts', {acId:this.acId,tagId: this.hardcoverTag}).then((res) => {
+            if (res.data.Code == 200) {
+              this.hadProducts = res.data.ExData;
+            } else {
+              Toast(res.data.Data);
+            }
+          }).catch((err) => {
+            Toast('网络请求超时');
+          })
+      } ,
+       //倒计时
+      timeDown () {
+        var endTime = new Date(this.activity.OverducTime);
+        //endTime.setHours(endTime.getHours() + 3); //给endTime增加3小时
+        setInterval( ()=> {
+          let nowTime = new Date()
+          let leftTime = parseInt((endTime.getTime()-nowTime.getTime())/1000)
+          let d = parseInt(leftTime/(24*60*60))
+          let h = this.formate(parseInt(leftTime/(60*60)%24))
+          let m = this.formate(parseInt(leftTime/60%60))
+          let s = this.formate(parseInt(leftTime%60))
+          if(leftTime <= 0){
+            this.flag = true
+          }
+          this.day=d;
+          this.hour=h;
+          this.minute=m;
+          this.second=s;
+        },1000)
+      },
+      //时间格式
+      formate (time) {
+          if(time>=10){
+              return time
+          }else{
+              return `0${time}`
+          }
+      },
+      //立即购买
+      choice(id,name,stock) {
+        this.stock=stock;
+        this.getProductSKU(id);
+        this.choiceShow = !this.choiceShow
+      },
+      //关闭立即购买
+      close(){
         this.choiceShow = !this.choiceShow
       },
       //数量变化
@@ -386,35 +363,76 @@
           }
         }
       },
+      //加入购物车
       addCar() {
         if (this.checkIndex == -1) {
           Toast('请选择商品规格');
           return;
         }
+        //定义商品参数
+        let skus=[];
+        let sku = {
+          ShoppingCarId: 0,
+          Name:this.productName,
+          ProductId:this.productId,
+          ProductSpecId: this.specId,
+          ShortName: this.specName,
+          Count: this.productNum,
+          HeadImg: this.specImg,
+          SalePrice: this.specPrice,
+          AllStock:this.specStock
+        }
 
-        if (this.isCar == 2) {
-          let sku = [{
-            ShoppingCarId: 0,
-            ProductSpecId: this.specId,
-            ProductName: this.specName,
-            ProductCount: this.productNum,
-            ProductImg: this.specImg,
-            ProductSpecPrice: this.specPrice
-          }]
-          if (!!localStorage.lut) {
+        if (!!!localStorage.lut) {//游客加入购物车
+          if(!!localStorage.tourist){
+            //localStorage.tourist已存在商品了
+            let sc=JSON.parse(localStorage.tourist);
+            let pro=false;
+            sc.skus.forEach(function(item){
+              if(item.ProductSpecId==sku.ProductSpecId){
+                item.Count+=sku.Count;
+               pro=true;
+              }
+            });
+            if(!pro){
+              sc.skus.push(sku);
+            }
+            localStorage.tourist=JSON.stringify(sc);
+            this.$router.push({path: '/cart'})
+          }else{
+            skus.push(sku);
             let sc = {
               productOrderId: "0",
-              skus: sku
+              skus: skus
             }
-            localStorage.setItem("cars", JSON.stringify(sc));
-            this.$router.push({path: '/Payment'})
+            localStorage.setItem("tourist", JSON.stringify(sc));
+            this.$router.push({path: '/cart'})
           }
+        }else{
+             //登录的用户加入购物车
+            this.axios({
+              url: this.url + '/api/ShoppingCar/AddToShoppingCar',
+              method: 'post',
+              data: {productSpecId: this.specId,  count: this.productNum},
+              headers: {'Authorization': 'BasicAuth ' + localStorage.lut}
 
+            }).then((res) => {
+              if (!!res) {
+                if (res.data.Code == 200) {
+                  this.choiceShow = !this.choiceShow
+                  Toast(res.data.Data);
+                } else {
+                  Toast(res.data.Data);
+                }
+              }
+            })
         }
       },
       //选中商品规格
       checkSpec(index) {
         this.checkIndex = index;
+        this.productId=this.productSpec[index].ProductId;
+        this.productName=this.productSpec[index].ProductName;
         this.specId = this.productSpec[index].ProductSpecId;
         this.specName = this.productSpec[index].ShortName;
         this.specImg = this.productSpec[index].HeadImg;
@@ -423,12 +441,14 @@
         this.checkMsg = '已选：' + this.productSpec[index].ShortName;
       },
       //获取商品SKU
-      getProductSKU() {
-        this.axios.post(this.url + '/api/Product/ProductSpecs', {productId: this.$route.params.productID}).then((res) => {
+      getProductSKU(proId) {
+        this.axios.post(this.url + '/api/Product/ProductSpecs', {productId: proId}).then((res) => {
           if (res.data.Code == 200) {
             this.productSpec = res.data.Data;
             //设置默认选中第一个
             this.checkIndex = 0;
+            this.productId=this.productSpec[0].ProductId;
+            this.productName=this.productSpec[0].ProductName;
             this.specId = this.productSpec[0].ProductSpecId;
             this.specName = this.productSpec[0].ShortName;
             this.specImg = this.productSpec[0].HeadImg;
@@ -442,8 +462,14 @@
           Toast('网络请求超时');
         })
       },
+      //跳转商品详情
+      chkDetail(val){
+        this.$router.push({path: '/ProductDetails/'+val})
+      },
       //跳转锚点
-      scrollTop() {
+      scroll() {
+        let pro = document.getElementById('pro');
+
         this.tab1 = document.getElementById('id1').offsetTop - 150;
         this.tab2 = document.getElementById('id2').offsetTop - 150;
         this.tab3 = document.getElementById('id3').offsetTop - 150;
@@ -464,16 +490,21 @@
         }if(this.top > this.tab4){
           this.activeIdx = 3
         }
-
       }
     },
     created() {
-      this.getProduct()
+       this.getActivity();
+      this.getTimelimit();
+      this.getExplosion();
+      this.getHardcover();
     },
     mounted() {
       this.$nextTick(() => {
-        window.addEventListener('scroll', this.scrollTop);
+        window.addEventListener('scroll', this.scroll);
       })
+    },
+    beforeDestroy(){
+      window.removeEventListener('scroll', this.scroll);
     }
   }
 </script>
@@ -641,7 +672,9 @@
     position: absolute;
     bottom: 0;
     color: #fff;
-    padding: 0.1rem;
+    padding: 0 0.2rem;
+    height: 0.8rem;
+    line-height: 0.8rem;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -652,7 +685,7 @@
     padding: 0.2rem 0;
     display: flex;
     align-items: center;
-    justify-content: space-around;
+    justify-content: center;
   }
 
   .new-price {
@@ -677,7 +710,7 @@
   }
 
   .pro-list {
-    padding: 0 0.3rem;
+    padding: 0 0.4rem;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -697,7 +730,7 @@
   }
   .pro-box .pro-name{
     font-size: 0.55rem;
-    padding: 0.1rem;
+    padding:0.1rem 0.2rem;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -709,7 +742,7 @@
     justify-content: center;
   }
   .pro-box .pro-btn-group{
-    margin: 0.4rem 0;
+    margin: 0.2rem 0;
     padding: 0 0.2rem;
     display: flex;
     align-items: center;

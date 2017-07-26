@@ -46,7 +46,7 @@
       </div>
     </div>
 
-    <Mfooter :shopCurrent=true></Mfooter>
+    <Mfooter :shopCurrent='true'></Mfooter>
   </div>
 </template>
 
@@ -88,7 +88,7 @@
             imgSrc: require('../../assets/images/goods/987tea_20.png')
           },
           {
-            title: '正品金骏梅',
+            title: '正品金骏眉',
             dp: '尝鲜价 买一送一',
             price: '99',
             cbPrice: '123',

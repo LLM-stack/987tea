@@ -280,10 +280,10 @@
     margin-top: 0.8rem;
   }
   .code .seconding > img{
+    vertical-align: inherit;
     border-radius: 0.2rem;
   }
   .code a{
-
     width: 7.5rem!important;
   }
 </style>

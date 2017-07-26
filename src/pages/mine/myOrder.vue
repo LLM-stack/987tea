@@ -202,7 +202,7 @@
             receive:receiveArea,          
             skus:skus
           }
-          localStorage.setItem("cars", JSON.stringify(sc));
+          localStorage.setItem("pay", JSON.stringify(sc));
           this.$router.push({path: '/Payment'})
       },
       //去评价

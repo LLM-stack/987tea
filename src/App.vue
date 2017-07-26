@@ -187,6 +187,9 @@
     margin-top: 0.2rem;
   }
 
+  .lm-margin-b-lg {
+    margin-bottom: 0.8rem;
+  }
   .lm-margin-b {
     margin-bottom: 0.6rem;
   }
@@ -223,6 +226,9 @@
     margin-left: 1rem;
   }
 
+  .lm-margin-xl {
+    margin-left: 0.8rem;
+  }
   .lm-margin-l {
     margin-left: 0.6rem;
   }
@@ -404,7 +410,9 @@
     transition: transform .2s;
     transition: transform .2s, -webkit-transform .2s;
   }
-
+  .picker-center-highlight:before, .picker-center-highlight:after{
+    background-color: #bbb;
+  }
   .sex .mint-cell {
     width: 5.5rem;
     min-height: 1rem;

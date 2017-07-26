@@ -121,24 +121,36 @@
             product.Count = 1;
           }
         }
-        //数量变动保存到数据库
-        this.axios({
-          url: this.url + '/api/ShoppingCar/UpdateCount',
-          method: 'post',
-          data: {shoppingCarId: product.ShoppingCarId, type: way},
-          headers: {'Authorization': 'BasicAuth ' + localStorage.lut}
+        
+        if(product.ShoppingCarId!=0){
+            //用户登录后数量变动保存到数据库
+            this.axios({
+              url: this.url + '/api/ShoppingCar/UpdateCount',
+              method: 'post',
+              data: {shoppingCarId: product.ShoppingCarId, type: way},
+              headers: {'Authorization': 'BasicAuth ' + localStorage.lut}
 
-        }).then((res) => {
-         if(!!res){
-            if (res.data.Code == 200) {
+            }).then((res) => {
+            if(!!res){
+                if (res.data.Code == 200) {
 
-            } else {
-              Toast(res.data.Data);
+                } else {
+                  Toast(res.data.Data);
+                }
             }
-         }
-        })
+          })
+        }else{
+          if(product.Count>=product.AllStock){
+            product.Count=product.AllStock
+            Toast("达到库存上限了");
+          }
+          if(product.Count<=1){
+            product.Count=1
+            Toast("已经减到底了");
+          }
+        }       
 
-        this.calcTotalMoney();
+        
       },
       //总金额计算
       calcTotalMoney() {
@@ -186,23 +198,33 @@
       //删除购物车中的商品
       deleteProduct(carId) {
         MessageBox.confirm('确认删除么?').then(action => {
-          this.axios({
-            url: this.url + '/api/ShoppingCar/RemoveProduct',
-            method: 'post',
-            data: {shoppingCarId: carId},
-            headers: {'Authorization': 'BasicAuth ' + localStorage.lut}
+           if(!!localStorage.lut){
+              this.axios({
+              url: this.url + '/api/ShoppingCar/RemoveProduct',
+              method: 'post',
+              data: {shoppingCarId: carId},
+              headers: {'Authorization': 'BasicAuth ' + localStorage.lut}
 
-          }).then((res) => {
-            if(!!res){
-              if (res.data.Code == 200) {
-                //移除删除的商品
-                this.productlist = this.productlist.filter(p => p.ShoppingCarId != carId);
-                Toast(res.data.Data);
-              } else {
-                Toast(res.data.Data);
+            }).then((res) => {
+              if(!!res){
+                if (res.data.Code == 200) {
+                  //登录用户移除删除的商品
+                  this.productlist = this.productlist.filter(p => p.ShoppingCarId != carId);
+                  Toast(res.data.Data);
+                } else {
+                  Toast(res.data.Data);
+                }
               }
+            })
+          }else{
+            //游客删除的商品
+            this.productlist = this.productlist.filter(p => p.ShoppingCarId != carId);
+            let sc = {
+              productOrderId: "0",
+              skus: this.productlist
             }
-          })
+            localStorage.tourist=JSON.stringify(sc);
+          }
         })
       },
       //提交订单
@@ -213,7 +235,9 @@
             let sku = {
               ShoppingCarId: item.ShoppingCarId,
               ProductSpecId: item.ProductSpecId,
-              ProductName: item.ShortName,
+              ProductId:item.ProductId,
+              ShortName:item.ShortName,
+              ProductName: item.productName,
               ProductCount: item.Count,
               ProductImg: item.HeadImg,
               ProductSpecPrice: item.SalePrice
@@ -231,14 +255,31 @@
             productOrderId:"0",
             skus:skus
           }
-          localStorage.setItem("cars", JSON.stringify(sc));
-          this.$router.push({path: '/Payment'})
+          if(!!!localStorage.lut){
+            //游客购买
+              localStorage.setItem("unPay", JSON.stringify(sc));              
+              this.$router.push({path: '/noIdPayment'})
+          }else{
+            //已经登录的用户购买
+              localStorage.setItem("pay", JSON.stringify(sc));
+              this.$router.push({path: '/Payment'})
+          }
+          
         }
       }
     },
     mounted: function () {
       this.$nextTick(function () {
-        this.getCarInfo();
+        if(!!localStorage.lut){
+          //登录状态加载数据库的购物车
+          this.getCarInfo();
+        }else{
+          if(!!localStorage.tourist){
+            let sc=JSON.parse(localStorage.tourist)
+            console.log(sc)
+            this.productlist=sc.skus;
+          }
+        }
 
       })
     }

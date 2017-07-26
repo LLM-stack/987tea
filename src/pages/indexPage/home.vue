@@ -75,7 +75,7 @@
         人气热卖 <span></span>
       </div>
       <!--<router-link :to="{path:'/OnSale'}">-->
-        <div class="box-block box-block-one" @click.stop="chkDetail('46436dd188d54e8993427c364099a66d')">
+        <div class="box-block box-block-one" @click.stop="chkDetail('0092976dc9b844fd9156e18e1affbf0e')">
           <div class="box-block-title">折扣好茶推荐</div>
           <div class="box-block-time"><span>{{hour}}</span>：<span>{{minute}}</span>：<span>{{second}}</span></div>
           <!--<div class="rmtime">下一场19:00开始</div>-->
@@ -137,7 +137,7 @@
             <div class="mode-img">
               <img  v-lazy="item.HeadImg"/>
             </div>
-            <div class="mode-dp">{{ item.SaleComment }}</div>
+            <!--<div class="mode-dp">{{ item.SaleComment }}</div>-->
             <div class="mode-title">{{ item.Name }}</div>
             <div class="mode-price ">
               <span class="lm-text-red">￥{{ item.SalePrice }}元</span>
@@ -157,7 +157,7 @@
           <div class="mode-img">
             <img :src="item.HeadImg"/>
           </div>
-          <div class="mode-dp">{{ item.SaleComment }}</div>
+          <!--<div class="mode-dp">{{ item.SaleComment }}</div>-->
           <div class="mode-title">{{ item.Name }}</div>
           <div class="mode-price">
             <span class="lm-text-red">￥{{ item.SalePrice }}元</span>
@@ -242,20 +242,20 @@
             this.minute=m;
             this.second=s;
           },1000)
-         },
-         formate (time) {
-               if(time>=10){
-                   return time
-               }else{
-                   return `0${time}`
-               }
-           },
-           chkDetail(val){
-             this.$router.push({path: '/ProductDetails/'+val})
-           }
+        },
+        formate (time) {
+          if(time>=10){
+              return time
+          }else{
+              return `0${time}`
+          }
+        },
+        chkDetail(val){
+          this.$router.push({path: '/ProductDetails/'+val})
+        }
 
     },
-    created:function(){
+    created(){
        this.getOwnTea();
        this.getGiftsTea();
     }

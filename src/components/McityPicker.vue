@@ -23,14 +23,8 @@
 </template>
 
 <script>
-  import Mheader from '../../components/Mheader'
-  import Mfooter from '../../components/Mfooter'
 
   export default {
-    components: {
-      Mheader,
-      Mfooter
-    },
     data () {
       return {
         showChose: false,

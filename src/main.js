@@ -24,6 +24,9 @@ Vue.prototype.axios = axios
           if(err.response.config.url.includes('/api/Product/IsFavourite')){
                  //过滤商品详情页的登录跳转进行处理
           }
+          else if(err.response.config.url.includes('/api/ShoppingCar/UserShoppingCar')){
+                 //过滤商品详情页的登录跳转进行处理
+          }
           else if (err.response.status == 401) {
               let instance = Toast('还未登录，请先登录');
               setTimeout(() => {
@@ -47,7 +50,7 @@ Vue.prototype.axios = axios
 //正式地址： 'http://api.987tea.com'
 // Vue.prototype.url='http://192.168.1.110:8088'
 Vue.prototype.url='http://localhost:8088'
-//Vue.prototype.url='http://api.987tea.com'
+// Vue.prototype.url='http://api.987tea.com'
 
 
 Vue.config.productionTip = false

@@ -24,12 +24,12 @@
       <div class="pay-modes lm-margin-b-sm">
         <div>支付方式：</div>
         <div class="pay-mode lm-margin-t-sm">
-          <div  :class="{active:payType==0}" @click="checkType(0)">货到付款</div>
-          <div :class="{active:payType==2}" @click="checkType(2)">支付宝</div>
-          <!--<div :class="payType==1?'active':''" @click="checkType(1)">微信支付</div>-->
+          <div :class="{active:payType==0}" @click="checkType(0)"><img src="../../assets/images/cart/huo.png"/>货到付款</div>
+          <div class="lm-margin-xl" :class="{active:payType==2}" @click="checkType(2)"><img src="../../assets/images/cart/zfb.png" />支付宝</div>
+          <!--<div class="lm-margin-xl" :class="payType==1?'active':''" @click="checkType(1)"><img src="../../assets/images/cart/wx.png" />微信支付</div>-->
         </div>
       </div>
-      <div class="product lm-margin-b-sm" v-for="(item,index) in orderDetails">
+      <div class="product" v-for="(item,index) in orderDetails">
         <img class="product-img" :src="item.ProductImg" />
         <div class="product-details">
           <div>{{item.ProductName}}</div>
@@ -40,12 +40,15 @@
         </div>
       </div>
       <!--优惠券的先注释-->
-      <!--<router-link :to="{path:'/Coupon'}">
-        <div class="coupon lm-margin-b-sm">
-          有3张优惠券可用
+      <!--<router-link :to="{path:'/Coupon'}">-->
+      <div class="lm-margin-b-sm lm-margin-t-sm">
+        <div class="coupon" v-for="(dis,index) in discount" @click="chkFavInfo(index)">
+          <div>{{dis.FavContent | discountContent}}</div>
+          <div class="product-select" :class="{checked:isChecked == index}" ></div>
         </div>
-      </router-link>-->
-      <div class="order-details">
+      </div>
+      <!--</router-link>-->
+      <div class="order-details lm-margin-b-lg">
         <div class="lm-margin-b-sm">订单明细：</div>
         <div class="details">
           <span>订单总价</span>
@@ -56,10 +59,10 @@
           <span>运费</span>
           <span>{{freight}}</span>
         </div>
-        <!--<div class="details">
+        <div class="details">
           <span>优惠券</span>
-          <span>￥-5</span>
-        </div>-->
+          <span>{{subtract}}</span>
+        </div>
         <div class="details">
           <span>总计</span>
           <span class="lm-text-red">￥{{total}}</span>
@@ -91,10 +94,13 @@
         defaultAddress:'',
         ProductCount:'',
         orderDetails:[],
-        freight:0,
-        payType:0,
-        alipay:'',
-        productOrderId:"0"
+        isChecked:'',
+        freight:0,//运费
+        payType:0,//支付类型
+        alipay:'',//ali支付form表单信息
+        productOrderId:"0",
+        discount:[],//优惠记录信息
+        subtract:'0'//优惠折扣价格
       }
     },
     computed: {
@@ -106,10 +112,18 @@
         return t;
       },
       total(){
-        return  parseFloat(this.orderTotal)+parseFloat(this.freight);
+        return  parseFloat(this.orderTotal)+parseFloat(this.freight)+parseFloat(this.subtract);
       },
       addressDetail(){
         return this.defaultAddress.Province+this.defaultAddress.City+this.defaultAddress.Area+this.defaultAddress.Detail;
+      }
+
+    },
+    filters: {
+      discountContent(val){
+        let strs=val.split('【');
+        let lastStr=strs[1].split('】');
+        return strs[0]+lastStr[1];
       }
     },
    methods:{
@@ -174,8 +188,8 @@
                setTimeout(function() {
                  document.forms['alipaysubmit'].submit();
                },0)
-               
-               localStorage.removeItem("cars");
+
+               localStorage.removeItem("pay");
              }
             }else {
               Toast(res.data.Data);
@@ -185,28 +199,58 @@
      },
      selectAddress() {
        this.$router.push({ path: '/MyAddress/'})
-     }
+     },
+     //获取优惠信息
+      getPreOrderFavInfo(){
+         //定义参数
+        let sc={
+          TotalPrice:this.total,
+          PayType:0,//0是货到付款
+          ProductCount:this.ProductCount,
+          OrderFrom:2,//订单来源  2标识商城
+          AddressId:'0',
+          ProductSkus:this.orderDetails,
+          ProductOrderId:'0',
+          OrderAddress:'',
+          OrderToPrice:''
+        }
+        this.axios.post(this.url + '/api/Order/LoadPreOrderFavInfo', {strSc:JSON.stringify(sc)}).then((res) => {
+          if (res.data.Code == 200) {
+            this.discount=res.data.Data;
+          } else {
+            Toast(res.data.Data);
+          }
+        }).catch((err) => {
+          Toast('网络请求超时');
+        })
+      },
+      //选中优惠折扣方式
+      chkFavInfo(index){
+        this.subtract='-'+this.discount[index].FavPrice;
+        this.isChecked = index;
+      }
    },
-   mounted:function(){
+   mounted(){
      this.$nextTick(()=>{
-        if(!!localStorage.cars){  
+        if(!!localStorage.pay){
           //继续付款
-          var sc=JSON.parse(localStorage.cars);
+          var sc=JSON.parse(localStorage.pay);
           this.productOrderId=sc.productOrderId;
           this.orderDetails=sc.skus;
-          if(this.productOrderId!='0'){
-              this.payType=sc.payType;         
-              this.defaultAddress=sc.receive;
-          }           
           this.ProductCount=this.orderDetails.length;
-          //localStorage.removeItem("cars");
-        }
-        if(this.productOrderId=='0'){
-          //首次付款           
-          if(!!!this.$store.state.receiveAddress){
-              this.getDefaultAddress();
+          if(this.productOrderId!='0'){
+              this.payType=sc.payType;
+              this.defaultAddress=sc.receive;
+          }else{
+              //首次付款
+              if(!!!this.$store.state.receiveAddress){
+                  this.getDefaultAddress();
+              }
           }
+          this.getPreOrderFavInfo();
+
         }
+
         //判断选择的地址是否为空
         if(!!this.$store.state.receiveAddress){
           this.defaultAddress=this.$store.state.receiveAddress;
@@ -270,20 +314,29 @@
     align-items: center;
   }
   .pay-modes .pay-mode > div{
-    padding: 0.1rem 0.2rem;
-    margin-right: 1rem;
+    display: flex;
+    align-items: center;
+    min-width: 4.4rem;
+    padding: 0.1rem ;
     border-radius: 0.1rem;
     font-size: 0.6rem;
-    border:1px solid;
+    border:1px solid #999;
+  }
+  .pay-mode > div >img{
+    margin-right: 0.2rem;
+    width: 1.2rem;
+    height: 1.2rem;
   }
   .pay-mode .active{
     color: #B4282D;
-    border:1px solid  #B4282D;
+    border-color: #B4282D!important;
+    /*background-color: #B4282D;*/
   }
   .product{
     display: flex;
     align-items: center;
     padding: 0.4rem;
+    border-top:1px solid #eee;
     background-color: #ffffff;
   }
   .product .product-img{
@@ -304,6 +357,11 @@
     justify-content: space-between;
   }
   .coupon{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.6rem;
+    border-top: 1px solid #eee;
     padding: 0.4rem;
     background-color: #ffffff;
   }
@@ -342,4 +400,15 @@
     height: 100%;
     background-color: #B4282D;
   }
+  .product-select {
+    width: 0.8rem;
+    height: 0.8rem;
+    margin-right: 0.4rem;
+    background-image: url("../../assets/images/cart/unchecked.png");
+    background-size: 100% 100%;
+  }
+  .checked {
+    background-image: url("../../assets/images/cart/checked.png");
+  }
+
 </style>

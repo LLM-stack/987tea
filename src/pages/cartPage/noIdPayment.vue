@@ -4,9 +4,9 @@
       <div slot="title">提交订单</div>
     </Mheader>
 
-    <div class="info">
-      <mt-field label="收货人" placeholder="请输入用户名" v-model="username"></mt-field>
-      <mt-field label="手机号" placeholder="请输入手机号" type="tel" v-model="phone"></mt-field>
+    <div class="info lm-margin-b-sm">
+      <mt-field label="收货人" placeholder="请输入收货人姓名" v-model="username"></mt-field>
+      <mt-field label="手机号" placeholder="请输入收货人手机号" type="tel" v-model="phone"></mt-field>
       <mt-field label="省市区" placeholder="请选择省市区" v-model="address"></mt-field>
       <div class="linkage-wrap">
         <div class="address-wrap">
@@ -23,7 +23,7 @@
       <mt-field label="详细地址" placeholder="请输入地址" v-model="detailAddress"></mt-field>
     </div>
 
-    <div class="product lm-margin-b-sm" v-for="(item,index) in orderDetails">
+    <div class="product" v-for="(item,index) in orderDetails">
       <img class="product-img" :src="item.ProductImg"/>
       <div class="product-details">
         <div>{{item.ProductName}}</div>
@@ -33,13 +33,13 @@
         </div>
       </div>
     </div>
-    <div class="hide" v-html="alipay"></div>
+
     <div class="pay">
       <div>
         <div>共选择 <span class="lm-text-red">{{ProductCount}}</span>件商品</div>
         <div>总金额：<span class="lm-text-red">￥{{total}}</span> 元</div>
       </div>
-      <div class="topay" @click="oncePayment">确认下单</div>
+      <div class="topay" @click="goToPay">确认下单</div>
     </div>
   </div>
 </template>
@@ -61,7 +61,23 @@
         detailAddress:'',
         address_flag: false,
         slots: slots,
-        temp_addr: ''
+        temp_addr: '',
+        orderDetails:[],
+        ProductCount:0,
+        freight:0,
+        discount:[]
+      }
+    },
+    computed: {
+      orderTotal(){
+        let t=0;
+        this.orderDetails.forEach(function (item) {
+           t+=parseInt(item.ProductCount)*parseFloat(item.ProductSpecPrice);
+        });
+        return t;
+      },
+      total(){
+        return  parseFloat(this.orderTotal)+parseFloat(this.freight);
       }
     },
     methods:{
@@ -104,12 +120,109 @@
       isPhoneNo(phone) {  //手机号验证
         var pattern = /^1[34578]\d{9}$/;
         return pattern.test(phone);
+      },
+      //去下单
+      goToPay(){
+        if(!!!this.username){
+           Toast("请填写收货人姓名")
+           return;
+        }
+        if(!!!this.phone){
+           Toast("请填写收货人手机号")
+           return;
+        }
+        if(!this.isPhoneNo(this.phone)){
+           Toast("手机号格式错误")
+           return;
+        }
+        if(!!!this.address){
+           Toast("请选择省市区")
+           return;
+        }
+        if(!!!this.detailAddress){
+           Toast("请填写详细地址")
+           return;
+        }
+        //定义地址参数
+        let areas=this.address.split(' ');
+        let str_address={
+          AddressId:'0',
+          Province:areas[0],
+          City:areas[1],
+          Area:areas[3],
+          Detail:this.detailAddress,
+          Phone:this.phone,
+          Reciever:this.username
+        }
+        //定义参数
+        let sc={
+          TotalPrice:this.total,
+          PayType:0,//0是货到付款
+          ProductCount:this.ProductCount,
+          OrderFrom:2,//订单来源  2标识商城
+          AddressId:'0',
+          ProductSkus:this.orderDetails,
+          ProductOrderId:'0',
+          OrderAddress:str_address,
+          OrderToPrice:this.discount
+        }
+         this.axios.post(this.url + '/api/Order/SaveOrder', {strSc:JSON.stringify(sc)}).then((res) => {
+          if (res.data.Code == 200) {             
+             localStorage.removeItem('unPay');
+              let instance = Toast(res.data.Data);
+              setTimeout(() => {
+                instance.close();
+                this.$router.replace({ path: '/'})
+              }, 1000);
+            
+          } else {
+            Toast(res.data.Data);
+          }
+        }).catch((err) => {
+          Toast('网络请求超时');
+        })
+      },
+      //获取优惠信息
+      getPreOrderFavInfo(){
+         //定义参数
+        let sc={
+          TotalPrice:this.total,
+          PayType:0,//0是货到付款
+          ProductCount:this.ProductCount,
+          OrderFrom:2,//订单来源  2标识商城
+          AddressId:'0',
+          ProductSkus:this.orderDetails,
+          ProductOrderId:'0',
+          OrderAddress:'',
+          OrderToPrice:''
+        }
+        this.axios.post(this.url + '/api/Order/LoadPreOrderFavInfo', {strSc:JSON.stringify(sc)}).then((res) => {
+          if (res.data.Code == 200) {
+            this.discount=res.data.Data;
+            
+          } else {
+            Toast(res.data.Data);
+          }
+        }).catch((err) => {
+          Toast('网络请求超时');
+        })
       }
     },
     mounted(){
       this.$nextTick(function () {
-      this.initAddress();
-    })
+        this.initAddress();
+        if(!!localStorage.unPay){
+            var sc=JSON.parse(localStorage.unPay);
+            this.productOrderId=sc.productOrderId;
+            this.orderDetails=sc.skus;
+            // if(this.productOrderId!='0'){
+            //     this.payType=sc.payType;
+            //     this.defaultAddress=sc.receive;
+            // }
+            this.ProductCount=this.orderDetails.length;
+            this.getPreOrderFavInfo();
+        }
+      })
     }
   }
 </script>
@@ -206,6 +319,7 @@
     display: flex;
     align-items: center;
     padding: 0.4rem;
+    border-top:1px solid #eee;
     background-color: #ffffff;
     .product-img {
       width: 3.2rem;
@@ -225,6 +339,7 @@
       }
     }
   }
+
   .coupon {
     padding: 0.4rem;
     background-color: #ffffff;
