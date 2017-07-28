@@ -1,11 +1,14 @@
 <template>
-  <div id="pro">
+  <div id="pro" class="container">
     <Mheader :show='true' v-show="!isfixed">
       <div slot="title">{{activity.AcTitle}}</div>
     </Mheader>
     <div class="banner">
-      <mt-swipe :auto="3000">
-        <mt-swipe-item>
+      <mt-swipe :auto="3000" v-if="advList.length > 0">
+      <mt-swipe-item  v-for="(item,index) in advList"  :key="item.Id" >
+          <img :src="url+item.Img" alt="" @click="jump(item.AdUrl)">
+        </mt-swipe-item>
+        <!--<mt-swipe-item>
           <img src="../../assets/images/banner/banner01.jpg"/>
         </mt-swipe-item>
         <mt-swipe-item>
@@ -13,8 +16,13 @@
         </mt-swipe-item>
         <mt-swipe-item>
           <img src="../../assets/images/banner/banner03.jpg"/>
-        </mt-swipe-item>
+        </mt-swipe-item>-->
       </mt-swipe>
+      <mt-swipe v-else>
+        <mt-swipe-item>
+          <img src="../../assets/images/banner/banner01.jpg"/>
+        </mt-swipe-item>
+       </mt-swipe>
     </div>
     <div class="title">
       <div>
@@ -26,11 +34,11 @@
     <div class="ticket-box">
       <div class="ticket">
         <span class="orange flex-alig-center">满<span class="lm-font-xxxl">100</span></span>
-        <span class="lm-margin-l-sm flex-alig-center">减<span class="yellow lm-font-xxxl">10</span></span>
+        <span class="lm-margin-l-sm flex-alig-center">减<span class="yellow lm-font-xxxl">11</span></span>
       </div>
       <div class="ticket">
         <span class="orange flex-alig-center">满<span class="lm-font-xxxl">200</span></span>
-        <span class="lm-margin-l-sm flex-alig-center">减<span class="yellow lm-font-xxxl">20</span></span>
+        <span class="lm-margin-l-sm flex-alig-center">减<span class="yellow lm-font-xxxl">22</span></span>
       </div>
     </div>
     <div class="title-z">
@@ -86,7 +94,7 @@
           <div class="old-price">￥{{ item.Price }}</div>
         </div>
         <div class="pro-btn-group">
-          <div class="pro-btn zhe">{{item.Price | discount(item.SalePrice)}}折</div>
+          <div class="pro-btn zhe" v-if="activity.AdType!=3">{{item.Price | discount(item.SalePrice)}}折</div>
           <div class="pro-btn gou" @click.stop="choice(item.ProductId )">立即抢购</div>
         </div>
       </div>
@@ -110,24 +118,25 @@
           <div class="old-price">￥{{ item.Price }}</div>
         </div>
         <div class="pro-btn-group">
-          <div class="pro-btn zhe">3.8折</div>
+          <div class="pro-btn zhe" v-if="activity.AdType!=3">{{item.Price | discount(item.SalePrice)}}折</div>
           <div class="pro-btn gou" @click.stop="choice(item.ProductId )">立即抢购</div>
         </div>
       </div>
     </div>
-    <div class="title"  id="id4">
+    <div class="title moerfl"  id="id4">
       <div>
-        <img src="../../assets/images/activities/activetis_03.png"/>
+        <img src="../../assets/images/activities/avtive_03.png"/>
         <span class="lm-font-lg">更多福利</span>
-        <img src="../../assets/images/activities/activetis_05.png"/>
+        <img src="../../assets/images/activities/avtive_03.png"/>
       </div>
-      <div class="lm-font-sm lm-text-grey">惊喜优惠 礼品多多</div>
+      <div class="lm-font-sm lm-text-white lm-margin-b-sm">惊喜优惠 礼品多多</div>
+      <ul class="fl-list">
+        <li>买<span class="orange">满98元</span>送<span class="orange">价值68元</span>神秘礼品一份</li>
+        <li>买<span class="orange">满398元</span>送<span class="orange">价值118元</span>精美礼品一份</li>
+        <li>买<span class="orange">满688元</span>送<span class="orange">价值298元</span>精美礼品一份</li>
+      </ul>
     </div>
-    <ul class="fl-list">
-      <li>买满98元送价值68元神秘礼品一份</li>
-      <li>买满398元送价值118元精美礼品一份</li>
-      <li>买满688元送价值298元精美礼品一份</li>
-    </ul>
+
     <transition name="fade">
       <div class="choice-model" v-if="choiceShow" >
 
@@ -228,7 +237,9 @@
         second:0,
         flag:false,
         productId:'',
-        productName:''
+        productName:'',
+        key:'ActivityBannerImg',//banner位置key
+        advList:[]//广告信息集合
       }
     },
     computed:{
@@ -236,7 +247,7 @@
     },
     filters:{
       discount(price,salePrice){
-        return (salePrice/(price!=0?price:1)).toFixed(1)
+        return ((salePrice/(price!=0?price:1))*10).toFixed(1)
       }
     },
     methods: {
@@ -368,6 +379,16 @@
           Toast('请选择商品规格');
           return;
         }
+        if(!!localStorage.lut){
+             //验证localStorage.lut是否在登录状态
+            this.axios.get(this.url + '/api/Login/CheckLogin?str='+localStorage.lut).then((res) => {
+                if (res.data.Code == 500) {
+                  //验证失败 清除localStorage
+                  localStorage.removeItem('lut');
+                  console.log('clear lut')
+                }
+              })
+        }
         //定义商品参数
         let skus=[];
         let sku = {
@@ -408,6 +429,7 @@
             this.$router.push({path: '/cart'})
           }
         }else{
+
              //登录的用户加入购物车
             this.axios({
               url: this.url + '/api/ShoppingCar/AddToShoppingCar',
@@ -490,10 +512,27 @@
         }if(this.top > this.tab4){
           this.activeIdx = 3
         }
+      },
+      //跳转链接
+      jump(val){
+        if(!!val){
+            //this.$router.push({path: val})
+            window.location.href=val;
+        }
+
+      },
+      //获取banner图
+      getBannerImg(){
+        this.axios.get(this.url + '/api/Advertising/GetAdvertisingByKey?key='+this.key).then((res) => {
+          if (res.data.Code == 200) {
+             this.advList = res.data.Data;
+          }
+        })
       }
     },
     created() {
-       this.getActivity();
+      this.getBannerImg();
+      this.getActivity();
       this.getTimelimit();
       this.getExplosion();
       this.getHardcover();
@@ -541,6 +580,9 @@
 
   .title > div > img {
     width: 0.7rem;
+  }
+  .title#id4 > div > img{
+    width: 1.5rem;
   }
 
   .title > div > span {
@@ -746,7 +788,7 @@
     padding: 0 0.2rem;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: space-around;
   }
   .pro-box .pro-btn-group .pro-btn{
     padding: 0.1rem 0;
@@ -765,11 +807,15 @@
   }
   .fl-list{
     color: #666;
-    padding-left: 1.4rem;
-    list-style: disc;
     margin-bottom: 1.2rem;
   }
   .fl-list > li{
+    width: 100%;
+    height: 1.68rem;
+    line-height: 1.68rem;
+    padding-left: 2.5rem;
+    background-size: 100% 100%;
+    background-image: url("../../assets/images/activities/avtive_07.png");
     margin-bottom: 0.5rem;
   }
   /*选择规格*/
@@ -911,7 +957,16 @@
     background-color: #d81e06;
     width: 100%;
   }
-
+  .moerfl{
+    border-radius: 0.4rem;
+    padding: 0.8rem 0.4rem 0.2rem 0.4rem;
+    margin-left: 0.4rem;
+    margin-right: 0.4rem;
+    background-color: #F9BDAA;
+  }
+  .moerfl > div >span{
+    color: #FFF100;
+  }
   .drop-enter-active, .drop-leave-active {
     transition: all .4s;
   }

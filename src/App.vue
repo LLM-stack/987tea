@@ -139,7 +139,9 @@
     margin-top: 1.8rem;
     margin-bottom: 2.4rem;
   }
-
+  .lm-text-white {
+    color: #fff !important;
+  }
   .lm-text-grey {
     color: #999 !important;
   }

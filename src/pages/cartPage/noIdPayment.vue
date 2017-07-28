@@ -90,7 +90,11 @@
         return  parseFloat(this.orderTotal)+parseFloat(this.freight)+parseFloat(this.subtract);
       },
       totalContent(){
-        return this.orderTotal+this.subtract+'='+this.total
+        if(this.subtract=='0'){
+          return this.total;
+        }else{
+          return this.orderTotal+this.subtract+'='+this.total
+        }        
       }
     },
     filters: {
@@ -208,8 +212,6 @@
           } else {
             Toast(res.data.Data);
           }
-        }).catch((err) => {
-          Toast('网络请求超时');
         })
       },
       //获取优惠信息
@@ -229,12 +231,15 @@
         this.axios.post(this.url + '/api/Order/LoadPreOrderFavInfo', {strSc:JSON.stringify(sc)}).then((res) => {
           if (res.data.Code == 200) {
             this.discount=res.data.Data;
-            this.subtract='-'+this.discount[0].FavPrice;
+            if(this.discount.length==0){
+              this.subtract='0';
+            }else{
+              this.subtract='-'+this.discount[0].FavPrice;
+            }
+            
           } else {
             Toast(res.data.Data);
           }
-        }).catch((err) => {
-          Toast('网络请求超时');
         })
       },
        //选中优惠折扣方式

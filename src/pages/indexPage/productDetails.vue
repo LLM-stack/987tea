@@ -166,7 +166,7 @@
       }
     },
     filters: {
-      teaB: function (value) {
+      teaB (value) {
         return ((value) * 0.1).toFixed(2);
       },
       formatTime(val) {
@@ -308,19 +308,16 @@
           Toast('请选择商品规格');
           return;
         }
-        // //判断是否userId是否空
-        // if (!!!localStorage.lut) {
-        //   // var url=window.location.pathname;//获取当前路径名称
-        //   var url = window.location.href
-        //   let instance = Toast('还未登录，请先登录');
-        //   setTimeout(() => {
-        //     this.$router.replace({
-        //       path: '/login/',
-        //       query: {redirect: this.$router.currentRoute.fullPath}
-        //     })
-        //   }, 1000);
-        //   return;
-        // }
+
+        if (!!localStorage.lut) {
+          //验证localStorage.lut是否在登录状态
+           this.axios.get(this.url + '/api/Login/CheckLogin?str='+localStorage.lut).then((res) => {
+                if (res.data.Code == 500) {
+                  //验证失败 清除localStorage
+                  localStorage.removeItem('lut');
+                }
+              })
+        }
 
         if (this.isCar == 1) {
 
@@ -382,7 +379,7 @@
               this.$router.push({path: '/cart'})
            }
           }
-        }
+        }       
         if (this.isCar == 2) {
           if (!!localStorage.lut) {//用户登录的时候
             //定义下单参数
@@ -442,7 +439,8 @@
           }
         }
       },
-      isFavourite() {//该商品是否收藏了
+      //该商品是否收藏了
+      isFavourite() {
         if (!!localStorage.lut) {
           this.axios({
             url: this.url + '/api/Product/IsFavourite',
@@ -455,8 +453,6 @@
                 this.sc = !this.sc
               }
             }
-          }).catch((err) => {
-
           })
 
         }

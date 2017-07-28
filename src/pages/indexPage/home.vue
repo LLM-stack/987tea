@@ -15,8 +15,11 @@
       </div>
     </header>
     <div class="banner">
-      <mt-swipe :auto="3000">
-        <mt-swipe-item>
+      <mt-swipe :auto="3000" v-if="advList.length>0">        
+        <mt-swipe-item v-for="(item,index) in advList"  :key="item.Id">
+          <img :src="item.Img" alt="" @click="jump(item.AdUrl)">
+        </mt-swipe-item>
+        <!--<mt-swipe-item>
           <img src="../../assets/images/banner/banner1.jpg" alt=""
                @click.stop="chkDetail('dae874c59c56448f99c8045753b5cf0f')">
         </mt-swipe-item>
@@ -31,8 +34,14 @@
         <mt-swipe-item>
           <img src="../../assets/images/banner/banner4.jpg" alt=""
                @click.stop="chkDetail('cb77b03361744feb89c21b5abf03a576')">
-        </mt-swipe-item>
+        </mt-swipe-item>-->
       </mt-swipe>
+      <mt-swipe v-else>
+        <mt-swipe-item>
+          <img src="../../assets/images/banner/banner1.jpg" alt=""
+               @click.stop="chkDetail('dae874c59c56448f99c8045753b5cf0f')">
+        </mt-swipe-item>
+       </mt-swipe>
     </div>
     <div class="promise flex-alig-center">
       <div>
@@ -54,9 +63,9 @@
     </div>
     <div class="top-tabs">
       <div>
-        <router-link :to="{path:'/MyCB'}">
+        <!--<router-link :to="{path:'/MyCB'}">-->
           <img src="../../assets/images/myInfo/icon.5.png" alt="">
-        </router-link>
+        <!--</router-link>-->
         <span>茶金币</span>
       </div>
       <div>
@@ -190,7 +199,9 @@
         minute: 0,
         second: 0,
         flag: false,
-        time: new Date()
+        time: new Date(),
+        key:'MallIndexBannerImg',//banner位置key
+        advList:[]//广告信息集合
       }
     },
     mounted () {
@@ -200,7 +211,8 @@
       )
     },
     methods: {
-      getOwnTea(){//获取自品好茶
+      //获取自品好茶
+      getOwnTea(){
         this.axios.post(this.url + '/api/Product/HomeProducts', {tagId: this.ownTag,pageIndex:this.pageIndex,pageSize:this.pageSize}).then((res) => {
           if (res.data.Code == 200) {
             this.ownTea = res.data.Data;
@@ -211,7 +223,8 @@
           Toast('网络请求超时');
         })
       },
-      getGiftsTea(){//获取送礼必备
+      //获取送礼必备
+      getGiftsTea(){
         this.axios.post(this.url + '/api/Product/HomeProducts', {tagId: this.giftsTag,pageIndex:this.pageIndex,pageSize:this.pageSize}).then((res) => {
           if (res.data.Code == 200) {
             this.giftsTea = res.data.Data;
@@ -249,12 +262,30 @@
           return `0${time}`
         }
       },
+      //跳转详情页  
       chkDetail(val){
         this.$router.push({path: '/ProductDetails/' + val})
+      },
+      //跳转链接
+      jump(val){
+          if(!!val){
+            console.log(val)
+           //this.$router.push({path: val})
+           window.location.href=val;
+          }
+      },
+      //获取banner图
+      getBannerImg(){
+        this.axios.get(this.url + '/api/Advertising/GetAdvertisingByKey?key='+this.key).then((res) => {
+          if (res.data.Code == 200) {
+             this.advList = res.data.Data;
+          } 
+        })
       }
 
     },
     created(){
+      this.getBannerImg();
       this.getOwnTea();
       this.getGiftsTea();
     }

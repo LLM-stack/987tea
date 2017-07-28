@@ -59,9 +59,9 @@
         tabNum: this.$route.params.tabNum,
         typeId: 1,//选择的订单类型
         pageIndex: 0,
-        pageSeze: 10,
+        pageSize: 10,
         loading: false,
-        activeIdx: 0,
+        activeIdx: this.$route.params.tabNum,
         tabList: [
           {
             tabName: '全部'
@@ -120,7 +120,7 @@
         this.axios({
           url: this.url + '/api/Order/OrderList',
           method: 'post',
-          data: {PageIndex: this.pageIndex, PageSize: this.pageSeze, TypeId: this.typeId},
+          data: {PageIndex: this.pageIndex, PageSize: this.pageSize, TypeId: this.typeId},
           headers: {'Authorization': 'BasicAuth ' + localStorage.lut}
 
         }).then((res) => {

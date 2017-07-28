@@ -16,7 +16,7 @@
         <span class="lm-margin-l-xs">热门搜索</span>
       </div>
       <div class="content lm-margin-t-xs">
-        <div class="keyword" v-for="(item,index) in searchValue">{{item.SearchValue}}</div>
+        <div class="keyword" v-for="(item,index) in searchValue" @click="chkSearchValue(index)">{{item.SearchValue}}</div>
       </div>
     </div>
 
@@ -129,6 +129,11 @@
              this.recommend = res.data.Data;
           }
         })
+      },
+      //热搜词点击
+      chkSearchValue(idx){
+          this.searchName=this.searchValue[idx].SearchValue;
+          this.searchProducts();
       }
     },
      mounted() {
