@@ -7,30 +7,12 @@
         <div class="icon"></div>
       </router-link>
     </header>
-    <div class="mode-box">
+    <div class="mode-box lm-margin-b-sm">
 
-      <div class="mode-list" :style="cl.bg" :class="{'mode-left': index % 2 !== 0}" v-for="(cl,index) in classList" @click="checked(index,cl.ProductTagId)">
+      <div class="mode-list" :style="cl.bg" :class="{'mode-left': index % 2 !== 0}" v-for="(cl,index) in classList" @click="chkClass(index)">
         <div class="cate-block">{{cl.Name }}</div>
       </div>
 
-      <!--<div class="tabs-cont">-->
-      <!--<div class="tea-box" v-for="(teaClass,index) in classList" v-if="classIndex == index">-->
-      <!--<div class="top-img">-->
-      <!--<img src="../../assets/images/category/category_03.png" alt="">-->
-      <!--</div>-->
-      <!--<div class="title">-->
-      <!--<div class="hr"></div>-->
-      <!--<div>{{ teaClass.Name }}</div>-->
-      <!--<div class="hr"></div>-->
-      <!--</div>-->
-      <!--<div class="tea-list">-->
-      <!--<div class="tea-product" v-for="item in productList" @click="chkDetail(item.ProductId)">-->
-      <!--<img v-lazy="item.HeadImg"/>-->
-      <!--<div class="lm-font-sm">{{ item.Name }}</div>-->
-      <!--</div>-->
-      <!--</div>-->
-      <!--</div>-->
-      <!--</div>-->
     </div>
       <Mfooter :indexCurrent='true'></Mfooter>
     </div>
@@ -120,20 +102,17 @@
           Toast('网络请求超时');
         })
       },
-      //商品详情
-      chkDetail(val){
-        this.$router.push({path: '/ProductDetails/' + val})
+      chkClass(index){
+          this.$router.push({ path: 'mall', query: { index: index }})
       }
-    },
-    created: function () {
-      this.getProducts('e72bbaa5b578449a8a42def3ef086599');
-
     }
   }
   Image</script>
 
 <style scoped>
   header {
+    top: 0;
+    position: fixed;
     width: 100%;
     display: flex;
     align-items: center;
@@ -170,7 +149,7 @@
   .mode-box .mode-list {
     border-radius: 0;
     text-align: center;
-    line-height: 4rem;
+    line-height: 5rem;
     height: 5rem;
     font-size: 0.8rem;
     /*font-weight: 600;*/

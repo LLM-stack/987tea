@@ -12,7 +12,7 @@
     <div class="order-box" v-infinite-scroll="loadMore"
          infinite-scroll-disabled="loading"
          infinite-scroll-distance="10">
-      <MorderBox v-for="(item,index) in orderList" :orderProductList="item.ProductList">
+      <MorderBox v-for="(item,index) in orderList" :orderProductList="item.ProductList" :key="item.ProductOrderId">
         <span slot="number">{{ item.OrderNo }}</span>
         <span slot="state">{{ item.OrderStateStr }}</span>
 
@@ -57,9 +57,7 @@
     data() {
       return {
         tabNum: this.$route.params.tabNum,
-        number: 12313,
-        price: 500,
-        typeId: 1,
+        typeId: 1,//选择的订单类型
         pageIndex: 0,
         pageSeze: 10,
         loading: false,
@@ -99,6 +97,7 @@
       }
     },
     methods: {
+      //加载更多
       loadMore() {
         this.loading = true;
         this.pageIndex++;
@@ -190,7 +189,7 @@
           let receiveArea={
             AdressId:'0',
             ConsigneeName:this.orderList[index].ReceiveUser,
-            Mobile:this.orderList[index].ReceivePhone,            
+            Mobile:this.orderList[index].ReceivePhone,
             Province:areas[0],
             City:areas[1],
             Area:areas[2],
@@ -201,7 +200,7 @@
           let sc={
             productOrderId:this.orderList[index].ProductOrderId,
             payType:this.orderList[index].PayType,
-            receive:receiveArea,          
+            receive:receiveArea,
             skus:skus
           }
           localStorage.setItem("pay", JSON.stringify(sc));
@@ -243,13 +242,9 @@
 </script>
 
 <style scoped>
-  header, .tabs {
+  .tabs {
     width: 100%;
     position: fixed !important;
-  }
-
-  header {
-    top: 0;
   }
 
   .tabs {

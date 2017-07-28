@@ -18,7 +18,7 @@
               <p class="lm-text-grey lm-font-xs">{{ item.ShortName }}</p>
               </router-link>
             </div>
-            <div class="product-delete" @click="deleteProduct(item.ShoppingCarId)"></div>
+            <div class="product-delete" @click="deleteProduct(item.ShoppingCarId,item.ProductSpecId)"></div>
           </div>
           <div class="product-price">
             <div>￥ <span class="lm-text-red">{{ item.SalePrice }}</span> 元</div>
@@ -196,7 +196,7 @@
         })
       },
       //删除购物车中的商品
-      deleteProduct(carId) {
+      deleteProduct(carId,skuId) {
         MessageBox.confirm('确认删除么?').then(action => {
            if(!!localStorage.lut){
               this.axios({
@@ -218,7 +218,7 @@
             })
           }else{
             //游客删除的商品
-            this.productlist = this.productlist.filter(p => p.ShoppingCarId != carId);
+            this.productlist = this.productlist.filter(p => p.ProductSpecId != skuId);
             let sc = {
               productOrderId: "0",
               skus: this.productlist
@@ -268,7 +268,7 @@
         }
       }
     },
-    mounted: function () {
+    mounted () {
       this.$nextTick(function () {
         if(!!localStorage.lut){
           //登录状态加载数据库的购物车
@@ -276,7 +276,6 @@
         }else{
           if(!!localStorage.tourist){
             let sc=JSON.parse(localStorage.tourist)
-            console.log(sc)
             this.productlist=sc.skus;
           }
         }

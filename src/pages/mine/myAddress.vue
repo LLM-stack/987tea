@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <Mheader>
       <div slot="title">地址管理</div>
     </Mheader>
@@ -76,7 +76,7 @@
         });
       },
       //选中收货地址
-      checkAddress(index) {        
+      checkAddress(index) {
         this.$store.state.receiveAddress = this.userAllAddress[index];
         this.$router.go(-1);
       }

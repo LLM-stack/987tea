@@ -1,6 +1,6 @@
 <template>
   <div id="pro">
-    <Mheader :show='true'>
+    <Mheader :show='true' v-show="!isfixed">
       <div slot="title">{{activity.AcTitle}}</div>
     </Mheader>
     <div class="banner">
@@ -93,14 +93,14 @@
     </div>
     <div class="title"  id="id3">
       <div>
-        <img src="../../assets/images/activities/activetis_03.png"/>
+        <img src="../../assets/images/activities/activities_03.png"/>
         <span class="lm-font-lg">精装礼品</span>
-        <img src="../../assets/images/activities/activetis_05.png"/>
+        <img src="../../assets/images/activities/activities_05.png"/>
       </div>
       <div class="lm-font-sm lm-text-grey">独具风味 送礼佳品</div>
     </div>
     <div class="pro-list">
-      <div class="pro-box" v-for="(item,index) in hadProducts" :class="{'pro-left' : index % 2 !== 0}" @click.stop="chkDetail(item.ProductId)">
+      <div class="pro-box" v-for="(item,index) in hadProducts" :class="{'pro-left' : index % 2 !== 0}" @click="chkDetail(item.ProductId)">
         <div class="pro-img">
           <img v-lazy="item.HeadImg"/>
         </div>
@@ -200,7 +200,6 @@
         checkIndex: -1,
         productNum: 1,
         activeIdx: 0,
-        acId:1,
         tabs: [
           {
             tabName: '限时特价'
@@ -260,7 +259,7 @@
       },
       //获取活动信息
       getActivity(){
-          this.axios.get(this.url + '/api/Activity/GetActivityById/'+this.acId, ).then((res) => {
+          this.axios.get(this.url + '/api/Activity/GetActivityById/'+this.$route.params.id).then((res) => {
           if (res.data.Code == 200) {
             this.activity = res.data.ExData;
             this.timeDown();
@@ -273,7 +272,7 @@
       },
       //获取限时特价商品
       getTimelimit(){
-          this.axios.post(this.url + '/api/Activity/GetActivityProducts', {acId:this.acId,tagId: this.timeTag}).then((res) => {
+          this.axios.post(this.url + '/api/Activity/GetActivityProducts', {acId:this.$route.params.id,tagId: this.timeTag}).then((res) => {
             if (res.data.Code == 200) {
               this.timeProducts = res.data.ExData;
             } else {
@@ -285,7 +284,7 @@
       },
       //获取爆款特价商品
       getExplosion(){
-          this.axios.post(this.url + '/api/Activity/GetActivityProducts', {acId:this.acId,tagId: this.explosionTag}).then((res) => {
+          this.axios.post(this.url + '/api/Activity/GetActivityProducts', {acId:this.$route.params.id,tagId: this.explosionTag}).then((res) => {
           if (res.data.Code == 200) {
             this.expProducts = res.data.ExData;
           } else {
@@ -297,7 +296,7 @@
       },
       //获取精装礼品商品
       getHardcover(){
-          this.axios.post(this.url + '/api/Activity/GetActivityProducts', {acId:this.acId,tagId: this.hardcoverTag}).then((res) => {
+          this.axios.post(this.url + '/api/Activity/GetActivityProducts', {acId:this.$route.params.id,tagId: this.hardcoverTag}).then((res) => {
             if (res.data.Code == 200) {
               this.hadProducts = res.data.ExData;
             } else {
@@ -607,7 +606,7 @@
     position: fixed;
     top:0;
     width: 100%;
-    z-index: 999;
+    z-index: 99;
     line-height: 1.8rem;
     height: 1.8rem;
     display: flex;

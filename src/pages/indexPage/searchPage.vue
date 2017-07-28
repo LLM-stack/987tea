@@ -4,110 +4,147 @@
       <div class="back" @click="goBack"></div>
       <div class="search flex-alig-center">
         <img src="../../assets/images/home/987tea_search.png" alt="搜索">
-        <input type="text" placeholder="搜索你喜欢的商品"/>
+        <input type="text" placeholder="搜索你喜欢的商品" v-model="searchName"/>
       </div>
-      <router-link to="/">
-        <div class="icon">搜索</div>
-      </router-link>
+
+      <div class="icon" @click="searchProducts">搜索</div>
+
     </header>
-    <div class="box">
+    <div class="box" v-if="!isSearch && searchValue.length>0">
       <div class="title">
         <img src="../../assets/images/home/search_03.png"/>
         <span class="lm-margin-l-xs">热门搜索</span>
       </div>
       <div class="content lm-margin-t-xs">
-        <div class="keyword">西施壶</div>
-        <div class="keyword">送礼茶</div>
-        <div class="keyword">送礼茶</div>
-        <div class="keyword">送礼茶</div>
-        <div class="keyword">办公室口粮茶</div>
-        <div class="keyword">送礼茶</div>
-        <div class="keyword">送礼茶</div>
-        <div class="keyword">送礼茶</div>
-        <div class="keyword">办公室口粮茶</div>
-        <div class="keyword">武夷山大红袍</div>
+        <div class="keyword" v-for="(item,index) in searchValue">{{item.SearchValue}}</div>
       </div>
     </div>
 
-    <div class="box">
+    <div class="box mode" v-if="isSearch" v-infinite-scroll="searchProducts"
+         infinite-scroll-disabled="loading"
+         infinite-scroll-distance="10">
+      <div class="mode-box">
+      <Mmode v-for="(item,index) in productList"
+             :key="item.ProductId"
+             :index="index"
+             :path="item.ProductId"
+             :imgSrc="item.HeadImg"
+             :productName="item.Name"
+             :productPrice="item.SalePrice"
+      ></Mmode>
+      </div>
+    </div>
+
+    <div class="box" v-if="!isSearch && recommend.length>0">
       <div class="title">
         <img src="../../assets/images/home/search_07.png"/>
         <span class="lm-margin-l-xs">推荐商品</span>
       </div>
       <div class="mode-box lm-margin-t-xs">
-        <div class="mode-list" v-for="(item,index) in modeList" :class="{'mode-left': index % 2 !== 0}">
-          <router-link :to="{path:'/ProductDetails'}">
-            <div class="mode-img">
-              <img :src="item.imgSrc"/>
-            </div>
-            <div class="mode-dp">{{ item.dp }}</div>
-            <div class="mode-title">{{ item.title }}</div>
-            <div class="mode-price ">
-              <span class="lm-text-red">￥{{ item.price }}元<span class="cb-price">{{'+' + item.cbPrice +'茶币' }}</span></span>
-              <span class="mode-btn">立即购买</span>
-            </div>
-          </router-link>
-        </div>
+        <Mmode v-for="(item,index) in recommend"
+             :key="item.ProductId"
+             :index="index"
+             :path="item.ProductId"
+             :imgSrc="item.HeadImg"
+             :productName="item.Name"
+             :productPrice="item.SalePrice"
+      ></Mmode>
       </div>
     </div>
 
-
-
-    <Mfooter :indexCurrent=true></Mfooter>
+    <Mfooter :indexCurrent='true'></Mfooter>
   </div>
 </template>
 
 <script>
   import Mfooter from '../../components/Mfooter'
+  import Mmode from '../../components/Mmode'
+  import {Toast} from 'mint-ui'
 
   export default {
     components: {
-      Mfooter
+      Mfooter,
+      Mmode
     },
     data() {
       return {
-        modeList: [
-          {
-            title: '正品碧螺春',
-            dp: '2017新品上市',
-            price: '99',
-            cbPrice: '999',
-            imgSrc: require('../../assets/images/goods/987tea_20.png')
-          },
-          {
-            title: '正品金骏梅',
-            dp: '尝鲜价 买一送一',
-            price: '99',
-            cbPrice: '123',
-            imgSrc: require('../../assets/images/goods/987tea_06.png')
-          },
-          {
-            title: '正品正山小种',
-            dp: '经典味道 值得一试',
-            price: '99',
-            cbPrice: '123',
-            imgSrc: require('../../assets/images/goods/987tea_25.png')
-          },
-          {
-            title: '正品铁观音',
-            dp: '好茶待寻知己',
-            price: '99',
-            cbPrice: '123',
-            imgSrc: require('../../assets/images/goods/987tea_27.png')
-          }
-        ]
+        searchValue:[],//热搜词汇
+        searchName:'',//搜索关键字
+        pageIndex:0,
+        pageSize:20,
+        loading: false,
+        productList:[],//搜索结果商品
+        isSearch:false,
+        recommend:[]//推荐商品
       }
     },
     methods: {
       goBack() {
         window.history.go(-1)
+      },
+      //获取热搜词汇
+      getSearchValue(){
+         this.axios.get(this.url + '/api/Product/GetSearchValue').then((res) => {
+          if (res.data.Code == 200) {
+             this.searchValue = res.data.Data;
+          }
+        })
+      },
+      //搜索商品
+      searchProducts(){
+        this.loading=true;
+        this.pageIndex++;
+        if(!!!this.searchName){
+            this.isSearch=false;
+            return;
+        }
+        this.axios.post(this.url + '/api/Product/SearchProducts',{key:this.searchName,starIndex:this.pageIndex,endIndex:this.pageSize}).then((res) => {
+          if (res.data.Code == 200) {
+            this.isSearch=true;
+            if (this.pageIndex == 1) {
+              this.productList = res.data.Data;
+              this.loading = false;
+            } else {
+              if (res.data.Data.length > 0) {
+                for (let i = 0; i < res.data.Data.length; i++) {
+                    this.productList.push(res.data.Data[i])
+                }
+                this.loading = false;
+              }else{
+                this.loading = true;
+              }
+            }
+
+          } else {
+            Toast(res.data.Data);
+          }
+        }).catch((err) => {
+          Toast('网络请求超时');
+        })
+      },
+      //获取推荐商品
+      getRecommendProduct(){
+          this.axios.get(this.url + '/api/Product/HotProducts').then((res) => {
+          if (res.data.Code == 200) {
+             this.recommend = res.data.Data;
+          }
+        })
       }
+    },
+     mounted() {
+      this.$nextTick(() => {
+        this.getSearchValue();
+        this.getRecommendProduct();
+      })
     }
   }
 </script>
 
 <style scoped>
   header {
+    position: fixed;
+    top:0;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;

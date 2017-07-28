@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="container">
       <Mheader>
         <div slot="title">{{title}}</div>
       </Mheader>

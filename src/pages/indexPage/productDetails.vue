@@ -4,7 +4,7 @@
       <div slot="title">商品详情</div>
     </Mheader>
     <div class="img-box">
-      <img :src="product.HeadImg" alt="">
+      <img v-lazy="product.HeadImg" alt="商品图片">
     </div>
     <div class="title">
       <div>{{product.Name}}</div>
@@ -160,7 +160,7 @@
         specPrice: 0,
         specStock: 0,
         productName:'',
-        productId:'',        
+        productId:'',
         checkIndex: -1,
         isCar: 0
       }
@@ -321,9 +321,9 @@
         //   }, 1000);
         //   return;
         // }
-       
+
         if (this.isCar == 1) {
-          
+
           if(!!localStorage.lut){
              //登录的用户加入购物车
             this.axios({
@@ -336,7 +336,7 @@
               if (!!res) {
                 if (res.data.Code == 200) {
                   this.choiceShow = !this.choiceShow
-                  Toast(res.data.Data);                
+                  Toast(res.data.Data);
                 } else {
                   Toast(res.data.Data);
                 }
@@ -359,7 +359,7 @@
             }
            if(!!localStorage.tourist){
              //购物车的localStorage.tourist已经存在商品了
-              let sc=JSON.parse(localStorage.tourist);            
+              let sc=JSON.parse(localStorage.tourist);
               let pro=false;
               sc.skus.forEach(function(item){
                 if(item.ProductSpecId==sku.ProductSpecId){
@@ -379,12 +379,12 @@
                 skus: skus
               }
               localStorage.setItem("tourist", JSON.stringify(sc));
-              this.$router.push({path: '/cart'})  
-           }              
+              this.$router.push({path: '/cart'})
+           }
           }
         }
-        if (this.isCar == 2) { 
-          if (!!localStorage.lut) {//用户登录的时候            
+        if (this.isCar == 2) {
+          if (!!localStorage.lut) {//用户登录的时候
             //定义下单参数
             let sku = [{
               ShoppingCarId: 0,
@@ -417,7 +417,7 @@
             }
             if(!!localStorage.tourist){
              //购物车的localStorage.tourist已经存在商品了
-              let sc=JSON.parse(localStorage.tourist);            
+              let sc=JSON.parse(localStorage.tourist);
               let pro=false;
               sc.skus.forEach(function(item){
                 if(item.ProductSpecId==sku.ProductSpecId){
@@ -437,8 +437,8 @@
                     skus: skus
                   }
                   localStorage.setItem("tourist", JSON.stringify(sc));
-                  this.$router.push({path: '/cart'})  
-              }           
+                  this.$router.push({path: '/cart'})
+              }
           }
         }
       },
@@ -477,11 +477,11 @@
                     for (let i = 0; i < res.data.Data.List.length; i++) {
                       this.productDesc.push(res.data.Data.List[i])
                     }
-                  
+
                   }else{
                     this.loading=false;
                     this.moreContent="已经查看了所有的评论了！！！";
-                  } 
+                  }
                 }
                 this.tab[2].tabName = "评论(" + res.data.Data.records + ")"
               } else {
@@ -491,7 +491,7 @@
               Toast('网络请求超时');
             })
         }
-        
+
       }
     },
     mounted: function () {
@@ -506,11 +506,6 @@
 </script>
 
 <style scoped>
-  header {
-    top: 0;
-    width: 100%;
-    position: fixed !important;
-  }
 
   .img-box {
     margin-top: 1.8rem;

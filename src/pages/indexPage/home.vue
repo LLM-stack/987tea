@@ -17,16 +17,20 @@
     <div class="banner">
       <mt-swipe :auto="3000">
         <mt-swipe-item>
-          <img src="../../assets/images/banner/banner1.jpg" alt="" @click.stop="chkDetail('dae874c59c56448f99c8045753b5cf0f')">
+          <img src="../../assets/images/banner/banner1.jpg" alt=""
+               @click.stop="chkDetail('dae874c59c56448f99c8045753b5cf0f')">
         </mt-swipe-item>
         <mt-swipe-item>
-          <img src="../../assets/images/banner/banner2.jpg" alt="" @click.stop="chkDetail('98a0b370bd49446eae702610a19d004f')">
+          <img src="../../assets/images/banner/banner2.jpg" alt=""
+               @click.stop="chkDetail('98a0b370bd49446eae702610a19d004f')">
         </mt-swipe-item>
         <mt-swipe-item>
-          <img src="../../assets/images/banner/banner3.jpg" alt="" @click.stop="chkDetail('4795f6b55ba747919a406b71593080d0')">
+          <img src="../../assets/images/banner/banner3.jpg" alt=""
+               @click.stop="chkDetail('4795f6b55ba747919a406b71593080d0')">
         </mt-swipe-item>
         <mt-swipe-item>
-          <img src="../../assets/images/banner/banner4.jpg" alt="" @click.stop="chkDetail('cb77b03361744feb89c21b5abf03a576')">
+          <img src="../../assets/images/banner/banner4.jpg" alt=""
+               @click.stop="chkDetail('cb77b03361744feb89c21b5abf03a576')">
         </mt-swipe-item>
       </mt-swipe>
     </div>
@@ -75,11 +79,11 @@
         人气热卖 <span></span>
       </div>
       <!--<router-link :to="{path:'/OnSale'}">-->
-        <div class="box-block box-block-one" @click.stop="chkDetail('0092976dc9b844fd9156e18e1affbf0e')">
-          <div class="box-block-title">折扣好茶推荐</div>
-          <div class="box-block-time"><span>{{hour}}</span>：<span>{{minute}}</span>：<span>{{second}}</span></div>
-          <!--<div class="rmtime">下一场19:00开始</div>-->
-        </div>
+      <div class="box-block box-block-one" @click.stop="chkDetail('0092976dc9b844fd9156e18e1affbf0e')">
+        <div class="box-block-title">折扣好茶推荐</div>
+        <div class="box-block-time"><span>{{hour}}</span>：<span>{{minute}}</span>：<span>{{second}}</span></div>
+        <!--<div class="rmtime">下一场19:00开始</div>-->
+      </div>
       <!--</router-link>-->
       <div class="flex-between" @click.stop="chkDetail('0c41ebacf33448488c006ca55b5f0b76')">
         <div class="box-block box-block-two">
@@ -132,39 +136,30 @@
         自品好茶 <span></span>
       </div>
       <div class="mode-box">
-        <div class="mode-list" v-for="(item,index) in ownTea" :class="{'mode-left': index % 2 !== 0}">
-          <router-link :to="{path:'/ProductDetails/'+item.ProductId}">
-            <div class="mode-img">
-              <img  v-lazy="item.HeadImg"/>
-            </div>
-            <!--<div class="mode-dp">{{ item.SaleComment }}</div>-->
-            <div class="mode-title">{{ item.Name }}</div>
-            <div class="mode-price ">
-              <span class="lm-text-red">￥{{ item.SalePrice }}元</span>
-              <span class="mode-btn" :to="{path:'/ProductDetails/'+item.ProductId}">立即购买</span>
-            </div>
-          </router-link>
-        </div>
+      <Mmode v-for="(item,index) in ownTea"
+             :key="item.ProductId"
+             :index="index"
+             :path="item.ProductId"
+             :imgSrc="item.HeadImg"
+             :productName="item.Name"
+             :productPrice="item.SalePrice"
+      ></Mmode>
       </div>
     </div>
+
     <div class="box mode">
       <div class="title flex-alig-center">
         送礼必备 <span></span>
       </div>
       <div class="mode-box">
-        <div class="mode-list" v-for="(item,index) in giftsTea" :class="{'mode-left' : index % 2 !== 0}">
-        <router-link :to="{path:'/ProductDetails/'+item.ProductId}">
-          <div class="mode-img">
-            <img :src="item.HeadImg"/>
-          </div>
-          <!--<div class="mode-dp">{{ item.SaleComment }}</div>-->
-          <div class="mode-title">{{ item.Name }}</div>
-          <div class="mode-price">
-            <span class="lm-text-red">￥{{ item.SalePrice }}元</span>
-            <span class="mode-btn" :to="{path:'/ProductDetails/'+item.ProductId}">立即购买</span>
-          </div>
-          </router-link>
-        </div>
+        <Mmode v-for="(item,index) in giftsTea"
+               :key="item.ProductId"
+               :index="index"
+               :path="item.ProductId"
+               :imgSrc="item.HeadImg"
+               :productName="item.Name"
+               :productPrice="item.SalePrice"
+        ></Mmode>
       </div>
     </div>
     <Mfooter :indexCurrent='true'></Mfooter>
@@ -173,92 +168,95 @@
 
 <script>
   import Mfooter from '../../components/Mfooter'
-  import { Toast } from 'mint-ui'
+  import Mmode from '../../components/Mmode'
+  import {Toast} from 'mint-ui'
 
   export default {
     name: 'index',
     components: {
-      Mfooter
+      Mfooter,
+      Mmode
     },
     data() {
       return {
-        ownTag:'c996e6f4a4614793a42f89428eab7039',
-        giftsTag:'068cf06410bd48629a01a98fd514e9bc',
-        ownTea:[],
-        giftsTea:[],
-        day:0,
-        hour:0,
-        minute:0,
-        second:0,
-        flag:false,
-        time:new Date()
+        ownTag: 'c996e6f4a4614793a42f89428eab7039',
+        giftsTag: '068cf06410bd48629a01a98fd514e9bc',
+        ownTea: [],
+        giftsTea: [],
+        pageIndex:1,
+        pageSize:12,
+        day: 0,
+        hour: 0,
+        minute: 0,
+        second: 0,
+        flag: false,
+        time: new Date()
       }
     },
     mounted () {
-      this.$nextTick(function(){
-           this.timeDown()
+      this.$nextTick(function () {
+          this.timeDown()
         }
       )
-       },
-    methods:{
-        getOwnTea(){//获取自品好茶
-           this.axios.post(this.url+'/api/Product/HomeProducts',{tagId:this.ownTag}).then((res)=>{
-           if(res.data.Code==200){
-             this.ownTea=res.data.Data;
-            }else{
-              Toast(res.data.Data);
-            }
-          }).catch((err)=>{
-             Toast('网络请求超时');
-          })
-        },
-        getGiftsTea(){//获取送礼必备
-           this.axios.post(this.url+'/api/Product/HomeProducts',{tagId:this.giftsTag}).then((res)=>{
-           if(res.data.Code==200){
-             this.giftsTea=res.data.Data;
-            }else{
-              Toast(res.data.Data);
-            }
-          }).catch((err)=>{
-             Toast('网络请求超时');
-          })
-        },
-        //倒计时
-        timeDown () {
-          var endTime = this.time
-          endTime.setHours(endTime.getHours() + 3); //给endTime增加3小时
-          setInterval( ()=> {
-            let nowTime = new Date()
-            let leftTime = parseInt((endTime.getTime()-nowTime.getTime())/1000)
-            let d = parseInt(leftTime/(24*60*60))
-            let h = this.formate(parseInt(leftTime/(60*60)%24))
-            let m = this.formate(parseInt(leftTime/60%60))
-            let s = this.formate(parseInt(leftTime%60))
-            if(leftTime <= 0){
-              this.flag = true
-            }
-            this.day=d;
-            this.hour=h;
-            this.minute=m;
-            this.second=s;
-          },1000)
-        },
-        formate (time) {
-          if(time>=10){
-              return time
-          }else{
-              return `0${time}`
+    },
+    methods: {
+      getOwnTea(){//获取自品好茶
+        this.axios.post(this.url + '/api/Product/HomeProducts', {tagId: this.ownTag,pageIndex:this.pageIndex,pageSize:this.pageSize}).then((res) => {
+          if (res.data.Code == 200) {
+            this.ownTea = res.data.Data;
+          } else {
+            Toast(res.data.Data);
           }
-        },
-        chkDetail(val){
-          this.$router.push({path: '/ProductDetails/'+val})
+        }).catch((err) => {
+          Toast('网络请求超时');
+        })
+      },
+      getGiftsTea(){//获取送礼必备
+        this.axios.post(this.url + '/api/Product/HomeProducts', {tagId: this.giftsTag,pageIndex:this.pageIndex,pageSize:this.pageSize}).then((res) => {
+          if (res.data.Code == 200) {
+            this.giftsTea = res.data.Data;
+          } else {
+            Toast(res.data.Data);
+          }
+        }).catch((err) => {
+          Toast('网络请求超时');
+        })
+      },
+      //倒计时
+      timeDown () {
+        var endTime = this.time
+        endTime.setHours(endTime.getHours() + 3); //给endTime增加3小时
+        setInterval(() => {
+          let nowTime = new Date()
+          let leftTime = parseInt((endTime.getTime() - nowTime.getTime()) / 1000)
+          let d = parseInt(leftTime / (24 * 60 * 60))
+          let h = this.formate(parseInt(leftTime / (60 * 60) % 24))
+          let m = this.formate(parseInt(leftTime / 60 % 60))
+          let s = this.formate(parseInt(leftTime % 60))
+          if (leftTime <= 0) {
+            this.flag = true
+          }
+          this.day = d;
+          this.hour = h;
+          this.minute = m;
+          this.second = s;
+        }, 1000)
+      },
+      formate (time) {
+        if (time >= 10) {
+          return time
+        } else {
+          return `0${time}`
         }
+      },
+      chkDetail(val){
+        this.$router.push({path: '/ProductDetails/' + val})
+      }
 
     },
     created(){
-       localStorage.clear()
-       this.getOwnTea();
-       this.getGiftsTea();
+      this.getOwnTea();
+      this.getGiftsTea();
     }
   }
 </script>
@@ -272,7 +270,7 @@
     background-color: #B4282D;
     position: fixed;
     width: 100%;
-    top:0;
+    top: 0;
     z-index: 999;
   }
 

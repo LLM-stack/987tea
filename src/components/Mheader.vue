@@ -34,7 +34,10 @@
 </script>
 <style scoped>
   .bar-nav{
-    position: relative;
+    top: 0;
+    width: 100%;
+    position: fixed;
+    z-index: 999;
     background-color: #B4282D;
     display: flex;
     align-items: center;

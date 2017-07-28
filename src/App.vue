@@ -1,6 +1,7 @@
 <template>
   <div id="app">
-    <router-view></router-view>
+
+        <router-view></router-view>
 
     <div class="gotop" v-show="top>700" @click="gotop">
       <img src="./assets/images/gotop.png"/>
@@ -129,11 +130,13 @@
   /*工具样式*/
   .container {
     height: 100%;
+    margin-top: 1.8rem;
     margin-bottom: 2rem;
   }
 
   .containerbig {
     height: 100%;
+    margin-top: 1.8rem;
     margin-bottom: 2.4rem;
   }
 
@@ -168,9 +171,11 @@
   .lm-font-defult {
     font-size: 0.7rem;
   }
+
   .lm-font-lg {
     font-size: 0.8rem;
   }
+
   .lm-font-xxxl {
     font-size: 1.3rem;
   }
@@ -190,6 +195,7 @@
   .lm-margin-b-lg {
     margin-bottom: 0.8rem;
   }
+
   .lm-margin-b {
     margin-bottom: 0.6rem;
   }
@@ -229,6 +235,7 @@
   .lm-margin-xl {
     margin-left: 0.8rem;
   }
+
   .lm-margin-l {
     margin-left: 0.6rem;
   }
@@ -321,6 +328,9 @@
     padding: 0.2rem 0.3rem;
     color: #8F7747;
     background-color: #F1ECE2;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
   .mode-list .mode-title {
@@ -410,9 +420,11 @@
     transition: transform .2s;
     transition: transform .2s, -webkit-transform .2s;
   }
-  .picker-center-highlight:before, .picker-center-highlight:after{
+
+  .picker-center-highlight:before, .picker-center-highlight:after {
     background-color: #bbb;
   }
+
   .sex .mint-cell {
     width: 5.5rem;
     min-height: 1rem;
@@ -439,11 +451,23 @@
     color: #B4282D;
   }
 
-  .fade-enter-active, .fade-leave-active {
-    transition: all .4s;
+  .back-enter-active,.back-leave-active {
+    transition: transform .4s ;
   }
 
-  .fade-enter, .fade-leave-active {
+  .back-enter {
+    transform: translateX(-100%);
+  }
+
+  .back-leave {
+    transform: translateX(100%);
+  }
+
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .5s ease;
+  }
+
+  .fade-enter, .fade-leave {
     opacity: 0;
   }
 

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <Mheader :show='true'>
       <div slot="title">商品评价</div>
     </Mheader>
@@ -14,7 +14,7 @@
 <script>
   import Mheader from '../../components/Mheader'
   import {Toast} from 'mint-ui'
-  
+
   export default {
     components: {
       Mheader
@@ -30,7 +30,7 @@
           Toast('请填写您的评价后再提交！');
           return;
         }
-        
+
         this.axios({
           url:this.url + '/api/Order/AddEvaluate',
           method:'post',

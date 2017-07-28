@@ -5,7 +5,7 @@
           <span>订单编号: <slot name="number"></slot></span>
           <span class="lm-text-red"><slot name="state"></slot></span>
         </div>
-        <div class="mid" v-for="(pitem,index) in orderProductList">
+        <div class="mid" v-for="(pitem,index) in orderProductList" :key="pitem.ProductOrderId">
           <div>
             <span><img alt="" v-lazy="pitem.HeadImg"></span>
             <div class="mid-cont">

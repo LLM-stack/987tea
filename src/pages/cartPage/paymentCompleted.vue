@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="container">
       <Mheader :show=true :back="false">
         <div slot="title">支付完成</div>
       </Mheader>

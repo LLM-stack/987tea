@@ -200,6 +200,7 @@
     border-color: gainsboro;
    }
   .cont{
+    margin-top: 1.8rem;
     height: 100vh;
     background-color: #ffffff;
   }

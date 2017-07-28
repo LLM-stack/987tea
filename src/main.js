@@ -25,7 +25,7 @@ Vue.prototype.axios = axios
                  //过滤商品详情页的登录跳转进行处理
           }
           else if(err.response.config.url.includes('/api/ShoppingCar/UserShoppingCar')){
-                 //过滤商品详情页的登录跳转进行处理
+                 //过滤购物车的登录跳转进行处理
           }
           else if (err.response.status == 401) {
               let instance = Toast('还未登录，请先登录');

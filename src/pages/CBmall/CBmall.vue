@@ -45,20 +45,22 @@
         <img  src="../../assets/images/cbmall/cbmall__03.png" />
         <div class="title0"><img class="lm-margin-r-xs" src="../../assets/images/cbmall/cb_07.png"/>超值购 花茶币换大折扣</div>
       </div>
-      <div class="mode-box">
-        <div class="mode-list" v-for="(item,index) in modeList" :class="{'mode-left': index % 2 !== 0}">
-          <router-link :to="{path:'/ProductDetails'}">
+      <div class="mode-box" v-infinite-scroll="loadMore"
+         infinite-scroll-disabled="loading"
+         infinite-scroll-distance="10">
+        <div class="mode-list" v-for="(item,index) in productList" :class="{'mode-left': index % 2 !== 0}">
+          <!--<router-link :to="{path:'/ProductDetails'}">-->
             <div class="mode-img">
-              <img :src="item.imgSrc"/>
+              <img :src="item.Img"/>
             </div>
-            <div class="mode-dp">{{ item.dp }}</div>
-            <div class="mode-title">{{ item.title }}</div>
+            <div class="mode-dp">{{ item.Detail }}</div>
+            <div class="mode-title">{{ item.Title }}</div>
             <div class="mode-price ">
-              <span class="lm-text-red">￥{{ item.price }}元<span class="cb-price">{{'+' + item.cbPrice +'茶币' }}</span></span>
+              <span class="lm-text-red">￥{{ item.Price }}元<span class="cb-price">{{'+' + item.TeaPrice +'茶币' }}</span></span>
               <span class="mode-btn">立即购买</span>
             </div>
-          </router-link>
-        </div>
+          <!--</router-link>-->
+        </div>       
       </div>
     </div>
     <Mfooter :myCenterCurrent='true'></Mfooter>
@@ -69,11 +71,13 @@
 <script>
   import Mheader from '../../components/Mheader'
   import Mfooter from '../../components/Mfooter'
+  import Mmode from '../../components/Mmode'
 
   export default {
     components: {
       Mheader,
-      Mfooter
+      Mfooter,
+      Mmode
     },
     data() {
       return {
@@ -106,9 +110,57 @@
             cbPrice: '123',
             imgSrc: require('../../assets/images/goods/987tea_27.png')
           }
-        ]
+        ],
+        pageIndex: 0,
+        loading: false,
+        productList:[]
       }
+    },
+    methods:{
+      //加载更多
+      loadMore() {
+        this.loading = true;
+        this.pageIndex++;
+        this.getTCProducts();
+      },
+      //获取茶币商品
+      getTCProducts(){
+            this.axios({
+              url: this.url + '/api/TeaCurrencyMall/PostProducts',
+              method: 'post',
+              data: {index: this.pageIndex},
+              headers: {'Authorization': 'BasicAuth ' + localStorage.lut}
+
+            }).then((res) => {
+              if(!!res){
+                if (res.data.Code == 200) {
+                  if (this.pageIndex == 1) {
+                     this.productList=res.data.ExData;
+                    this.loading = false;
+                  } else {
+                    if (res.data.ExData.length > 0) {
+                      for (let i = 0; i < res.data.ExData.length; i++) {
+                          this.productList.push(res.data.ExData[i])
+                      }
+                      this.loading = false;
+                    }else{
+                      this.loading = true;
+                    }
+                  }
+
+                } else {
+                  Toast(res.data.Data);
+                }
+              }
+            })
+      }
+    },
+    mounted(){
+      this.$nextTick(function (){
+        //this.getTCProducts();
+      })
     }
+
   }
 </script>
 

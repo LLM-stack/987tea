@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <Mheader :show=true>
       <div slot="title">今日特价</div>
     </Mheader>

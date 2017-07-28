@@ -7,42 +7,34 @@
     <div class="banner">
       <img src="../../assets/images/cbmall/cbshop_02.png"/>
       <div class="tabs" id="tabs" :class="{fixed:isfixed}">
-        <div class="tab" v-for="(item,index) in tabList" :class="{active:item.isactive}" @click="tabActive(index)">{{ item.tabName }}</div>
+        <div class="tab" v-for="(item,index) in tabList" :class="{active:item.isactive}" @click="tabActive(index)">{{ item.Name }}</div>
       </div>
     </div>
     <div class="clear"></div>
     <div class="cont">
       <div class="mode-box">
-        <div class="mode-list" v-for="(item,index) in modeList" :class="{'mode-left': index % 2 !== 0}">
-          <router-link :to="{path:'/ProductDetails'}">
-            <div class="mode-img">
-              <img :src="item.imgSrc"/>
-            </div>
-            <div class="mode-dp">{{ item.dp }}</div>
-            <div class="mode-title">{{ item.title }}</div>
-            <div class="mode-price ">
-              <span class="lm-text-red">￥{{ item.price }}元</span>
-              <span class="mode-btn">立即购买</span>
-            </div>
-          </router-link>
-        </div>
+        <Mmode v-for="(item,index) in productList"
+             :key="item.ProductId"
+             :index="index"
+             :path="item.ProductId"
+             :imgSrc="item.HeadImg"
+             :productName="item.Name"
+             :productPrice="item.SalePrice"
+      ></Mmode>
       </div>
       <div class="box mode">
         <div class="title flex-alig-center">
           猜你喜欢 <span></span>
         </div>
         <div class="mode-box">
-          <div class="mode-list" v-for="(item,index) in modeList" :class="{'mode-left' : index % 2 !== 0}">
-            <div class="mode-img">
-              <img :src="item.imgSrc"/>
-            </div>
-            <div class="mode-dp">{{ item.dp }}</div>
-            <div class="mode-title">{{ item.title }}</div>
-            <div class="mode-price">
-              <span class="lm-text-red">￥{{ item.price }}元</span>
-              <span class="mode-btn">立即购买</span>
-            </div>
-          </div>
+          <Mmode v-for="(item,index) in recommend"
+             :key="item.ProductId"
+             :index="index"
+             :path="item.ProductId"
+             :imgSrc="item.HeadImg"
+             :productName="item.Name"
+             :productPrice="item.SalePrice"
+          ></Mmode>
         </div>
       </div>
     </div>
@@ -54,11 +46,13 @@
 <script>
   import Mheader from '../../components/Mheader'
   import Mfooter from '../../components/Mfooter'
+  import Mmode from '../../components/Mmode'
 
   export default {
     components: {
       Mheader,
-      Mfooter
+      Mfooter,
+      Mmode
     },
     data() {
       return {
@@ -67,52 +61,52 @@
         isfixed: false,
         tabList: [
           {
-            tabName: '试喝好茶',
-            isactive: true
+          Name: '绿茶',
+          ProductTagId: 'e72bbaa5b578449a8a42def3ef086599',
+          //bg: {backgroundImage: 'url('+ require('../../assets/images/category/lvtea.jpg') +')'},
+          isactive: true
           },
           {
-            tabName: '限量抢购',
+            Name: '红茶',
+            ProductTagId: 'ded2fe1e606c40f3a546cc8d3c5fb9af',
+           // bg: {backgroundImage: 'url('+ require('../../assets/images/category/hongtea.jpg') +')'},
             isactive: false
           },
           {
-            tabName: '好茶优惠',
+            Name: '乌龙茶',
+            ProductTagId: '21e97d03d88f433085126b22cc9f21e5',
+           // bg: {backgroundImage: 'url('+ require('../../assets/images/category/wulongtea.jpeg') +')'},
             isactive: false
           },
           {
-            tabName: '茶具特卖',
+            Name: '白茶',
+            ProductTagId: '93843e7fcccd4ffa9ede6ad3b20aac2c',
+            //bg: {backgroundImage: 'url('+ require('../../assets/images/category/baitea.jpg') +')'},
+            isactive: false
+          },
+          {
+            Name: '黄茶',
+            ProductTagId: '2c17126c02774e95bdd22e7f88662008',
+           // bg: {backgroundImage: 'url('+ require('../../assets/images/category/huangtea.jpg') +')'},
+            isactive: false
+          },
+          {
+            Name: '黑茶',
+            ProductTagId: '4e82223c669e462d8877324ad6f7fcf4',
+            //bg: {backgroundImage: 'url('+ require('../../assets/images/category/heitea.jpg') +')'},
+            isactive: false
+          },
+          {
+            Name: '茶具',
+            ProductTagId: '6dd8eae89c9a4fdeac8ebd67aae6ad41',
+           // bg: {backgroundImage: 'url('+ require('../../assets/images/category/chaju.jpg') +')'},
             isactive: false
           }
         ],
-        modeList: [
-          {
-            title: '正品碧螺春',
-            dp: '2017新品上市',
-            price: '99',
-            cbPrice: '999',
-            imgSrc: require('../../assets/images/goods/987tea_20.png')
-          },
-          {
-            title: '正品金骏眉',
-            dp: '尝鲜价 买一送一',
-            price: '99',
-            cbPrice: '123',
-            imgSrc: require('../../assets/images/goods/987tea_06.png')
-          },
-          {
-            title: '正品正山小种',
-            dp: '经典味道 值得一试',
-            price: '99',
-            cbPrice: '123',
-            imgSrc: require('../../assets/images/goods/987tea_25.png')
-          },
-          {
-            title: '正品铁观音',
-            dp: '好茶待寻知己',
-            price: '99',
-            cbPrice: '123',
-            imgSrc: require('../../assets/images/goods/987tea_27.png')
-          }
-        ]
+        productList:[],//分类商品
+        pageIndex:1,
+        pageSize:10,
+        recommend:[]//推荐商品
       }
     },
     methods: {
@@ -121,9 +115,9 @@
           array[index].isactive= false;
         });
     		this.tabList[i].isactive = true;
+        this.getProducts(this.tabList[i].ProductTagId);
       },
       scroll() {
-
         this.top = document.body.scrollTop;
 
         if(this.top >= this.tabs){
@@ -131,12 +125,44 @@
         }else {
           this.isfixed = false
         };
+      },
+      //获取类别商品
+      getProducts(cId){
+        this.axios.post(this.url + '/api/Product/GetCategoryProducts', {categoryId: cId,pageIndex:this.pageIndex,pageSize:this.pageSize}).then((res) => {
+          if (res.data.Code == 200) {
+            this.productList = res.data.Data;
+          } else {
+            Toast(res.data.Data);
+          }
+        }).catch((err) => {
+          Toast('网络请求超时');
+        })
+      },
+       //获取推荐商品
+      getRecommendProduct(){
+          this.axios.get(this.url + '/api/Product/HotProducts').then((res) => {
+          if (res.data.Code == 200) {
+             this.recommend = res.data.Data;
+          }
+        })
       }
+
     },
     mounted() {
       this.$nextTick(() => {
         window.addEventListener('scroll', this.scroll);
         this.tabs = document.getElementById('tabs').offsetTop +80;
+
+        console.log(this.tabsX);
+        let idx= this.$route.query.index;
+        if(idx > 3){
+          document.getElementById("tabs").scrollLeft = document.body.clientWidth;
+        }
+        if(!!!idx){
+          idx=0;
+        }
+        this.tabActive(idx);
+        this.getRecommendProduct();
       })
     },
     beforeDestroy(){

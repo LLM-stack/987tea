@@ -45,7 +45,7 @@
     <div class="pay">
       <div>
         <div>共选择 <span class="lm-text-red">{{ProductCount}}</span>件商品</div>
-        <div>总金额：<span class="lm-text-red">￥{{total}}</span> 元</div>
+        <div>总金额：￥<span class="lm-text-red">{{totalContent}}</span> 元</div>
       </div>
       <div class="topay" @click="goToPay">确认下单</div>
     </div>
@@ -73,7 +73,9 @@
         orderDetails:[],
         ProductCount:0,
         freight:0,
-        discount:[]
+        discount:[],//优惠记录信息
+        subtract:'0',//优惠折扣价格
+        isChecked:'',
       }
     },
     computed: {
@@ -85,7 +87,17 @@
         return t;
       },
       total(){
-        return  parseFloat(this.orderTotal)+parseFloat(this.freight);
+        return  parseFloat(this.orderTotal)+parseFloat(this.freight)+parseFloat(this.subtract);
+      },
+      totalContent(){
+        return this.orderTotal+this.subtract+'='+this.total
+      }
+    },
+    filters: {
+      discountContent(val){
+        let strs=val.split('【');
+        let lastStr=strs[1].split('】');
+        return strs[0]+lastStr[1];
       }
     },
     methods:{
@@ -125,7 +137,8 @@
           this.temp_addr = values[0].aname + ' ' + values[1].aname + ' ' + values[2].aname;
         }
       },
-      isPhoneNo(phone) {  //手机号验证
+       //手机号验证
+      isPhoneNo(phone) { 
         var pattern = /^1[34578]\d{9}$/;
         return pattern.test(phone);
       },
@@ -176,7 +189,16 @@
         }
          this.axios.post(this.url + '/api/Order/SaveOrder', {strSc:JSON.stringify(sc)}).then((res) => {
           if (res.data.Code == 200) {
-             localStorage.removeItem('unPay');
+             let tPro=JSON.parse(localStorage.unPay);//下单的localStorage数据
+              let touristProduct=tPro.skus;
+              let carPro=JSON.parse(localStorage.tourist)//购物车的localStorage数据
+              touristProduct.forEach(function(od){
+                //过滤掉下单成功后,下单的localStorage数据
+                carPro.skus = carPro.skus.filter(p => p.ProductSpecId != od.ProductSpecId);
+                
+              })
+            localStorage.tourist=JSON.stringify(carPro);//购物车中的商品重新赋值
+            localStorage.removeItem('unPay');//购物成功后移除订单里的商品
               let instance = Toast(res.data.Data);
               setTimeout(() => {
                 instance.close();
@@ -207,13 +229,18 @@
         this.axios.post(this.url + '/api/Order/LoadPreOrderFavInfo', {strSc:JSON.stringify(sc)}).then((res) => {
           if (res.data.Code == 200) {
             this.discount=res.data.Data;
-
+            this.subtract='-'+this.discount[0].FavPrice;
           } else {
             Toast(res.data.Data);
           }
         }).catch((err) => {
           Toast('网络请求超时');
         })
+      },
+       //选中优惠折扣方式
+      chkFavInfo(index){
+        this.subtract='-'+this.discount[index].FavPrice;
+        this.isChecked = index;
       }
     },
     mounted(){

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <Mheader :show=true>
       <div slot="title">意见箱</div>
     </Mheader>
@@ -30,7 +30,7 @@
       }
     },
     methods: {
-        
+
         submitSuggest(){
           if(!!!this.content){
             Toast('请填写您的意见或建议后再提交！');

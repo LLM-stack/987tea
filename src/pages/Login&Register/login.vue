@@ -54,7 +54,7 @@
       }
     },
     methods: {
-        login(){//登录        
+        login(){//登录
            if(!!!this.phone){
            Toast('手机号不能为空');
             return;
@@ -112,6 +112,7 @@
 
 <style scoped>
   .cont{
+    margin-top: 1.8rem;
     height: 100vh;
     background-color: #ffffff;
   }

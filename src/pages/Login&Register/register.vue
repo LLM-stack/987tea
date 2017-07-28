@@ -327,6 +327,7 @@
    }
   .cont {
     height: 100vh;
+    margin-top: 1.8rem;
     padding-bottom: 1rem;
     background-color: #ffffff;
   }
