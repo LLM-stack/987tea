@@ -133,6 +133,7 @@
         left: 0;
         bottom: 0;
         width: 100%;
+        height: 9.2rem;
       }
       .picker-items {
         background: #eee;

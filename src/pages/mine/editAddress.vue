@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container address">
       <Mheader>
         <div slot="title">{{title}}</div>
       </Mheader>
@@ -198,7 +198,7 @@
     left: 4rem;
     width: 11rem;
     z-index: 999;
-    top: 6.3rem;
+    top: 31%;
     position: absolute;
   .address-wrap {
     display: flex;

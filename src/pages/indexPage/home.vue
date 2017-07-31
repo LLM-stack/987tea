@@ -15,7 +15,7 @@
       </div>
     </header>
     <div class="banner">
-      <mt-swipe :auto="3000" v-if="advList.length>0">        
+      <mt-swipe :auto="3000" v-if="advList.length>0">
         <mt-swipe-item v-for="(item,index) in advList"  :key="item.Id">
           <img :src="item.Img" alt="" @click="jump(item.AdUrl)">
         </mt-swipe-item>
@@ -171,6 +171,12 @@
         ></Mmode>
       </div>
     </div>
+    <div class="lm-text-grey lm-font-xs more-comment">
+      <p>闽ICP备14015705号-1</p>
+      <p>营业执照91350104315308392G</p>
+      <p>食品经营许可证JY13501040006708</p>
+      <p>版权所有：福州中榕网络科技有限公司</p>
+    </div>
     <Mfooter :indexCurrent='true'></Mfooter>
   </div>
 </template>
@@ -262,7 +268,7 @@
           return `0${time}`
         }
       },
-      //跳转详情页  
+      //跳转详情页
       chkDetail(val){
         this.$router.push({path: '/ProductDetails/' + val})
       },
@@ -279,7 +285,7 @@
         this.axios.get(this.url + '/api/Advertising/GetAdvertisingByKey?key='+this.key).then((res) => {
           if (res.data.Code == 200) {
              this.advList = res.data.Data;
-          } 
+          }
         })
       }
 

@@ -8,19 +8,19 @@
       <mt-field label="收货人" placeholder="请输入收货人姓名" v-model="username"></mt-field>
       <mt-field label="手机号" placeholder="请输入收货人手机号" type="tel" v-model="phone"></mt-field>
       <mt-field label="省市区" placeholder="请选择省市区" v-model="address"></mt-field>
-      <div class="linkage-wrap">
-        <div class="address-wrap">
-          <span class="btn" @click="address_flag = true">点击选择</span>
-        </div>
-        <div class="pick-mark" v-show="address_flag" @click="address_flag = false">
-          <div class="btn-wrap">
-            <a class="btn-cancel" @click="address_flag = false">取消</a>
-            <a class="btn-sure" @click="fillAddress">确定</a>
-          </div>
-          <mt-picker class="select" :slots="slots" value-key="aname" @change="onValuesChange"></mt-picker>
-        </div>
-      </div>
       <mt-field label="详细地址" placeholder="请输入地址" v-model="detailAddress"></mt-field>
+    </div>
+    <div class="linkage-wrap">
+      <div class="address-wrap">
+        <span class="btn" @click="address_flag = true">点击选择</span>
+      </div>
+      <div class="pick-mark" v-show="address_flag" @click="address_flag = false">
+        <div class="btn-wrap">
+          <a class="btn-cancel" @click="address_flag = false">取消</a>
+          <a class="btn-sure" @click="fillAddress">确定</a>
+        </div>
+        <mt-picker class="select" :slots="slots" value-key="aname" @change="onValuesChange"></mt-picker>
+      </div>
     </div>
     <div class="pay-modes lm-margin-b-sm">
         <div>支付方式：</div>
@@ -103,7 +103,7 @@
           return this.total;
         }else{
           return this.orderTotal+this.subtract+'='+this.total
-        }        
+        }
       }
     },
     filters: {
@@ -151,7 +151,7 @@
         }
       },
        //手机号验证
-      isPhoneNo(phone) { 
+      isPhoneNo(phone) {
         var pattern = /^1[34578]\d{9}$/;
         return pattern.test(phone);
       },
@@ -172,7 +172,7 @@
         if(!this.isPhoneNo(this.phone)){
            Toast("手机号格式错误")
            return;
-        }     
+        }
         if(!!!this.address){
            Toast("请选择省市区")
            return;
@@ -213,11 +213,11 @@
               touristProduct.forEach(function(od){
                 //过滤掉下单成功后,下单的localStorage数据
                 carPro.skus = carPro.skus.filter(p => p.ProductSpecId != od.ProductSpecId);
-                
+
               })
             localStorage.tourist=JSON.stringify(carPro);//购物车中的商品重新赋值
             localStorage.removeItem('unPay');//购物成功后移除订单里的商品
-            
+
             if(this.payType==0){
                this.$router.push({path: '/paymentCompleted'})
              }
@@ -228,7 +228,7 @@
                  document.forms['alipaysubmit'].submit();
                },0)
              }
-              
+
           } else {
             Toast(res.data.Data);
           }
@@ -256,7 +256,7 @@
             }else{
               this.subtract='-'+this.discount[0].FavPrice;
             }
-            
+
           } else {
             Toast(res.data.Data);
           }
@@ -271,7 +271,6 @@
     mounted(){
       this.$nextTick(function () {
         this.initAddress();
-        console.log(sessionStorage.getItem("ExpandId"))
         if(!!localStorage.unPay){
             var sc=JSON.parse(localStorage.unPay);
             this.productOrderId=sc.productOrderId;
@@ -320,7 +319,7 @@
     left: 4rem;
     width: 11rem;
     z-index: 999;
-    top: 6.3rem;
+    top: 27%;
     position: absolute;
   .address-wrap {
     display: flex;
@@ -357,6 +356,8 @@
     bottom: 0;
     right: 0;
     z-index: 999;
+    background-color: rgba(0,0,0,.5);
+    overflow: hidden;
 
   .btn-wrap {
     position: absolute;
@@ -396,6 +397,7 @@
    }
   }
   .picker-center-highlight {
+
   &:after, &:before {
               background: #fff;
             }

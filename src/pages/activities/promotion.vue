@@ -136,6 +136,12 @@
         <li>买<span class="orange">满688元</span>送<span class="orange">价值298元</span>精美礼品一份</li>
       </ul>
     </div>
+    <div class="lm-text-grey lm-font-xs more-comment">
+      <p>闽ICP备14015705号-1</p>
+      <p>营业执照91350104315308392G</p>
+      <p>食品经营许可证JY13501040006708</p>
+      <p>版权所有：福州中榕网络科技有限公司</p>
+    </div>
 
     <transition name="fade">
       <div class="choice-model" v-if="choiceShow" >
@@ -277,7 +283,7 @@
             this.activity = res.data.ExData;
             if(!!this.activity){
               let sTime=new Date(this.activity.StartTime);//活动开始时间
-              let eTime=new Date(); //当前时间            
+              let eTime=new Date(); //当前时间
               if(sTime>eTime){
                   //this.isStart=true;
                   this.timeDownText='距离抢购开始还剩';
@@ -356,7 +362,7 @@
               this.second=s;
             },1000)
         }
-        
+
       },
       //时间格式
       formate (time) {
@@ -401,7 +407,7 @@
           return;
         }
          //定义商品参数
-        
+
         let sku = {
           ShoppingCarId: 0,
           Name:this.productName,
@@ -450,7 +456,7 @@
           }else{
             skus.push(sku);
             let sc = {
-              productOrderId: "0",              
+              productOrderId: "0",
               skus: skus
             }
             localStorage.setItem("tourist", JSON.stringify(sc));
@@ -458,7 +464,7 @@
           }
       },
       //登录的用户加入购物车
-      userAddCar(){           
+      userAddCar(){
             this.axios({
               url: this.url + '/api/ShoppingCar/AddToShoppingCar',
               method: 'post',
@@ -569,7 +575,7 @@
         if(!!this.$route.params.expId){
           //存储推广位ID
           sessionStorage.setItem("ExpandId",this.$route.params.expId );
-        }       
+        }
         window.addEventListener('scroll', this.scroll);
       })
     },

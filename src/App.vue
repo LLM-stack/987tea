@@ -130,6 +130,7 @@
   /*工具样式*/
   .container {
     height: 100%;
+    position: relative;
     margin-top: 1.8rem;
     margin-bottom: 2rem;
   }
@@ -428,9 +429,21 @@
     transition: transform .2s;
     transition: transform .2s, -webkit-transform .2s;
   }
-
+  .picker-center-highlight{
+    height: 78px!important;
+    margin-top: -38px!important;
+  }
+  .picker-item{
+    top: -20px!important;
+  }
   .picker-center-highlight:before, .picker-center-highlight:after {
-    background-color: #bbb;
+    background-color: #bbb!important;
+  }
+  .picker-item.picker-selected{
+    color: #B4282D!important;
+    height: 78px!important;
+    line-height: 78px!important;
+    font-size: 22px!important;
   }
 
   .sex .mint-cell {
