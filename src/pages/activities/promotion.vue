@@ -42,9 +42,9 @@
       </div>
     </div>
     <div class="title-z">
-      <span>距离抢购结束还剩</span>
+      <span>{{timeDownText}}</span>
       <div class="lm-margin-t-xs">
-        <span class="bg-time">{{hour}}</span>：<span class="bg-time">{{minute}}</span>：<span class="bg-time">{{second}}</span>
+        <span class="bg-time">{{day}}</span>：<span class="bg-time">{{hour}}</span>：<span class="bg-time">{{minute}}</span>：<span class="bg-time">{{second}}</span>
       </div>
     </div>
     <div class="tab-box" id="tabBox" v-if="isfixed">
@@ -239,7 +239,9 @@
         productId:'',
         productName:'',
         key:'ActivityBannerImg',//banner位置key
-        advList:[]//广告信息集合
+        advList:[],//广告信息集合,
+        timeDownText:'距离抢购开始还剩',
+        activityOverducTime:''//倒计时的结束时间
       }
     },
     computed:{
@@ -273,6 +275,18 @@
           this.axios.get(this.url + '/api/Activity/GetActivityById/'+this.$route.params.id).then((res) => {
           if (res.data.Code == 200) {
             this.activity = res.data.ExData;
+            if(!!this.activity){
+              let sTime=new Date(this.activity.StartTime);//活动开始时间
+              let eTime=new Date(); //当前时间            
+              if(sTime>eTime){
+                  //this.isStart=true;
+                  this.timeDownText='距离抢购开始还剩';
+                  this.activityOverducTime=this.activity.StartTime;
+              }else{
+                  this.timeDownText='距离抢购结束还剩';
+                  this.activityOverducTime=this.activity.OverducTime;
+              }
+            }
             this.timeDown();
           } else {
             Toast(res.data.Data);
@@ -319,23 +333,30 @@
       } ,
        //倒计时
       timeDown () {
-        var endTime = new Date(this.activity.OverducTime);
-        //endTime.setHours(endTime.getHours() + 3); //给endTime增加3小时
-        setInterval( ()=> {
-          let nowTime = new Date()
-          let leftTime = parseInt((endTime.getTime()-nowTime.getTime())/1000)
-          let d = parseInt(leftTime/(24*60*60))
-          let h = this.formate(parseInt(leftTime/(60*60)%24))
-          let m = this.formate(parseInt(leftTime/60%60))
-          let s = this.formate(parseInt(leftTime%60))
-          if(leftTime <= 0){
-            this.flag = true
-          }
-          this.day=d;
-          this.hour=h;
-          this.minute=m;
-          this.second=s;
-        },1000)
+        if(!!!this.activityOverducTime){
+            this.day=0;
+            this.hour=0;
+            this.minute=0;
+            this.second=0;
+        }else{
+            let endTime = new Date(this.activityOverducTime);
+            setInterval( ()=> {
+              let nowTime = new Date()
+              let leftTime = parseInt((endTime.getTime()-nowTime.getTime())/1000)
+              let d = this.formate(parseInt(leftTime/(24*60*60)))
+              let h = this.formate(parseInt(leftTime/(60*60)%24))
+              let m = this.formate(parseInt(leftTime/60%60))
+              let s = this.formate(parseInt(leftTime%60))
+              if(leftTime <= 0){
+                this.flag = true
+              }
+              this.day=d;
+              this.hour=h;
+              this.minute=m;
+              this.second=s;
+            },1000)
+        }
+        
       },
       //时间格式
       formate (time) {
@@ -379,18 +400,8 @@
           Toast('请选择商品规格');
           return;
         }
-        if(!!localStorage.lut){
-             //验证localStorage.lut是否在登录状态
-            this.axios.get(this.url + '/api/Login/CheckLogin?str='+localStorage.lut).then((res) => {
-                if (res.data.Code == 500) {
-                  //验证失败 清除localStorage
-                  localStorage.removeItem('lut');
-                  console.log('clear lut')
-                }
-              })
-        }
-        //定义商品参数
-        let skus=[];
+         //定义商品参数
+        
         let sku = {
           ShoppingCarId: 0,
           Name:this.productName,
@@ -402,16 +413,33 @@
           SalePrice: this.specPrice,
           AllStock:this.specStock
         }
-
-        if (!!!localStorage.lut) {//游客加入购物车
-          if(!!localStorage.tourist){
+        if(!!localStorage.lut){
+             //验证localStorage.lut是否在登录状态
+            this.axios.get(this.url + '/api/Login/CheckLogin?str='+localStorage.lut).then((res) => {
+                if (res.data.Code == 500) {
+                  //验证失败 清除localStorage
+                  localStorage.removeItem('lut');
+                  console.log('clear lut')
+                  this.touristAddCar(sku);
+                }else{
+                  userAddCar();
+                }
+              })
+        }else{
+          this.touristAddCar(sku);
+        }
+      },
+      //游客加入购物车
+      touristAddCar(sku){
+        let skus=[];
+        if(!!localStorage.tourist){
             //localStorage.tourist已存在商品了
             let sc=JSON.parse(localStorage.tourist);
             let pro=false;
             sc.skus.forEach(function(item){
               if(item.ProductSpecId==sku.ProductSpecId){
                 item.Count+=sku.Count;
-               pro=true;
+                pro=true;
               }
             });
             if(!pro){
@@ -422,15 +450,15 @@
           }else{
             skus.push(sku);
             let sc = {
-              productOrderId: "0",
+              productOrderId: "0",              
               skus: skus
             }
             localStorage.setItem("tourist", JSON.stringify(sc));
             this.$router.push({path: '/cart'})
           }
-        }else{
-
-             //登录的用户加入购物车
+      },
+      //登录的用户加入购物车
+      userAddCar(){           
             this.axios({
               url: this.url + '/api/ShoppingCar/AddToShoppingCar',
               method: 'post',
@@ -447,7 +475,6 @@
                 }
               }
             })
-        }
       },
       //选中商品规格
       checkSpec(index) {
@@ -539,6 +566,10 @@
     },
     mounted() {
       this.$nextTick(() => {
+        if(!!this.$route.params.expId){
+          //存储推广位ID
+          sessionStorage.setItem("ExpandId",this.$route.params.expId );
+        }       
         window.addEventListener('scroll', this.scroll);
       })
     },

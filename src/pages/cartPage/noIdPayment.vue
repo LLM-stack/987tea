@@ -22,7 +22,14 @@
       </div>
       <mt-field label="详细地址" placeholder="请输入地址" v-model="detailAddress"></mt-field>
     </div>
-
+    <div class="pay-modes lm-margin-b-sm">
+        <div>支付方式：</div>
+        <div class="pay-mode lm-margin-t-sm">
+          <div :class="{active:payType==0}" @click="checkType(0)"><img src="../../assets/images/cart/huo.png"/>货到付款</div>
+          <div class="lm-margin-xl" :class="{active:payType==2}" @click="checkType(2)"><img src="../../assets/images/cart/zfb.png" />支付宝</div>
+          <!--<div class="lm-margin-xl" :class="payType==1?'active':''" @click="checkType(1)"><img src="../../assets/images/cart/wx.png" />微信支付</div>-->
+        </div>
+      </div>
     <div class="product" v-for="(item,index) in orderDetails">
       <img class="product-img" :src="item.ProductImg"/>
       <div class="product-details">
@@ -41,7 +48,7 @@
         <div class="product-select" :class="{checked:isChecked == index}" ></div>
       </div>
     </div>
-
+<div class="hide" v-html="alipay"></div>
     <div class="pay">
       <div>
         <div>共选择 <span class="lm-text-red">{{ProductCount}}</span>件商品</div>
@@ -76,6 +83,8 @@
         discount:[],//优惠记录信息
         subtract:'0',//优惠折扣价格
         isChecked:'',
+        payType:0,//支付类型
+        alipay:''//ali支付form表单信息
       }
     },
     computed: {
@@ -146,6 +155,10 @@
         var pattern = /^1[34578]\d{9}$/;
         return pattern.test(phone);
       },
+      //支付类型选择
+     checkType(val){
+        this.payType=val;
+     },
       //去下单
       goToPay(){
         if(!!!this.username){
@@ -159,7 +172,7 @@
         if(!this.isPhoneNo(this.phone)){
            Toast("手机号格式错误")
            return;
-        }
+        }     
         if(!!!this.address){
            Toast("请选择省市区")
            return;
@@ -174,7 +187,7 @@
           AddressId:'0',
           Province:areas[0],
           City:areas[1],
-          Area:areas[3],
+          Area:areas[2],
           Detail:this.detailAddress,
           Phone:this.phone,
           Reciever:this.username
@@ -182,14 +195,15 @@
         //定义参数
         let sc={
           TotalPrice:this.total,
-          PayType:0,//0是货到付款
+          PayType:this.payType,
           ProductCount:this.ProductCount,
           OrderFrom:2,//订单来源  2标识商城
           AddressId:'0',
           ProductSkus:this.orderDetails,
           ProductOrderId:'0',
           OrderAddress:str_address,
-          OrderToPrice:this.discount
+          OrderToPrice:this.discount,
+          ExpandId:sessionStorage.getItem("ExpandId")
         }
          this.axios.post(this.url + '/api/Order/SaveOrder', {strSc:JSON.stringify(sc)}).then((res) => {
           if (res.data.Code == 200) {
@@ -203,12 +217,18 @@
               })
             localStorage.tourist=JSON.stringify(carPro);//购物车中的商品重新赋值
             localStorage.removeItem('unPay');//购物成功后移除订单里的商品
-              let instance = Toast(res.data.Data);
-              setTimeout(() => {
-                instance.close();
-                this.$router.replace({ path: '/'})
-              }, 1000);
-
+            
+            if(this.payType==0){
+               this.$router.push({path: '/paymentCompleted'})
+             }
+             if(this.payType==2){
+               //支付宝支付返回
+               this.alipay=res.data.ExData;
+               setTimeout(function() {
+                 document.forms['alipaysubmit'].submit();
+               },0)
+             }
+              
           } else {
             Toast(res.data.Data);
           }
@@ -219,7 +239,7 @@
          //定义参数
         let sc={
           TotalPrice:this.total,
-          PayType:0,//0是货到付款
+          PayType:this.payType,
           ProductCount:this.ProductCount,
           OrderFrom:2,//订单来源  2标识商城
           AddressId:'0',
@@ -251,6 +271,7 @@
     mounted(){
       this.$nextTick(function () {
         this.initAddress();
+        console.log(sessionStorage.getItem("ExpandId"))
         if(!!localStorage.unPay){
             var sc=JSON.parse(localStorage.unPay);
             this.productOrderId=sc.productOrderId;
@@ -268,6 +289,33 @@
 </script>
 
 <style scoped  lang="scss">
+.pay-modes{
+    padding: 0.4rem;
+    background-color: #ffffff;
+  }
+  .pay-modes .pay-mode{
+    display: flex;
+    align-items: center;
+  }
+  .pay-modes .pay-mode > div{
+    display: flex;
+    align-items: center;
+    min-width: 4.4rem;
+    padding: 0.1rem ;
+    border-radius: 0.1rem;
+    font-size: 0.6rem;
+    border:1px solid #999;
+  }
+  .pay-mode > div >img{
+    margin-right: 0.2rem;
+    width: 1.2rem;
+    height: 1.2rem;
+  }
+  .pay-mode .active{
+    color: #B4282D;
+    border-color: #B4282D!important;
+    /*background-color: #B4282D;*/
+  }
   .linkage-wrap {
     left: 4rem;
     width: 11rem;

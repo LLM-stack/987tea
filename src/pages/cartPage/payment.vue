@@ -174,7 +174,8 @@
           AddressId:this.defaultAddress.AdressId,
           ProductSkus:this.orderDetails,
           ProductOrderId:this.productOrderId,
-          OrderAddress:str_address
+          OrderAddress:str_address,
+          ExpandId:sessionStorage.getItem("ExpandId")
         }
        this.axios({
         url: this.url + '/api/Order/SaveOrder',

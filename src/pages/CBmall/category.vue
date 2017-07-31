@@ -49,12 +49,7 @@
             Name: '白茶',
             ProductTagId: '93843e7fcccd4ffa9ede6ad3b20aac2c',
             bg: {backgroundImage: 'url('+ require('../../assets/images/category/baitea.jpg') +')'}
-          },
-          {
-            Name: '黄茶',
-            ProductTagId: '2c17126c02774e95bdd22e7f88662008',
-            bg: {backgroundImage: 'url('+ require('../../assets/images/category/huangtea.jpg') +')'}
-          },
+          },          
           {
             Name: '黑茶',
             ProductTagId: '4e82223c669e462d8877324ad6f7fcf4',

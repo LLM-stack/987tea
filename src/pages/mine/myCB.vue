@@ -7,22 +7,39 @@
         <img src="../../assets/images/cbmall/cb_03.png"/>
         <div>
           <div>当前茶币合计</div>
-          <div class="cb-num">155</div>
+          <div class="cb-num">{{user.Score}}</div>
         </div>
       </div>
       <div class="tip">
         <div class="lm-text-red">什么是茶币？</div>
-        <div class="lm-margin-t-sm tip-text">茶币是指987茶网为茶友提供的虚拟货币。茶币可兑换赠品、茶样等。茶币为非
+        <div class="lm-margin-t-xs tip-text">茶币是指987茶网为茶友提供的虚拟货币。茶币可兑换赠品、茶样等。茶币为非
           真实货币，不可兑现。</div>
       </div>
 
       <div class="tabs">
-        <div class="tab" :class="{active:isActive}" @click="check">收入</div>
-        <div class="tab" :class="{active:!isActive}" @click="check">支出</div>
+        <div class="tab" :class="{active:isActive}" @click="check(0)">收入</div>
+        <div class="tab" :class="{active:!isActive}" @click="check(1)">支出</div>
       </div>
+      <div class="pay-cont">
+        <div class="pay-deta">
+          <div class="left">
+            <div>收入支出来源</div>
+            <div class="lm-font-xs lm-text-grey">2017-07-30</div>
+          </div>
+          <div class="right lm-text-yellow">+25</div>
+        </div>
+        <div class="pay-deta">
+          <div class="left">
+            <div>收入支出来源</div>
+            <div class="lm-font-xs lm-text-grey">2017-07-30</div>
+          </div>
+          <div class="right lm-text-yellow">-25</div>
+        </div>
+      </div>
+      <div class="more-comment">点击加载更多</div>
 
 
-      <Mfooter :myCenterCurrent=true></Mfooter>
+      <Mfooter :myCenterCurrent='true'></Mfooter>
     </div>
 </template>
 
@@ -37,13 +54,59 @@
     },
     data() {
     	return {
-    		isActive: true
+    		isActive: true,
+        user:'',
+        type:0,
+        pageIndex:0,
+        pageSize:10,
+        loading:false,
+        tbList:[]
       }
     },
     methods:{
-    	 check() {
-    	 	this.isActive = !this.isActive
+    	 check(val) {
+         this.type=val;
+    	 	 this.isActive = !this.isActive
+       },
+       //获取用户信息
+       getUserInfo(){
+          this.axios({
+          url: this.url + '/api/User/GetUserInfoByUserId',
+          method: 'get',
+          headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
+
+          }).then((res)=>{
+            if(!!res){
+              if (res.data.Code == 200) {
+              this.user=res.data.ExData;
+              } else {
+                Toast(res.data.Data);
+              }
+            }
+          })
+       },
+       getTBLog(){
+         this.axios({
+          url: this.url + '/api/TeaCurrency/GetTeaCurrencyByUserId',
+          method: 'post',
+          data:{typeId:this.type,pageIndex:this.pageIndex,pageSize:this.pageSize},
+          headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
+
+          }).then((res)=>{
+            if(!!res){
+              if (res.data.Code == 200) {
+              this.tbList=res.data.ExData;
+              } else {
+                Toast(res.data.Data);
+              }
+            }
+          })
        }
+    },
+    mounted:function(){
+      this.$nextTick(()=>{
+         this.getUserInfo();
+       })
     }
   }
 </script>
@@ -75,7 +138,6 @@
   }
   .tip .tip-text{
     color: #aaa;
-    line-height: 1rem;
     font-size: 0.55rem;
   }
   .tabs{
@@ -93,10 +155,23 @@
     line-height: 1.8rem;
     text-align: center;
     width: 50%;
-    border-bottom: 2px solid #fff;
+    border-bottom: 1px solid #eee;
   }
   .tabs .tab.active{
     color: #B4282D;
     border-bottom: 2px solid #B4282D;
+  }
+  .pay-cont{
+    background-color: #fff;
+  }
+  .pay-cont .pay-deta{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.4rem;
+    border-bottom: 1px solid #eee;
+  }
+  .pay-cont .pay-deta .right{
+    font-weight: 600;
   }
 </style>

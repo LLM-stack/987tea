@@ -249,6 +249,12 @@
   .lm-margin-l-xs {
     margin-left: 0.2rem;
   }
+  /*点击更多*/
+  .more-comment {
+    color: #aaa;
+    padding: 0.6rem 0;
+    text-align: center;
+  }
 
   /*垂直居中*/
   .flex-alig-center {

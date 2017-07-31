@@ -84,7 +84,7 @@ export default new Router({
       path: '/onSale',
       component: OnSale
     },{
-      path: '/Promotion/:id',
+      path: '/Promotion/:id/Expand/:expId',
       component: Promotion
     },
     //登录注册

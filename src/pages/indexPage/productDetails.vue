@@ -379,7 +379,7 @@
               this.$router.push({path: '/cart'})
            }
           }
-        }       
+        }
         if (this.isCar == 2) {
           if (!!localStorage.lut) {//用户登录的时候
             //定义下单参数
@@ -816,11 +816,6 @@
     justify-content: flex-end;
   }
 
- .more-comment {
-   color: #aaa;
-    padding: 0.6rem 0;
-    text-align: center;
-  }
 
 
   .drop-enter-active, .drop-leave-active {
