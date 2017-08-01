@@ -84,20 +84,26 @@
       },
       //获取热搜词汇
       getSearchValue(){
-         this.axios.get(this.url + '/api/Product/GetSearchValue').then((res) => {
+        if(!!sessionStorage.SearchValue){
+            this.searchValue = JSON.parse(sessionStorage.SearchValue);
+        }else{
+            this.axios.get(this.url + '/api/Product/GetSearchValue').then((res) => {
           if (res.data.Code == 200) {
+             sessionStorage.setItem("SearchValue", JSON.stringify(res.data.Data));
              this.searchValue = res.data.Data;
           }
         })
+        }
+         
       },
       //搜索商品
-      searchProducts(){
-        this.loading=true;
-        this.pageIndex++;
+      searchProducts(){       
         if(!!!this.searchName){
             this.isSearch=false;
             return;
         }
+        this.loading=true;
+        this.pageIndex++;
         this.axios.post(this.url + '/api/Product/SearchProducts',{key:this.searchName,starIndex:this.pageIndex,endIndex:this.pageSize}).then((res) => {
           if (res.data.Code == 200) {
             this.isSearch=true;
@@ -124,11 +130,17 @@
       },
       //获取推荐商品
       getRecommendProduct(){
-          this.axios.get(this.url + '/api/Product/HotProducts').then((res) => {
-          if (res.data.Code == 200) {
-             this.recommend = res.data.Data;
+          if(!!sessionStorage.Recommend){
+            this.recommend=JSON.parse(sessionStorage.Recommend);
+          }else{
+            this.axios.get(this.url + '/api/Product/HotProducts').then((res) => {
+              if (res.data.Code == 200) {
+                 sessionStorage.setItem("Recommend", JSON.stringify(res.data.Data));
+                this.recommend = res.data.Data;
+              }
+            })
           }
-        })
+          
       },
       //热搜词点击
       chkSearchValue(idx){

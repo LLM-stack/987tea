@@ -5,8 +5,8 @@
     </Mheader>
     <div class="banner">
       <mt-swipe :auto="3000" v-if="advList.length > 0">
-      <mt-swipe-item  v-for="(item,index) in advList"  :key="item.Id" >
-          <img :src="url+item.Img" alt="" @click="jump(item.AdUrl)">
+      <mt-swipe-item  v-for="(adv,index) in advList"  :key="adv.Id" >
+          <img :src="adv.Img" alt="" @click="jump(adv.AdUrl)">
         </mt-swipe-item>
         <!--<mt-swipe-item>
           <img src="../../assets/images/banner/banner01.jpg"/>
@@ -44,7 +44,7 @@
     <div class="title-z">
       <span>{{timeDownText}}</span>
       <div class="lm-margin-t-xs">
-        <span class="bg-time">{{day}}</span>：<span class="bg-time">{{hour}}</span>：<span class="bg-time">{{minute}}</span>：<span class="bg-time">{{second}}</span>
+        <span class="bg-time">{{day}}</span> 天 <span class="bg-time">{{hour}}</span> 时 <span class="bg-time">{{minute}}</span> 分 <span class="bg-time">{{second}}</span> 秒
       </div>
     </div>
     <div class="tab-box" id="tabBox" v-if="isfixed">
@@ -61,16 +61,16 @@
       <div class="lm-font-sm lm-text-grey">超值低价 多款茶类任你选</div>
     </div>
     <div class="scroll-bar">
-      <div class="scroll-cont" v-for="(item,index) in timeProducts" @click.stop="chkDetail(item.ProductId)">
+      <div class="scroll-cont" v-for="(t,index) in timeProducts" @click.stop="chkDetail(t.ProductId)">
         <div class="cont-img">
-          <img v-lazy="item.HeadImg"/>
-          <div class="cont-name">{{item.Name}}</div>
+          <img v-lazy="t.HeadImg"/>
+          <div class="cont-name">{{t.Name}}</div>
         </div>
         <div class="cont-price">
-          <div class="new-price lm-margin-r-sm">￥{{item.SalePrice}}</div>
-          <div class="old-price">￥{{item.Price}}</div>
+          <div class="new-price lm-margin-r-sm">￥{{t.SalePrice}}</div>
+          <div class="old-price">￥{{t.Price}}</div>
         </div>
-        <div class="cont-btn" @click.stop="choice(item.ProductId)">立即抢购</div>
+        <div class="cont-btn" @click.stop="choice(t.ProductId)">立即抢购</div>
       </div>
 
     </div>
@@ -84,18 +84,18 @@
       <div class="lm-font-sm lm-text-grey">热卖爆款 感恩放价</div>
     </div>
     <div class="pro-list">
-      <div class="pro-box" v-for="(item,index) in expProducts" :class="{'pro-left' : index % 2 !== 0}" @click.stop="chkDetail(item.ProductId)">
+      <div class="pro-box" v-for="(exp,index) in expProducts" :class="{'pro-left' : index % 2 !== 0}" @click.stop="chkDetail(exp.ProductId)">
         <div class="pro-img">
-          <img v-lazy="item.HeadImg"/>
+          <img v-lazy="exp.HeadImg"/>
         </div>
-        <div class="pro-name">{{ item.Name }}</div>
+        <div class="pro-name">{{ exp.Name }}</div>
         <div class="pro-price">
-          <div class="new-price lm-margin-r-sm">￥{{ item.SalePrice }}</div>
-          <div class="old-price">￥{{ item.Price }}</div>
+          <div class="new-price lm-margin-r-sm">￥{{ exp.SalePrice }}</div>
+          <div class="old-price">￥{{ exp.Price }}</div>
         </div>
         <div class="pro-btn-group">
-          <div class="pro-btn zhe" v-if="activity.AdType!=3">{{item.Price | discount(item.SalePrice)}}折</div>
-          <div class="pro-btn gou" @click.stop="choice(item.ProductId )">立即抢购</div>
+          <div class="pro-btn zhe" v-if="activity.AdType!=3">{{exp.Price | discount(exp.SalePrice)}}折</div>
+          <div class="pro-btn gou" @click.stop="choice(exp.ProductId )">立即抢购</div>
         </div>
       </div>
     </div>
@@ -108,18 +108,18 @@
       <div class="lm-font-sm lm-text-grey">独具风味 送礼佳品</div>
     </div>
     <div class="pro-list">
-      <div class="pro-box" v-for="(item,index) in hadProducts" :class="{'pro-left' : index % 2 !== 0}" @click="chkDetail(item.ProductId)">
+      <div class="pro-box" v-for="(had,index) in hadProducts" :class="{'pro-left' : index % 2 !== 0}" @click="chkDetail(had.ProductId)">
         <div class="pro-img">
-          <img v-lazy="item.HeadImg"/>
+          <img v-lazy="had.HeadImg"/>
         </div>
-        <div class="pro-name">{{ item.Name }}</div>
+        <div class="pro-name">{{ had.Name }}</div>
         <div class="pro-price">
-          <div class="new-price lm-margin-r-sm">￥{{ item.SalePrice }}</div>
-          <div class="old-price">￥{{ item.Price }}</div>
+          <div class="new-price lm-margin-r-sm">￥{{ had.SalePrice }}</div>
+          <div class="old-price">￥{{ had.Price }}</div>
         </div>
         <div class="pro-btn-group">
-          <div class="pro-btn zhe" v-if="activity.AdType!=3">{{item.Price | discount(item.SalePrice)}}折</div>
-          <div class="pro-btn gou" @click.stop="choice(item.ProductId )">立即抢购</div>
+          <div class="pro-btn zhe" v-if="activity.AdType!=3">{{had.Price | discount(had.SalePrice)}}折</div>
+          <div class="pro-btn gou" @click.stop="choice(had.ProductId )">立即抢购</div>
         </div>
       </div>
     </div>
@@ -166,8 +166,8 @@
           <div>规格</div>
           <div class="spec-box">
 
-            <div class="spec" v-for="(item, index) in productSpec" @click="checkSpec(index)"
-                 :class="index == checkIndex?'spec-checked':''">{{item.ShortName}}
+            <div class="spec" v-for="(sku, index) in productSpec" @click="checkSpec(index)"
+                 :class="index == checkIndex?'spec-checked':''">{{sku.ShortName}}
             </div>
 
           </div>
@@ -247,7 +247,8 @@
         key:'ActivityBannerImg',//banner位置key
         advList:[],//广告信息集合,
         timeDownText:'距离抢购开始还剩',
-        activityOverducTime:''//倒计时的结束时间
+        activityOverducTime:'',//倒计时的结束时间,
+        activityNowTime:''//服务器的当前时间
       }
     },
     computed:{
@@ -278,19 +279,37 @@
       },
       //获取活动信息
       getActivity(){
+        if(!!sessionStorage.Activity){      
+             this.activity =JSON.parse(sessionStorage.Activity);
+             if(!!this.activity){
+              let sTime=new Date(this.activity.StartTime);//活动开始时间
+              let eTime=new Date(this.activity.NowTime); //当前时间
+              this.activityNowTime=this.activity.NowTime;
+              if(sTime>eTime){
+                  this.timeDownText='距离抢购开始还剩';
+                  this.activityOverducTime=this.activity.StartTime;
+                  
+              }else{
+                  this.timeDownText='距离抢购结束还剩';
+                  this.activityOverducTime=this.activity.EndTime;
+              }
+            }
+            this.timeDown();
+        }else{
           this.axios.get(this.url + '/api/Activity/GetActivityById/'+this.$route.params.id).then((res) => {
           if (res.data.Code == 200) {
+            sessionStorage.setItem("Activity", JSON.stringify(res.data.ExData)); 
             this.activity = res.data.ExData;
             if(!!this.activity){
               let sTime=new Date(this.activity.StartTime);//活动开始时间
-              let eTime=new Date(); //当前时间
+              let eTime=new Date(this.activity.NowTime); //当前时间
+              this.activityNowTime=this.activity.NowTime;
               if(sTime>eTime){
-                  //this.isStart=true;
                   this.timeDownText='距离抢购开始还剩';
                   this.activityOverducTime=this.activity.StartTime;
               }else{
                   this.timeDownText='距离抢购结束还剩';
-                  this.activityOverducTime=this.activity.OverducTime;
+                  this.activityOverducTime=this.activity.EndTime;
               }
             }
             this.timeDown();
@@ -300,43 +319,73 @@
         }).catch((err) => {
           Toast('网络请求超时');
         })
+        }
+          
       },
       //获取限时特价商品
       getTimelimit(){
-          this.axios.post(this.url + '/api/Activity/GetActivityProducts', {acId:this.$route.params.id,tagId: this.timeTag}).then((res) => {
+         if(!!sessionStorage.TimeProducts){
+            this.timeProducts=JSON.parse(sessionStorage.TimeProducts);
+         }else{
+            this.axios.post(this.url + '/api/Activity/GetActivityProducts', {acId:this.$route.params.id,tagId: this.timeTag}).then((res) => {
             if (res.data.Code == 200) {
-              this.timeProducts = res.data.ExData;
+              if(res.data.Data==this.timeTag){
+                 sessionStorage.setItem("TimeProducts", JSON.stringify(res.data.ExData)); 
+                  this.timeProducts = res.data.ExData;
+              }
+              
             } else {
               Toast(res.data.Data);
             }
           }).catch((err) => {
             Toast('网络请求超时');
           })
+         }
+          
       },
       //获取爆款特价商品
       getExplosion(){
-          this.axios.post(this.url + '/api/Activity/GetActivityProducts', {acId:this.$route.params.id,tagId: this.explosionTag}).then((res) => {
-          if (res.data.Code == 200) {
-            this.expProducts = res.data.ExData;
-          } else {
-            Toast(res.data.Data);
-          }
-        }).catch((err) => {
-          Toast('网络请求超时');
-        })
-      },
-      //获取精装礼品商品
-      getHardcover(){
-          this.axios.post(this.url + '/api/Activity/GetActivityProducts', {acId:this.$route.params.id,tagId: this.hardcoverTag}).then((res) => {
+        if(!!sessionStorage.ExpProducts){
+            this.expProducts=JSON.parse(sessionStorage.ExpProducts);
+         }else{
+            this.axios.post(this.url + '/api/Activity/GetExplosionProducts', {acId:this.$route.params.id,tagId: this.explosionTag}).then((res) => {
             if (res.data.Code == 200) {
-              this.hadProducts = res.data.ExData;
+              if(res.data.Data==this.explosionTag){
+                  sessionStorage.setItem("ExpProducts", JSON.stringify(res.data.ExData)); 
+                  this.expProducts = res.data.ExData;
+              }
+              
             } else {
               Toast(res.data.Data);
             }
           }).catch((err) => {
             Toast('网络请求超时');
           })
+         }
+          
+      },
+      //获取精装礼品商品
+      getHardcover(){
+        if(!!sessionStorage.HadProducts){
+            this.hadProducts=JSON.parse(sessionStorage.HadProducts);
+         }else{
+            this.axios.post(this.url + '/api/Activity/GetHardcoverProducts', {acId:this.$route.params.id,tagId: this.hardcoverTag}).then((res) => {
+            if (res.data.Code == 200) {
+              if(res.data.Data==this.hardcoverTag){
+                sessionStorage.setItem("HadProducts", JSON.stringify(res.data.ExData));
+                this.hadProducts = res.data.ExData;
+              }
+              
+            } else {
+              Toast(res.data.Data);
+            }
+          }).catch((err) => {
+            Toast('网络请求超时');
+          })
+         }
+          
       } ,
+     
        //倒计时
       timeDown () {
         if(!!!this.activityOverducTime){
@@ -344,13 +393,13 @@
             this.hour=0;
             this.minute=0;
             this.second=0;
-        }else{
-            let endTime = new Date(this.activityOverducTime);
-            setInterval( ()=> {
-              let nowTime = new Date()
-              let leftTime = parseInt((endTime.getTime()-nowTime.getTime())/1000)
+        }else{         
+            let endTime = new Date(this.activityOverducTime.replace(/-/g,"/").replace('T',' '));
+            let nowTime = new Date(this.activityNowTime.replace(/-/g,"/").replace('T',' '))             
+            let leftTime = parseInt((endTime.getTime()-nowTime.getTime())/1000)
+            setInterval( ()=> { 
               let d = this.formate(parseInt(leftTime/(24*60*60)))
-              let h = this.formate(parseInt(leftTime/(60*60)%24))
+              let h = this.formate(parseInt(leftTime/(60*60)%24))              
               let m = this.formate(parseInt(leftTime/60%60))
               let s = this.formate(parseInt(leftTime%60))
               if(leftTime <= 0){
@@ -360,10 +409,11 @@
               this.hour=h;
               this.minute=m;
               this.second=s;
+              leftTime--;
             },1000)
         }
 
-      },
+      },      
       //时间格式
       formate (time) {
           if(time>=10){
@@ -425,7 +475,6 @@
                 if (res.data.Code == 500) {
                   //验证失败 清除localStorage
                   localStorage.removeItem('lut');
-                  console.log('clear lut')
                   this.touristAddCar(sku);
                 }else{
                   userAddCar();
@@ -556,27 +605,34 @@
       },
       //获取banner图
       getBannerImg(){
-        this.axios.get(this.url + '/api/Advertising/GetAdvertisingByKey?key='+this.key).then((res) => {
-          if (res.data.Code == 200) {
-             this.advList = res.data.Data;
-          }
-        })
+        if(!!sessionStorage.AdvList){
+          this.advList=JSON.parse(sessionStorage.AdvList);
+        }else{
+          this.axios.get(this.url + '/api/Advertising/GetAdvertisingByKey?key='+this.key).then((res) => {
+            if (res.data.Code == 200) {
+              sessionStorage.setItem("AdvList", JSON.stringify(res.data.Data));
+              this.advList = res.data.Data;
+            }
+          })
+        }
+        
       }
     },
     created() {
       this.getBannerImg();
-      this.getActivity();
-      this.getTimelimit();
-      this.getExplosion();
-      this.getHardcover();
-    },
+      this.getActivity(); 
+         
+     },
     mounted() {
       this.$nextTick(() => {
-        if(!!this.$route.params.expId){
-          //存储推广位ID
-          sessionStorage.setItem("ExpandId",this.$route.params.expId );
-        }
-        window.addEventListener('scroll', this.scroll);
+          if(!!this.$route.params.expId){
+            //存储推广位ID
+            sessionStorage.setItem("ExpandId",this.$route.params.expId );
+          }
+          window.addEventListener('scroll', this.scroll);
+          this.getTimelimit();
+          this.getExplosion();
+          this.getHardcover();
       })
     },
     beforeDestroy(){

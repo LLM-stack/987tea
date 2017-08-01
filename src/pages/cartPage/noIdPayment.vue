@@ -7,13 +7,13 @@
     <div class="info lm-margin-b-sm">
       <mt-field label="收货人" placeholder="请输入收货人姓名" v-model="username"></mt-field>
       <mt-field label="手机号" placeholder="请输入收货人手机号" type="tel" v-model="phone"></mt-field>
-      <mt-field label="省市区" placeholder="请选择省市区" v-model="address"></mt-field>
-      <mt-field label="详细地址" placeholder="请输入地址" v-model="detailAddress"></mt-field>
+      <mt-field label="省市区" placeholder="请选择省市区" v-model="address">
+        <div class="ssq" @click="address_flag = true"></div>
+      </mt-field>
+      <mt-field label="详细地址" placeholder="请输入地址" v-model="detailAddress">
+      </mt-field>
     </div>
     <div class="linkage-wrap">
-      <div class="address-wrap">
-        <span class="btn" @click="address_flag = true">点击选择</span>
-      </div>
       <div class="pick-mark" v-show="address_flag" @click="address_flag = false">
         <div class="btn-wrap">
           <a class="btn-cancel" @click="address_flag = false">取消</a>
@@ -486,5 +486,12 @@
   }
   .info {
     background-color: #ffffff;
+  }
+  .info .ssq{
+    width: 11rem;
+    height: 1.5rem;
+    left: -11rem;
+    top: -0.8rem;
+    position: absolute;
   }
 </style>

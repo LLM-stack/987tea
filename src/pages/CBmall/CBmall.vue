@@ -1,11 +1,11 @@
 <template>
   <div class="container">
-    <Mheader :show=true>
+    <Mheader :show='true'>
       <div slot="title">茶币商城</div>
     </Mheader>
     <div class="cb-current">
       <div class="cb-cu-top">当前茶币</div>
-      <div class="cb-cu-mid"><img class="lm-margin-r-sm" src="../../assets/images/cbmall/cb_03.png"/><span>0</span>
+      <div class="cb-cu-mid"><img class="lm-margin-r-sm" src="../../assets/images/cbmall/cb_03.png"/><span>{{user.TeaCurrency}}</span>
       </div>
       <div class="cb-cu-btm"><router-link :to="{path:'/MyCB'}">茶币收支账单</router-link></div>
     </div>
@@ -113,7 +113,8 @@
         ],
         pageIndex: 0,
         loading: false,
-        productList:[]
+        productList:[],
+        user:[]
       }
     },
     methods:{
@@ -153,11 +154,28 @@
                 }
               }
             })
-      }
+      },
+      //获取用户信息
+      getUserInfo(){
+          this.axios({
+          url: this.url + '/api/User/GetUserInfoByUserId',
+          method: 'get',
+          headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
+
+          }).then((res)=>{
+            if(!!res){
+              if (res.data.Code == 200) {
+              this.user=res.data.ExData;
+              } else {
+                Toast(res.data.Data);
+              }
+            }
+          }) 
+        }
     },
     mounted(){
       this.$nextTick(function (){
-        //this.getTCProducts();
+        this.getUserInfo();
       })
     }
 

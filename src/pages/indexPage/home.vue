@@ -219,31 +219,44 @@
     methods: {
       //获取自品好茶
       getOwnTea(){
-        this.axios.post(this.url + '/api/Product/HomeProducts', {tagId: this.ownTag,pageIndex:this.pageIndex,pageSize:this.pageSize}).then((res) => {
-          if (res.data.Code == 200) {
-            this.ownTea = res.data.Data;
-          } else {
-            Toast(res.data.Data);
-          }
-        }).catch((err) => {
-          Toast('网络请求超时');
-        })
+         if(!!sessionStorage.OwnTea){
+            this.ownTea=JSON.parse(sessionStorage.OwnTea);
+         }else{
+            this.axios.post(this.url + '/api/Product/HomeProducts', {tagId: this.ownTag,pageIndex:this.pageIndex,pageSize:this.pageSize}).then((res) => {
+              if (res.data.Code == 200) {
+                sessionStorage.setItem("OwnTea", JSON.stringify(res.data.Data));
+                this.ownTea = res.data.Data;
+              } else {
+                Toast(res.data.Data);
+              }
+            }).catch((err) => {
+              Toast('网络请求超时');
+            })
+         }
+        
       },
       //获取送礼必备
       getGiftsTea(){
-        this.axios.post(this.url + '/api/Product/HomeProducts', {tagId: this.giftsTag,pageIndex:this.pageIndex,pageSize:this.pageSize}).then((res) => {
-          if (res.data.Code == 200) {
-            this.giftsTea = res.data.Data;
-          } else {
-            Toast(res.data.Data);
-          }
-        }).catch((err) => {
-          Toast('网络请求超时');
-        })
+         if(!!sessionStorage.GiftsTea){
+            this.giftsTea=JSON.parse(sessionStorage.GiftsTea);
+         }else{
+            this.axios.post(this.url + '/api/Product/HomeProducts', {tagId: this.giftsTag,pageIndex:this.pageIndex,pageSize:this.pageSize}).then((res) => {
+              if (res.data.Code == 200) {
+                 sessionStorage.setItem("GiftsTea", JSON.stringify(res.data.Data));
+                this.giftsTea = res.data.Data;
+              } else {
+                Toast(res.data.Data);
+              }
+            }).catch((err) => {
+              Toast('网络请求超时');
+            })
+         }
+        
       },
       //倒计时
       timeDown () {
         var endTime = this.time
+        console.log(endTime);
         endTime.setHours(endTime.getHours() + 3); //给endTime增加3小时
         setInterval(() => {
           let nowTime = new Date()
@@ -282,15 +295,29 @@
       },
       //获取banner图
       getBannerImg(){
-        this.axios.get(this.url + '/api/Advertising/GetAdvertisingByKey?key='+this.key).then((res) => {
-          if (res.data.Code == 200) {
-             this.advList = res.data.Data;
-          }
-        })
+        if(!!sessionStorage.HomeAdvList){
+          this.advList=JSON.parse(sessionStorage.HomeAdvList);
+        }else{
+          this.axios.get(this.url + '/api/Advertising/GetAdvertisingByKey?key='+this.key).then((res) => {
+            if (res.data.Code == 200) {
+              sessionStorage.setItem("HomeAdvList", JSON.stringify(res.data.Data));
+              this.advList = res.data.Data;
+            }
+          })
+        }
+        
       }
 
     },
+    mounted(){
+      this.$nextTick(function (){
+        if(!!this.$route.query.PromotionKey){
+          sessionStorage.setItem('promotionKey',this.$route.query.PromotionKey);
+        }
+      })
+    },
     created(){
+      
       this.getBannerImg();
       this.getOwnTea();
       this.getGiftsTea();

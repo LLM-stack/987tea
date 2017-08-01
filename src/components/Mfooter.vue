@@ -6,9 +6,9 @@
       <router-link :to="{path:'/mall'}">
         <span class="nav-icon nav-icon-shop" :class="{ shopCurrent: shopCurrent }"></span>
       </router-link>
-      <!--<router-link :to="{path: '/'}">-->
-        <!--<span class="nav-icon nav-icon-world" :class="{ worldCurrent: worldCurrent }"></span>-->
-      <!--</router-link>-->
+      <a>
+        <span class="nav-icon nav-icon-world" :class="{ worldCurrent: worldCurrent }"></span>
+      </a>
       <router-link :to="{path: '/Cart'}">
         <span class="nav-icon nav-icon-cart" :class="{ cartCurrent: cartCurrent }"></span>
       </router-link>

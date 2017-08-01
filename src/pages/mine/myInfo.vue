@@ -11,7 +11,7 @@
         <div class="name lm-margin-l-sm">{{user.UserName}}</div>
         <div class="cb lm-margin-t-xs">
           <router-link :to="{path:'/MyCB'}">
-            <i class="lm-margin-r-xs"></i>茶币：{{user.Score}}
+            <i class="lm-margin-r-xs"></i>茶币：{{user.TeaCurrency}}
           </router-link>
         </div>
       </div>

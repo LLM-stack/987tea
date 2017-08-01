@@ -122,23 +122,29 @@
       },
       //获取类别商品
       getProducts(cId){
-        this.axios.post(this.url + '/api/Product/GetCategoryProducts', {categoryId: cId,pageIndex:this.pageIndex,pageSize:this.pageSize}).then((res) => {
-          if (res.data.Code == 200) {
-            this.productList = res.data.Data;
-          } else {
-            Toast(res.data.Data);
-          }
-        }).catch((err) => {
-          Toast('网络请求超时');
-        })
+         this.axios.post(this.url + '/api/Product/GetCategoryProducts', {categoryId: cId,pageIndex:this.pageIndex,pageSize:this.pageSize}).then((res) => {
+            if (res.data.Code == 200) {              
+              this.productList = res.data.Data;
+            } else {
+              Toast(res.data.Data);
+            }
+          }).catch((err) => {
+            Toast('网络请求超时');
+          })
       },
        //获取推荐商品
       getRecommendProduct(){
-          this.axios.get(this.url + '/api/Product/HotProducts').then((res) => {
-          if (res.data.Code == 200) {
-             this.recommend = res.data.Data;
+         if(!!sessionStorage.Recommend){
+            this.recommend=JSON.parse(sessionStorage.Recommend);
+          }else{
+               this.axios.get(this.url + '/api/Product/HotProducts').then((res) => {
+                  if (res.data.Code == 200) {
+                    sessionStorage.setItem("Recommend", JSON.stringify(res.data.Data));
+                    this.recommend = res.data.Data;
+                  }
+                })
           }
-        })
+         
       }
 
     },
