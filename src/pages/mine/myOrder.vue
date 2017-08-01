@@ -31,11 +31,12 @@
 
     </div>
 
-    <div class="noorder" v-show="orderList.length == 0">
-      <img src="../../assets/images/myInfo/order_03.png"/>
-      <p>没有相关的订单</p>
+    <div class="noorder-box">
+      <div class="noorder" v-show="orderList.length == 0">
+        <img src="../../assets/images/myInfo/order_03.png"/>
+        <p>没有相关的订单</p>
+      </div>
     </div>
-
 
     <Mfooter :myCenterCurrent='true'></Mfooter>
   </div>
@@ -273,7 +274,11 @@
     color: #B4282D;
     border-bottom: 3px solid #B4282D;
   }
-
+  .noorder-box{
+    width: 100%;
+    height: 80vh;
+    position: relative;
+  }
   .noorder {
     position: absolute;
     text-align: center;
