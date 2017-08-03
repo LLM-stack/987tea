@@ -16,7 +16,7 @@
         <span class="lm-margin-l-xs">热门搜索</span>
       </div>
       <div class="content lm-margin-t-xs">
-        <div class="keyword" v-for="(item,index) in searchValue" @click="chkSearchValue(index)">{{item.SearchValue}}</div>
+        <div class="keyword" v-for="(item,index) in searchValue" :key='index' @click="chkSearchValue(index)">{{item.SearchValue}}</div>
       </div>
     </div>
 

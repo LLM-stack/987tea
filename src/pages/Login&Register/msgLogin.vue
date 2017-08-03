@@ -138,9 +138,11 @@
             Toast('验证码格式不正确');
             return;
           }
-          this.axios.post(this.url+'/api/Login/SMSLogin',{phone:this.phone,code:this.number}).then((res)=>{
+          let browse=!!!localStorage.browse?'':localStorage.browse;
+          this.axios.post(this.url+'/api/Login/SMSLogin',{phone:this.phone,code:this.number,browse:browse}).then((res)=>{
             if(res.data.Code==200){
                localStorage.setItem("lut", res.data.ExData);
+               localStorage.removeItem('browse');//登录成功后移除浏览过的商品信息
               let instance = Toast(res.data.Data);
               setTimeout(() => {
                 instance.close();

@@ -256,7 +256,6 @@
       //倒计时
       timeDown () {
         var endTime = this.time
-        console.log(endTime);
         endTime.setHours(endTime.getHours() + 3); //给endTime增加3小时
         setInterval(() => {
           let nowTime = new Date()
@@ -312,12 +311,12 @@
       this.$nextTick(function (){
         if(!!this.$route.query.PromotionKey){
           //推广位Id ?PromotionKey=
-          sessionStorage.setItem('PromotionKey',this.$route.query.PromotionKey);
+          localStorage.setItem('PromotionKey',this.$route.query.PromotionKey);
         }
+        this.timeDown();
       })
     },
     created(){
-      
       this.getBannerImg();
       this.getOwnTea();
       this.getGiftsTea();

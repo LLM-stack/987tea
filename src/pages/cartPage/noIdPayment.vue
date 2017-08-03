@@ -30,7 +30,7 @@
           <!--<div class="lm-margin-xl" :class="payType==1?'active':''" @click="checkType(1)"><img src="../../assets/images/cart/wx.png" />微信支付</div>-->
         </div>
       </div>
-    <div class="product" v-for="(item,index) in orderDetails">
+    <div class="product" v-for="(item,index) in orderDetails" :key='index'>
       <img class="product-img" :src="item.ProductImg"/>
       <div class="product-details">
         <div>{{item.ProductName}}</div>
@@ -43,7 +43,7 @@
     </div>
 
     <div class="lm-margin-b-sm lm-margin-t-sm">
-      <div class="coupon" v-for="(dis,index) in discount" @click="chkFavInfo(index)">
+      <div class="coupon" v-for="(dis,index) in discount" @click="chkFavInfo(index)" :key='index'>
         <div>{{dis.FavContent | discountContent}}</div>
         <div class="product-select" :class="{checked:isChecked == index}" ></div>
       </div>
@@ -203,21 +203,25 @@
           ProductOrderId:'0',
           OrderAddress:str_address,
           OrderToPrice:this.discount,
-          ExpandId:sessionStorage.getItem("ExpandId")
+          ExpandId:!!localStorage.getItem("PromotionKey")?localStorage.getItem("PromotionKey"):localStorage.getItem("ExpandId")
         }
          this.axios.post(this.url + '/api/Order/SaveOrder', {strSc:JSON.stringify(sc)}).then((res) => {
           if (res.data.Code == 200) {
-             let tPro=JSON.parse(localStorage.unPay);//下单的localStorage数据
+             let tPro=JSON.parse(sessionStorage.unPay);//下单的localStorage数据
               let touristProduct=tPro.skus;
               let carPro=JSON.parse(localStorage.tourist)//购物车的localStorage数据
               touristProduct.forEach(function(od){
                 //过滤掉下单成功后,下单的localStorage数据
                 carPro.skus = carPro.skus.filter(p => p.ProductSpecId != od.ProductSpecId);
-
+                if(carPro.skus.length==0){
+                  //当购物车中没有商品时移除localStorage.tourist
+                  localStorage.removeItem('tourist');
+                }
               })
             localStorage.tourist=JSON.stringify(carPro);//购物车中的商品重新赋值
-            localStorage.removeItem('unPay');//购物成功后移除订单里的商品
-
+            sessionStorage.removeItem('unPay');//购物成功后移除订单里的商品
+            localStorage.removeItem("PromotionKey")//移除推广位id
+            localStorage.removeItem("ExpandId")//移除活动推广位id
             if(this.payType==0){
                this.$router.push({path: '/paymentCompleted'})
              }
@@ -271,8 +275,8 @@
     mounted(){
       this.$nextTick(function () {
         this.initAddress();
-        if(!!localStorage.unPay){
-            var sc=JSON.parse(localStorage.unPay);
+        if(!!sessionStorage.unPay){
+            var sc=JSON.parse(sessionStorage.unPay);
             this.productOrderId=sc.productOrderId;
             this.orderDetails=sc.skus;
             // if(this.productOrderId!='0'){
@@ -283,7 +287,11 @@
             this.getPreOrderFavInfo();
         }
       })
-    }
+    },
+   beforeDestroy(){
+     //离开组件的时候清楚localStorage
+      sessionStorage.removeItem("unPay");
+   }
   }
 </script>
 

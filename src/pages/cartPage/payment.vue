@@ -29,7 +29,7 @@
           <!--<div class="lm-margin-xl" :class="payType==1?'active':''" @click="checkType(1)"><img src="../../assets/images/cart/wx.png" />微信支付</div>-->
         </div>
       </div>
-      <div class="product" v-for="(item,index) in orderDetails">
+      <div class="product" v-for="(item,index) in orderDetails" :key='index'>
         <img class="product-img" :src="item.ProductImg" />
         <div class="product-details">
           <div>
@@ -38,20 +38,19 @@
           </div>
 
           <div>
-            <span>￥{{item.ProductSpecPrice}}</span>
+            <span><span class="lm-text-red">￥{{item.ProductSpecPrice}}</span>元 <span v-if="teaBMall"> + <span class="lm-text-red">{{item.TeaBPrice}}</span>茶币</span></span>
             <span>x{{item.ProductCount}}</span>
           </div>
         </div>
       </div>
-      <!--优惠券的先注释-->
-      <!--<router-link :to="{path:'/Coupon'}">-->
+     
       <div class="lm-margin-b-sm lm-margin-t-sm">
-        <div class="coupon" v-for="(dis,index) in discount" @click="chkFavInfo(index)">
+        <div class="coupon" v-for="(dis,index) in discount" @click="chkFavInfo(index)" :key='index'>
           <div>{{dis.FavContent | discountContent}}</div>
           <div class="product-select" :class="{checked:isChecked == index}" ></div>
         </div>
       </div>
-      <!--</router-link>-->
+
       <div class="order-details lm-margin-b-lg">
         <div class="lm-margin-b-sm">订单明细：</div>
         <div class="details">
@@ -63,7 +62,11 @@
           <span>运费</span>
           <span>{{freight}}</span>
         </div>
-        <div class="details">
+        <div class="details" v-if="teaBMall">
+          <span>茶币</span>
+          <span>{{teaBPrice}}</span>
+        </div>
+        <div class="details" v-else>
           <span>优惠</span>
           <span>{{subtract}}</span>
         </div>
@@ -104,7 +107,9 @@
         alipay:'',//ali支付form表单信息
         productOrderId:"0",
         discount:[],//优惠记录信息
-        subtract:'0'//优惠折扣价格
+        subtract:'0',//优惠折扣价格
+        teaBMall:false,
+        teaBPrice:'0'
       }
     },
     computed: {
@@ -170,37 +175,77 @@
           TotalPrice:this.total,
           PayType:this.payType,
           ProductCount:this.ProductCount,
-          OrderFrom:2,//订单来源  2标识商城
+          OrderFrom:this.teaBMall?4:2,//订单来源  2标识商城  4表示茶币商城
           AddressId:this.defaultAddress.AdressId,
           ProductSkus:this.orderDetails,
           ProductOrderId:this.productOrderId,
           OrderAddress:str_address,
-          ExpandId:!!sessionStorage.getItem("PromotionKey")?sessionStorage.getItem("PromotionKey"):sessionStorage.getItem("ExpandId")
+          ExpandId:!!localStorage.getItem("PromotionKey")?localStorage.getItem("PromotionKey"):localStorage.getItem("ExpandId")
         }
-       this.axios({
-        url: this.url + '/api/Order/SaveOrder',
-        method: 'post',
-        data:{strSc:JSON.stringify(sc)},
-        headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
-        }).then((res)=>{
-          if(!!res)
-             if (res.data.Code == 200) {
-             if(this.payType==0){
-               this.$router.push({path: '/paymentCompleted'})
-             }
-             if(this.payType==2){
-               this.alipay=res.data.ExData;
-               setTimeout(function() {
-                 document.forms['alipaysubmit'].submit();
-               },0)
+      
+        if(this.teaBMall){
+          this.taaBMallOrder(sc);
+        }else{          
+          this.mallOrder(sc);
+        }
+      
+     },
+     //商城下单
+     mallOrder(sc){
+         this.axios({
+          url: this.url + '/api/Order/SaveOrder',
+          method: 'post',
+          data:{strSc:JSON.stringify(sc)},
+          headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
+          }).then((res)=>{
+            if(!!res)
+              if (res.data.Code == 200) {
+                sessionStorage.removeItem("pay");
+                localStorage.removeItem("PromotionKey")//移除推广位id
+                localStorage.removeItem("ExpandId")//移除活动推广位id
+              if(this.payType==0){                
+                this.$router.push({path: '/paymentCompleted'})
+              }
+              if(this.payType==2){
+                this.alipay=res.data.ExData;               
+                setTimeout(function() {
+                  document.forms['alipaysubmit'].submit();
+                },0)
+              }
+              }else {
+                Toast(res.data.Data);
+              }
 
-               localStorage.removeItem("pay");
-             }
-            }else {
-              Toast(res.data.Data);
-            }
+          })
+     },
+     //茶币商城下单
+     taaBMallOrder(sc){
+        this.axios({
+          url: this.url + '/api/Order/TeaBPay',
+          method: 'post',
+          data:{strSc:JSON.stringify(sc)},
+          headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
+          }).then((res)=>{
+            if(!!res)
+              if (res.data.Code == 200) {
+                sessionStorage.removeItem("pay");
+                localStorage.removeItem("PromotionKey")//移除推广位id
+                localStorage.removeItem("ExpandId")//移除活动推广位id
+              if(this.payType==0){
+               
+                this.$router.push({path: '/paymentCompleted'})
+              }
+              if(this.payType==2){
+                this.alipay=res.data.ExData;
+                setTimeout(function() {
+                  document.forms['alipaysubmit'].submit();
+                },0)
+              }
+              }else {
+                Toast(res.data.Data);
+              }
 
-        })
+          })
      },
      selectAddress() {
        this.$router.push({ path: '/MyAddress/'})
@@ -240,10 +285,10 @@
    },
    mounted(){
      this.$nextTick(()=>{
-        if(!!localStorage.pay){
+        if(!!sessionStorage.pay){
           //继续付款
-          var sc=JSON.parse(localStorage.pay);
-          this.productOrderId=sc.productOrderId;
+          var sc=JSON.parse(sessionStorage.pay);
+          this.productOrderId=sc.productOrderId;          
           this.orderDetails=sc.skus;
           this.ProductCount=this.orderDetails.length;
           if(this.productOrderId!='0'){
@@ -255,18 +300,31 @@
                   this.getDefaultAddress();
               }
           }
-          this.getPreOrderFavInfo();
-
+          if(sc.mallType !='teaBMall'){
+            this.teaBMall=false;
+             this.getPreOrderFavInfo();
+          } else{
+            let totalTeaB=0;
+            this.orderDetails.forEach(function(item){
+              totalTeaB +=item.TeaBPrice;
+            })
+            this.teaBPrice=totalTeaB==0?0:'-'+totalTeaB;
+            this.teaBMall=true;
+          }        
         }
 
         //判断选择的地址是否为空
-        if(!!this.$store.state.receiveAddress){
+        if(!!this.$store.state.receiveAddress){         
           this.defaultAddress=this.$store.state.receiveAddress;
-           this.$store.state.receiveAddress='';
+         
         }
 
      })
+   },
+   beforeDestroy(){
+     
    }
+
   }
 </script>
 

@@ -9,8 +9,8 @@
     </header>
     <div class="mode-box lm-margin-b-sm">
 
-      <div class="mode-list" :style="cl.bg" :class="{'mode-left': index % 2 !== 0}" v-for="(cl,index) in classList" @click="chkClass(index)">
-        <div class="cate-block">{{cl.Name }}</div>
+      <div class="mode-list" :style="{backgroundImage: 'url(' + tag.Img + ')'}" :class="{'mode-left': index % 2 !== 0}" v-for="(tag,index) in tagList" :key="index" @click="chkClass(index)">
+        <div class="cate-block">{{tag.Name |tagName}}</div>
       </div>
 
     </div>
@@ -28,41 +28,15 @@
     },
     data() {
       return {
-        classIndex: '',
-        classList: [
-          {
-            Name: '绿茶',
-            ProductTagId: 'e72bbaa5b578449a8a42def3ef086599',
-            bg: {backgroundImage: 'url('+ require('../../assets/images/category/lvtea.jpg') +')'}
-          },
-          {
-            Name: '红茶',
-            ProductTagId: 'ded2fe1e606c40f3a546cc8d3c5fb9af',
-            bg: {backgroundImage: 'url('+ require('../../assets/images/category/hongtea.jpg') +')'}
-          },
-          {
-            Name: '乌龙茶',
-            ProductTagId: '21e97d03d88f433085126b22cc9f21e5',
-            bg: {backgroundImage: 'url('+ require('../../assets/images/category/wulongtea.jpeg') +')'}
-          },
-          {
-            Name: '白茶',
-            ProductTagId: '93843e7fcccd4ffa9ede6ad3b20aac2c',
-            bg: {backgroundImage: 'url('+ require('../../assets/images/category/baitea.jpg') +')'}
-          },          
-          {
-            Name: '黑茶',
-            ProductTagId: '4e82223c669e462d8877324ad6f7fcf4',
-            bg: {backgroundImage: 'url('+ require('../../assets/images/category/heitea.jpg') +')'}
-          },
-          {
-            Name: '茶具',
-            ProductTagId: '6dd8eae89c9a4fdeac8ebd67aae6ad41',
-            bg: {backgroundImage: 'url('+ require('../../assets/images/category/chaju.jpg') +')'}
-          }
-        ],
+        classIndex: '',       
+        tagList:[],
         productList: []
       };
+    },
+    filters: {
+      tagName(val){
+        return val.split('】')[1];
+      }
     },
     methods: {
       checked(i, classId) {
@@ -73,16 +47,12 @@
       goBack() {
         window.history.go(-1)
       },
-      //获取所有的类别
-      getClassInfo(){
-        this.axios.get(this.url + '/api/ProductClassify/GetProductClassify', {}).then((res) => {
+      //获取分类信息
+      getTagInfo(){
+        this.axios.get(this.url + '/api/ProductClassify/GetProductTags', {}).then((res) => {
           if (res.data.Code == 200) {
-            this.getProducts(this.classList[0].ProductClassifyId);
-          } else {
-            Toast(res.data.Data);
-          }
-        }).catch((err) => {
-          Toast('网络请求超时');
+            this.tagList=res.data.Data;
+          } 
         })
       },
       //获取类别商品
@@ -100,9 +70,14 @@
       chkClass(index){
           this.$router.push({ path: 'mall', query: { index: index }})
       }
-    }
+    },
+     mounted() {
+      this.$nextTick(() => {
+        this.getTagInfo();
+      })
+     }
   }
-  Image</script>
+  </script>
 
 <style scoped>
   header {

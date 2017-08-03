@@ -13,7 +13,7 @@
     </div>
 
     <div class="logistics-info">
-      <div class="logistics-line" v-for="(item,index) in expressList">
+      <div class="logistics-line" v-for="(item,index) in expressList" :key='index'>
         <div class="line-time">
           <p class="lm-font-defult">{{ item.time | timeA }}</p>
           <P class="lm-font-xs lm-text-grey">{{ item.time | timeB }}</P>

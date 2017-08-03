@@ -79,7 +79,6 @@
          let browse=!!!localStorage.browse?'':localStorage.browse;
           this.axios.post(this.url+'/api/Login/LoginUp',{phone:this.phone,pwd:this.password,browse:browse}).then((res)=>{
             if(res.data.Code==200){
-              this.$store.state.user_id=res.data.ExData;//将用户id赋值给数据源
               localStorage.setItem("lut", res.data.ExData);
               localStorage.removeItem('browse');//登录成功后移除浏览过的商品信息
               let instance = Toast(res.data.Data);

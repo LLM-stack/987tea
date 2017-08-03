@@ -4,7 +4,7 @@
       <div slot="title">地址管理</div>
     </Mheader>
 
-    <div class="address" :class="{checked:item.IsDefault==0}" v-for="(item,index) in userAllAddress">
+    <div class="address" :class="{checked:item.IsDefault==0}" v-for="(item,index) in userAllAddress" :key='index'>
       <div>
         <div class="name">{{item.ConsigneeName}}</div>
         <div class="mr" v-if="item.IsDefault==0">默认</div>
@@ -77,7 +77,7 @@
       },
       //选中收货地址
       checkAddress(index) {
-        this.$store.state.receiveAddress = this.userAllAddress[index];
+       this.$store.state.receiveAddress = this.userAllAddress[index];  
         this.$router.go(-1);
       }
     },

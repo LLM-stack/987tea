@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <Mheader>
-      <div slot="title">发帖</div>
+      <div slot="title">发贴</div>
       <div slot="info">发布</div>
     </Mheader>
 

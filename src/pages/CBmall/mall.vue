@@ -7,7 +7,7 @@
     <div class="banner">
       <img src="../../assets/images/cbmall/cbshop_02.png"/>
       <div class="tabs" id="tabs" :class="{fixed:isfixed}">
-        <div class="tab" v-for="(item,index) in tabList" :class="{active:item.isactive}" @click="tabActive(index)">{{ item.Name }}</div>
+        <div class="tab" v-for="(item,index) in tagList" :class="{active:item.isactive}" :key='index' @click="tabActive(index)">{{ item.Name |tagName }}</div>
       </div>
     </div>
     <div class="clear"></div>
@@ -58,67 +58,63 @@
       return {
       	top:'',
         tabs:'',
-        isfixed: false,
-        tabList: [
-          {
-          Name: '绿茶',
-          ProductTagId: 'e72bbaa5b578449a8a42def3ef086599',
-          //bg: {backgroundImage: 'url('+ require('../../assets/images/category/lvtea.jpg') +')'},
-          isactive: true
-          },
-          {
-            Name: '红茶',
-            ProductTagId: 'ded2fe1e606c40f3a546cc8d3c5fb9af',
-           // bg: {backgroundImage: 'url('+ require('../../assets/images/category/hongtea.jpg') +')'},
-            isactive: false
-          },
-          {
-            Name: '乌龙茶',
-            ProductTagId: '21e97d03d88f433085126b22cc9f21e5',
-           // bg: {backgroundImage: 'url('+ require('../../assets/images/category/wulongtea.jpeg') +')'},
-            isactive: false
-          },
-          {
-            Name: '白茶',
-            ProductTagId: '93843e7fcccd4ffa9ede6ad3b20aac2c',
-            //bg: {backgroundImage: 'url('+ require('../../assets/images/category/baitea.jpg') +')'},
-            isactive: false
-          },          
-          {
-            Name: '黑茶',
-            ProductTagId: '4e82223c669e462d8877324ad6f7fcf4',
-            //bg: {backgroundImage: 'url('+ require('../../assets/images/category/heitea.jpg') +')'},
-            isactive: false
-          },
-          {
-            Name: '茶具',
-            ProductTagId: '6dd8eae89c9a4fdeac8ebd67aae6ad41',
-           // bg: {backgroundImage: 'url('+ require('../../assets/images/category/chaju.jpg') +')'},
-            isactive: false
-          }
-        ],
+        isfixed: false,        
+        tagList:[],
         productList:[],//分类商品
         pageIndex:1,
         pageSize:10,
         recommend:[]//推荐商品
       }
     },
+    filters: {
+      tagName(val){
+        return val.split('】')[1];
+      }
+    },
     methods: {
     	tabActive(i) {
-    		this.tabList.forEach(function(value,index,array){
+    		this.tagList.forEach(function(value,index,array){
           array[index].isactive= false;
         });
-    		this.tabList[i].isactive = true;
-        this.getProducts(this.tabList[i].ProductTagId);
+    		this.tagList[i].isactive = true;
+        this.getProducts(this.tagList[i].ProductTagId);
+         
       },
       scroll() {
         this.top = document.body.scrollTop;
-
+        
         if(this.top >= this.tabs){
           this.isfixed = true
         }else {
           this.isfixed = false
         };
+      },
+       //获取分类信息
+      getTagInfo(){
+        this.axios.get(this.url + '/api/ProductClassify/GetProductTags', {}).then((res) => {
+          if (res.data.Code == 200) {
+            this.tagList=res.data.Data;
+            let idx= this.$route.query.index;
+            if(!!!idx){
+              idx=0;
+            } 
+            this.tagList.forEach((item,index)=>{
+              if(idx==index){
+                  this.$set(item, "isactive", true);
+              }else{
+                this.$set(item, "isactive", false);
+              }              
+            })
+            this.tabActive(idx);
+            //跳转选中的标签
+            setTimeout(function(){
+              if(idx>3){
+                document.getElementById("tabs").scrollLeft = document.body.clientWidth;
+              }              
+            },0)
+
+          } 
+        })
       },
       //获取类别商品
       getProducts(cId){
@@ -160,17 +156,11 @@
       this.$nextTick(() => {
         window.addEventListener('scroll', this.scroll);
         this.tabs = document.getElementById('tabs').offsetTop +80;
-
-        let idx= this.$route.query.index;
-        if(idx > 3){
-          document.getElementById("tabs").scrollLeft = document.body.clientWidth;
-        }
-        if(!!!idx){
-          idx=0;
-        }
-        this.tabActive(idx);
         this.getRecommendProduct();
       })
+    },
+    created(){
+        this.getTagInfo();
     },
     beforeDestroy(){
       window.removeEventListener('scroll', this.scroll);
@@ -199,7 +189,7 @@
   }
   .banner .tabs {
     width: 100%;
-    height: 1.6rem;
+    height: 1.8rem;
     margin-bottom: 0.5rem;
     line-height: 1.6rem;
     background-color: #fff;

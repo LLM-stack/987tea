@@ -47,7 +47,7 @@
     </div>
 
     <div class="tab">
-      <div class="navbar-item" v-for="(item, index) in tab" @click="selected(index)"
+      <div class="navbar-item" v-for="(item, index) in tab" @click="selected(index)" :key='index' 
            :class="{isSelected:index == tabIndex}">{{ item.tabName }}
       </div>
     </div>
@@ -58,12 +58,12 @@
       </div>
       <div v-if="tabIndex == 1">
         <div class="parameter">
-          <div class="parameter-list" v-for="(item,index) in productParams">{{item.ParamKey}}：{{item.ParamValue}}</div>
+          <div class="parameter-list" v-for="(item,index) in productParams" :key='index'>{{item.ParamKey}}：{{item.ParamValue}}</div>
         </div>
       </div>
       <div v-if="tabIndex == 2">
         <div class="evaluate-list">
-          <div class="evaluate" v-for="(item,index) in productDesc">
+          <div class="evaluate" v-for="(item,index) in productDesc" :key='index'>
             <div>
               <span class=" lm-text-grey">{{item.UserName}}</span>
             </div>
@@ -102,7 +102,7 @@
           <div>规格</div>
           <div class="spec-box">
 
-            <div class="spec" v-for="(item, index) in productSpec" @click="checkSpec(index)"
+            <div class="spec" v-for="(item, index) in productSpec" @click="checkSpec(index)" :key='index' 
                  :class="index == checkIndex?'spec-checked':''">{{item.ShortName}}
             </div>
 
@@ -210,7 +210,7 @@
             this.specImg = this.product.HeadImg;
             this.specPrice = this.product.Price;
             this.specStock = this.product.AllStock;     
-            this.getBrowse();      
+            //this.getBrowse();      
           } else {
             Toast(res.data.Data);
           }
@@ -313,7 +313,7 @@
                 }
               })
         }
-
+        //加入购物车
         if (this.isCar == 1) {
 
           if(!!localStorage.lut){
@@ -375,11 +375,13 @@
            }
           }
         }
+        //立即下单
         if (this.isCar == 2) {
           if (!!localStorage.lut) {//用户登录的时候
             //定义下单参数
             let sku = [{
               ShoppingCarId: 0,
+              ProductId:this.productId,
               ProductSpecId: this.specId,
               ProductName: this.specName,
               ProductCount: this.productNum,
@@ -390,7 +392,7 @@
               productOrderId: "0",
               skus: sku
             }
-            localStorage.setItem("pay", JSON.stringify(sc));
+            sessionStorage.setItem("pay", JSON.stringify(sc));
             this.$router.push({path: '/Payment'})
           } else {
             //游客身份购买
@@ -498,7 +500,7 @@
           let browses=JSON.parse(localStorage.browse);
           let bo_class=false;    
           let bo_tag=false;       
-          if(browses.productClass.length>100 &&browse.productTags.length>100){
+          if(browses.productTags.length>100){
             //当localStorage的存储的长度超过100后 清空localStorage
             localStorage.removeItem('browse');
           }else{
@@ -544,7 +546,11 @@
         this.getProductEstimates();
         this.isFavourite(); 
       });
-    }
+    },
+    beforeDestroy(){
+     
+      this.getBrowse(); 
+   }
    
   }
 </script>

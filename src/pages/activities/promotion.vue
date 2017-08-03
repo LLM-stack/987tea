@@ -48,7 +48,7 @@
       </div>
     </div>
     <div class="tab-box" id="tabBox" v-if="isfixed">
-      <div class="tab" :class="{active:activeIdx == index}" v-for="(item,index) in tabs" @click="select(index)">
+      <div class="tab" :class="{active:activeIdx == index}" v-for="(item,index) in tabs" :key='index' @click="select(index)">
         {{ item.tabName }}
       </div>
     </div>
@@ -61,7 +61,7 @@
       <div class="lm-font-sm lm-text-grey">超值低价 多款茶类任你选</div>
     </div>
     <div class="scroll-bar">
-      <div class="scroll-cont" v-for="(t,index) in timeProducts" @click.stop="chkDetail(t.ProductId)">
+      <div class="scroll-cont" v-for="(t,index) in timeProducts" :key='index' @click.stop="chkDetail(t.ProductId)">
         <div class="cont-img">
           <img v-lazy="t.HeadImg"/>
           <div class="cont-name">{{t.Name}}</div>
@@ -84,7 +84,7 @@
       <div class="lm-font-sm lm-text-grey">热卖爆款 感恩放价</div>
     </div>
     <div class="pro-list">
-      <div class="pro-box" v-for="(exp,index) in expProducts" :class="{'pro-left' : index % 2 !== 0}" @click.stop="chkDetail(exp.ProductId)">
+      <div class="pro-box" v-for="(exp,index) in expProducts" :class="{'pro-left' : index % 2 !== 0}" :key='index' @click.stop="chkDetail(exp.ProductId)">
         <div class="pro-img">
           <img v-lazy="exp.HeadImg"/>
         </div>
@@ -108,7 +108,7 @@
       <div class="lm-font-sm lm-text-grey">独具风味 送礼佳品</div>
     </div>
     <div class="pro-list">
-      <div class="pro-box" v-for="(had,index) in hadProducts" :class="{'pro-left' : index % 2 !== 0}" @click="chkDetail(had.ProductId)">
+      <div class="pro-box" v-for="(had,index) in hadProducts" :class="{'pro-left' : index % 2 !== 0}" :key='index' @click="chkDetail(had.ProductId)">
         <div class="pro-img">
           <img v-lazy="had.HeadImg"/>
         </div>
@@ -167,7 +167,7 @@
           <div class="spec-box">
 
             <div class="spec" v-for="(sku, index) in productSpec" @click="checkSpec(index)"
-                 :class="index == checkIndex?'spec-checked':''">{{sku.ShortName}}
+                 :class="index == checkIndex?'spec-checked':''" :key='index'>{{sku.ShortName}}
             </div>
 
           </div>
@@ -477,7 +477,7 @@
                   localStorage.removeItem('lut');
                   this.touristAddCar(sku);
                 }else{
-                  userAddCar();
+                  this.userAddCar();
                 }
               })
         }else{
@@ -627,7 +627,7 @@
       this.$nextTick(() => {
           if(!!this.$route.query.Expand){
             //存储推广位ID  ?Expand=
-            sessionStorage.setItem("ExpandId",this.$route.query.Expand );
+            localStorage.setItem("ExpandId",this.$route.query.Expand );
           }           
           window.addEventListener('scroll', this.scroll);
           this.getTimelimit();

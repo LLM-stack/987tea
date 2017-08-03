@@ -5,7 +5,7 @@
     </Mheader>
 
     <div class="cart-list">
-      <div class="product" v-for="(item,index) in productlist">
+      <div class="product" v-for="(item,index) in productlist" :key='index'>
         <div class="product-select" :class="{checked:item.ischecked}" @click="check(item)"></div>
         <div class="product-img">
           <img :src="item.HeadImg" alt="">
@@ -257,11 +257,11 @@
           }
           if(!!!localStorage.lut){
             //游客购买
-              localStorage.setItem("unPay", JSON.stringify(sc));              
+              sessionStorage.setItem("unPay", JSON.stringify(sc));              
               this.$router.push({path: '/noIdPayment'})
           }else{
             //已经登录的用户购买
-              localStorage.setItem("pay", JSON.stringify(sc));
+              sessionStorage.setItem("pay", JSON.stringify(sc));
               this.$router.push({path: '/Payment'})
           }
           

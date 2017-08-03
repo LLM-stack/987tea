@@ -57,7 +57,7 @@
             <div class="mode-title">{{ item.Title }}</div>
             <div class="mode-price ">
               <span class="lm-text-red">￥{{ item.Price }}元<span class="cb-price">{{'+' + item.TeaPrice +'茶币' }}</span></span>
-              <span class="mode-btn">立即购买</span>
+              <span class="mode-btn" @click='goToPay(item)'>立即购买</span>
             </div>
           <!--</router-link>-->
         </div>       
@@ -80,37 +80,7 @@
       Mmode
     },
     data() {
-      return {
-        modeList: [
-          {
-            title: '正品碧螺春',
-            dp: '2017新品上市',
-            price: '99',
-            cbPrice: '999',
-            imgSrc: require('../../assets/images/goods/987tea_20.png')
-          },
-          {
-            title: '正品金骏眉',
-            dp: '尝鲜价 买一送一',
-            price: '99',
-            cbPrice: '123',
-            imgSrc: require('../../assets/images/goods/987tea_06.png')
-          },
-          {
-            title: '正品正山小种',
-            dp: '经典味道 值得一试',
-            price: '99',
-            cbPrice: '123',
-            imgSrc: require('../../assets/images/goods/987tea_25.png')
-          },
-          {
-            title: '正品铁观音',
-            dp: '好茶待寻知己',
-            price: '99',
-            cbPrice: '123',
-            imgSrc: require('../../assets/images/goods/987tea_27.png')
-          }
-        ],
+      return {       
         pageIndex: 0,
         loading: false,
         productList:[],
@@ -171,7 +141,29 @@
               }
             }
           }) 
-        }
+      },
+      goToPay(item){       
+          //定义下单参数
+            let sku = [{
+              ShoppingCarId: 0,
+              ProductSpecId: item.ProductSpecId,
+              ProductId:item.ProductId,
+              ShortName:item.Detail,
+              ProductName: item.Title,
+              ProductCount: 1,
+              ProductImg: item.Img,
+              ProductSpecPrice: item.Price,
+              TeaBPrice:item.TeaPrice
+            }];
+            let sc={
+              productOrderId:"0",
+              mallType:'teaBMall',
+              skus:sku
+            }
+            //已经登录的用户购买
+            sessionStorage.setItem("pay", JSON.stringify(sc));
+            this.$router.push({path: '/Payment'})
+      }
     },
     mounted(){
       this.$nextTick(function (){

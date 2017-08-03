@@ -23,7 +23,7 @@
       <div class="pay-cont"  v-infinite-scroll="getTBLog"
          infinite-scroll-disabled="loading"
          infinite-scroll-distance="10">
-        <div class="pay-deta" v-for="(item,index) in tbList">
+        <div class="pay-deta" v-for="(item,index) in tbList" :key='index'>
           <div class="left">
             <div>{{item.Explain}}</div>
             <div class="lm-font-xs lm-text-grey">{{item.CreateTime | formatTime}}</div>

@@ -4,7 +4,7 @@
       <div slot="title" id="t">优惠券</div>
     </Mheader>
     <div class="coupons" >
-      <div class="coupon" :class="{'unable':item.CouponStatus!=1}" v-for="(item,index) in couponList">
+      <div class="coupon" :class="{'unable':item.CouponStatus!=1}" v-for="(item,index) in couponList" :key='index'>
         <div class="coupon-box">
           <div>
             <div>

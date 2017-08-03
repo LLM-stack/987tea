@@ -4,7 +4,7 @@
       <div slot="title">我的订单</div>
     </Mheader>
     <div class="tabs">
-      <div class="tab" v-for="(item,index) in tabList" :class="{active:activeIdx == index}" @click="tabActive(index)">{{
+      <div class="tab" v-for="(item,index) in tabList" :class="{active:activeIdx == index}" :key='index' @click="tabActive(index)">{{
         item.tabName }}
       </div>
     </div>
@@ -181,7 +181,8 @@
                 ShortName:item.ShortName,
                 ProductCount: item.ProductCount,
                 ProductImg: item.HeadImg,
-                ProductSpecPrice: item.SalePrice
+                ProductSpecPrice: item.SalePrice,
+                TeaBPrice:0
               }
               skus.push(sku);
           });
@@ -202,9 +203,10 @@
             productOrderId:this.orderList[index].ProductOrderId,
             payType:this.orderList[index].PayType,
             receive:receiveArea,
-            skus:skus
-          }
-          localStorage.setItem("pay", JSON.stringify(sc));
+            skus:skus,
+            mallType:this.orderList[index].OrderFrom===4?'teaBMall':''
+          }         
+          sessionStorage.setItem("pay", JSON.stringify(sc));
           this.$router.push({path: '/Payment'})
       },
       //去评价
