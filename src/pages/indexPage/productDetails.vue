@@ -143,10 +143,10 @@
           {tabName: "参数"},
           {tabName: "评论(132)"}
         ],
-        product: '',
-        productSpec: '',
-        productDesc: [],
-        productParams: '',
+        product: '',//商品信息
+        productSpec: '',//商品sku
+        productDesc: [],//商品评论
+        productParams: '',//商品参数
         //评论下拉加载
         pageIndex: 1,
         pageSize: 50,
@@ -209,12 +209,11 @@
             //设置选择商品规格的默认参数
             this.specImg = this.product.HeadImg;
             this.specPrice = this.product.Price;
-            this.specStock = this.product.AllStock;
+            this.specStock = this.product.AllStock;     
+            this.getBrowse();      
           } else {
             Toast(res.data.Data);
           }
-        }).catch((err) => {
-          Toast('网络请求超时');
         })
       },
       //获取商品SKU
@@ -235,8 +234,6 @@
           } else {
             Toast(res.data.Data);
           }
-        }).catch((err) => {
-          Toast('网络请求超时');
         })
       },
       //获取商品参数
@@ -247,8 +244,6 @@
           } else {
             Toast(res.data.Data);
           }
-        }).catch((err) => {
-          Toast('网络请求超时');
         })
       },
       //收藏商品
@@ -483,21 +478,74 @@
               } else {
                 Toast(res.data.Data);
               }
-            }).catch((err) => {
-              Toast('网络请求超时');
             })
         }
 
+      },
+      //组建浏览记录
+      getBrowse(){
+        let pClass=[]; 
+        let pTags=[];        
+        let productClass={          
+          productClassId:this.product.ProductClassifyId,          
+          count:1    
+        }
+        let productTag={
+          productTagId:this.product.ProductTagIds,
+          count:1
+        }
+        if(!!localStorage.browse){
+          let browses=JSON.parse(localStorage.browse);
+          let bo_class=false;    
+          let bo_tag=false;       
+          if(browses.productClass.length>100 &&browse.productTags.length>100){
+            //当localStorage的存储的长度超过100后 清空localStorage
+            localStorage.removeItem('browse');
+          }else{
+             browses.productClass.forEach(function(item){
+              if(item.productClassId==productClass.productClassId){
+                item.count+=productClass.count;//相同的商品标签就增加数量
+                bo_class=true;
+              }              
+            });
+            if(!bo_class){
+              browses.productClass.push(productClass);
+            }
+             browses.productTags.forEach(function(item){
+              if(item.productTagId==productTag.productTagId){
+                item.count+=productTag.count;//相同的商品标签就增加数量
+                bo_tag=true;
+              }              
+            });
+            if(!bo_tag){
+              browses.productTags.push(productTag);
+            }
+
+            localStorage.browse=JSON.stringify(browses);
+          }
+         
+        }else{
+          pClass.push(productClass);
+          pTags.push(productTag);
+          let blog={
+            productClass:pClass,
+            productTags:pTags
+          }
+          localStorage.setItem('browse',JSON.stringify(blog));
+        }
+       
       }
     },
-    mounted: function () {
+  
+    mounted () {
       this.$nextTick(() => {
-        this.getProduct();
+        this.getProduct();        
         this.getParams();
         this.getProductEstimates();
-        this.isFavourite();
+        this.isFavourite(); 
       });
     }
+   
   }
 </script>
 

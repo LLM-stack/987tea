@@ -14,6 +14,11 @@ import Payment from '@/pages/cartPage/payment'
 import NoIdPayment from '@/pages/cartPage/noIdPayment'
 import PaymentCompleted from '@/pages/cartPage/paymentCompleted'
 
+// 茶圈子
+import TcHome from '@/pages/teaCommunity/tcHome'
+import TcContent from '@/pages/teaCommunity/tcContent'
+import Post from '@/pages/teaCommunity/post'
+
 // 活动页
 import OnSale from '@/pages/activities/onSale'
 import Promotion from '@/pages/activities/promotion'
@@ -79,12 +84,23 @@ export default new Router({
       path: '/PaymentCompleted',
       component: PaymentCompleted
     },
+    // 茶圈子
+    {
+      path: '/TcHome',
+      component: TcHome
+    }, {
+      path: '/TcContent',
+      component: TcContent
+    }, {
+      path: '/Post',
+      component: Post
+    },
     // 活动页
     {
       path: '/onSale',
       component: OnSale
     },{
-      path: '/Promotion/:id/Expand/:expId',
+      path: '/Promotion/:id',
       component: Promotion
     },
     //登录注册

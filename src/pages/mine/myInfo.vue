@@ -3,14 +3,14 @@
     <Mheader></Mheader>
     <div class="head">
       <div class="avatar lm-margin-r-lg">
-        <router-link :to="{path: '/MySet'}">
+        <router-link to="/MySet">
           <img :src="user.HeadImg" alt="">
         </router-link>
       </div>
       <div class="info ">
         <div class="name lm-margin-l-sm">{{user.UserName}}</div>
         <div class="cb lm-margin-t-xs">
-          <router-link :to="{path:'/MyCB'}">
+          <router-link to="/MyCB">
             <i class="lm-margin-r-xs"></i>茶币：{{user.TeaCurrency}}
           </router-link>
         </div>
@@ -20,25 +20,25 @@
     <div class="my-order">
       <div class="title">我的订单</div>
       <div class="order-control">
-        <router-link :to="{path: '/MyOrder/待付款/1'}">
+        <router-link to="/MyOrder/待付款/1">
           <div class="control-icon" >
             <img src="../../assets/images/myInfo/icon.1.png"/>
             <div>待付款</div>
           </div>
           </router-link>
-        <router-link :to="{path: '/MyOrder/待发货/2'}">
+        <router-link to="/MyOrder/待发货/2">
           <div class="control-icon">
             <img src="../../assets/images/myInfo/icon.2.png"/>
             <div>待发货</div>
           </div>
         </router-link>
-        <router-link :to="{path: '/MyOrder/待收货/3'}">
+        <router-link to="/MyOrder/待收货/3">
           <div class="control-icon">
             <img src="../../assets/images/myInfo/icon.3.png"/>
             <div>待收货</div>
           </div>
         </router-link>
-        <router-link :to="{path: '/MyOrder/待评价/4'}">
+        <router-link to="/MyOrder/待评价/4">
           <div class="control-icon">
             <img src="../../assets/images/myInfo/icon.4.png"/>
             <div>待评价</div>
@@ -50,25 +50,25 @@
     <div class="my-order">
       <div class="title">我的服务</div>
       <div class="server-control ">
-        <router-link :to="{path: '/CBmall'}">
+        <router-link to="/CBmall">
           <div class="control-icon">
             <img src="../../assets/images/myInfo/icon.5.png"/>
             <div>茶币商城</div>
           </div>
         </router-link>
-        <router-link :to="{path: '/MyCollection'}">
+        <router-link to="/MyCollection">
           <div class="control-icon">
             <img src="../../assets/images/myInfo/icon.6.png"/>
             <div>我的收藏</div>
           </div>
         </router-link>
-        <router-link :to="{path: '/MyAddress'}">
+        <router-link to="/MyAddress">
         <div class="control-icon">
           <img src="../../assets/images/myInfo/icon.7.png"/>
           <div>地址管理</div>
         </div>
         </router-link>
-        <router-link :to="{path: '/Coupon'}">
+        <router-link to="/Coupon">
         <div class="control-icon">
           <img src="../../assets/images/myInfo/icon.8.png"/>
           <div>优惠券</div>
@@ -90,7 +90,7 @@
           <img src="../../assets/images/myInfo/icon.11.png"/>
           <div>我的客服</div>
         </div>
-        <router-link :to="{path: '/CommentsBox'}">
+        <router-link to="/CommentsBox">
         <div class="control-icon">
           <img src="../../assets/images/myInfo/icon.12.png"/>
           <div>意见箱</div>
@@ -98,7 +98,6 @@
         </router-link>
       </div>
     </div>
-
 
     <Mfooter :myCenterCurrent='true'></Mfooter>
   </div>
@@ -134,7 +133,7 @@
                 Toast(res.data.Data);
               }
             }
-          }) 
+          })
         }
 
     },

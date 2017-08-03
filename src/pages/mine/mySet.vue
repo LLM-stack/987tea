@@ -34,29 +34,29 @@
       </div>
     </div>
     <div class="info">
-      <router-link :to="{path:'/MyAddress'}">
+      <router-link to="/MyAddress">
       <div class="info-list arrow">
         收货地址 <img src="../../assets/images/arrow.png" />
       </div>
       </router-link>
-      <router-link :to="{path:'/ResetPassword'}">
+      <router-link to="/ResetPassword">
       <div class="info-list arrow">
         改密码 <img src="../../assets/images/arrow.png" />
       </div>
       </router-link>
     </div>
     <div class="info">
-      <router-link :to="{path:'/preferences/选择你喜欢的茶/1'}">
+      <router-link to="/preferences/选择你喜欢的茶/1">
       <div class="info-list arrow">
         喜欢的茶 <img src="../../assets/images/arrow.png" />
       </div>
       </router-link>
-      <router-link :to="{path:'/preferences/选择你常用的泡茶器具/2'}">
+      <router-link to="/preferences/选择你常用的泡茶器具/2">
       <div class="info-list arrow">
        泡茶茶具 <img src="../../assets/images/arrow.png" />
       </div>
       </router-link>
-      <router-link :to="{path:'/preferences/请选择每月喝茶量/3'}">
+      <router-link to="/preferences/请选择每月喝茶量/3">
       <div class="info-list arrow">
         喝茶量 <img src="../../assets/images/arrow.png" />
       </div>

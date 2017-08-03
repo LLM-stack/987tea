@@ -625,10 +625,10 @@
      },
     mounted() {
       this.$nextTick(() => {
-          if(!!this.$route.params.expId){
-            //存储推广位ID
-            sessionStorage.setItem("ExpandId",this.$route.params.expId );
-          }
+          if(!!this.$route.query.Expand){
+            //存储推广位ID  ?Expand=
+            sessionStorage.setItem("ExpandId",this.$route.query.Expand );
+          }           
           window.addEventListener('scroll', this.scroll);
           this.getTimelimit();
           this.getExplosion();

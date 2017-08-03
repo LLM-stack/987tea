@@ -42,6 +42,7 @@
   //import { MessageBox } from 'mint-ui';
   import { Toast } from 'mint-ui';
 
+
   export default {
     components: {
       Mheader,
@@ -54,7 +55,7 @@
       }
     },
     methods: {
-        login(){//登录
+        login(){//登录         
            if(!!!this.phone){
            Toast('手机号不能为空');
             return;
@@ -75,10 +76,12 @@
             Toast('密码的格式错误');
             return;
           }
-          this.axios.post(this.url+'/api/Login/LoginUp',{phone:this.phone,pwd:this.password}).then((res)=>{
+         let browse=!!!localStorage.browse?'':localStorage.browse;
+          this.axios.post(this.url+'/api/Login/LoginUp',{phone:this.phone,pwd:this.password,browse:browse}).then((res)=>{
             if(res.data.Code==200){
               this.$store.state.user_id=res.data.ExData;//将用户id赋值给数据源
               localStorage.setItem("lut", res.data.ExData);
+              localStorage.removeItem('browse');//登录成功后移除浏览过的商品信息
               let instance = Toast(res.data.Data);
               setTimeout(() => {
                 instance.close();

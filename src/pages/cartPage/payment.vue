@@ -175,7 +175,7 @@
           ProductSkus:this.orderDetails,
           ProductOrderId:this.productOrderId,
           OrderAddress:str_address,
-          ExpandId:sessionStorage.getItem("ExpandId")
+          ExpandId:!!sessionStorage.getItem("PromotionKey")?sessionStorage.getItem("PromotionKey"):sessionStorage.getItem("ExpandId")
         }
        this.axios({
         url: this.url + '/api/Order/SaveOrder',

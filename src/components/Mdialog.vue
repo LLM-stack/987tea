@@ -23,10 +23,7 @@
             default: false
           },
           prompt: false
-        },
-      methods: {
-
-      }
+        }
     }
 </script>
 

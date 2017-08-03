@@ -288,7 +288,6 @@
       //跳转链接
       jump(val){
           if(!!val){
-            console.log(val)
            //this.$router.push({path: val})
            window.location.href=val;
           }
@@ -312,7 +311,8 @@
     mounted(){
       this.$nextTick(function (){
         if(!!this.$route.query.PromotionKey){
-          sessionStorage.setItem('promotionKey',this.$route.query.PromotionKey);
+          //推广位Id ?PromotionKey=
+          sessionStorage.setItem('PromotionKey',this.$route.query.PromotionKey);
         }
       })
     },

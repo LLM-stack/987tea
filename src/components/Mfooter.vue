@@ -1,18 +1,18 @@
 <template>
     <nav class="nav-bottom">
-      <router-link :to="{path: '/'}">
+      <router-link to="/">
         <span class="nav-icon nav-icon-index" :class="{ indexCurrent: indexCurrent }"></span>
       </router-link>
-      <router-link :to="{path:'/mall'}">
+      <router-link to="/Mall">
         <span class="nav-icon nav-icon-shop" :class="{ shopCurrent: shopCurrent }"></span>
       </router-link>
-      <a>
-        <span class="nav-icon nav-icon-world" :class="{ worldCurrent: worldCurrent }"></span>
-      </a>
-      <router-link :to="{path: '/Cart'}">
+      <router-link to="/TcHome">
+      <span class="nav-icon nav-icon-world" :class="{ worldCurrent: worldCurrent }"></span>
+      </router-link>
+      <router-link to="/Cart">
         <span class="nav-icon nav-icon-cart" :class="{ cartCurrent: cartCurrent }"></span>
       </router-link>
-      <router-link :to="{path: '/MyInfo'}">
+      <router-link to="/MyInfo">
         <span class="nav-icon nav-icon-myCenter" :class="{ myCenterCurrent: myCenterCurrent }"></span>
       </router-link>
     </nav>

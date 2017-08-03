@@ -250,6 +250,9 @@
   .lm-margin-l-xs {
     margin-left: 0.2rem;
   }
+  .lm-padding-t-sm{
+    padding-top: 0.4rem;
+  }
   /*点击更多*/
   .more-comment {
     color: #aaa;
