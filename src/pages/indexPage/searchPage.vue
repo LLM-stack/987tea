@@ -7,7 +7,7 @@
         <input type="text" placeholder="搜索你喜欢的商品" v-model="searchName"/>
       </div>
 
-      <div class="icon" @click="searchProducts">搜索</div>
+      <div class="icon" @click="searchProducts(1)">搜索</div>
 
     </header>
     <div class="box" v-if="!isSearch && searchValue.length>0">
@@ -20,7 +20,7 @@
       </div>
     </div>
 
-    <div class="box mode" v-if="isSearch" v-infinite-scroll="searchProducts"
+    <div class="box mode" v-if="isSearch" v-infinite-scroll="loadMore"
          infinite-scroll-disabled="loading"
          infinite-scroll-distance="10">
       <div class="mode-box">
@@ -75,7 +75,8 @@
         loading: false,
         productList:[],//搜索结果商品
         isSearch:false,
-        recommend:[]//推荐商品
+        recommend:[],//推荐商品
+        oldSearch:''
       }
     },
     methods: {
@@ -96,18 +97,23 @@
         }
          
       },
+      loadMore(){
+          this.loading=true;
+           this.pageIndex++;
+           this.searchProducts(this.pageIndex);
+      },
       //搜索商品
-      searchProducts(){       
+      searchProducts(val){       
         if(!!!this.searchName){
             this.isSearch=false;
             return;
-        }
-        this.loading=true;
-        this.pageIndex++;
-        this.axios.post(this.url + '/api/Product/SearchProducts',{key:this.searchName,starIndex:this.pageIndex,endIndex:this.pageSize}).then((res) => {
+        }       
+             
+        this.axios.post(this.url + '/api/Product/SearchProducts',{key:this.searchName,starIndex:val,endIndex:this.pageSize}).then((res) => {
           if (res.data.Code == 200) {
             this.isSearch=true;
-            if (this.pageIndex == 1) {
+            this.oldSearch=this.searchName;
+            if (val == 1) {
               this.productList = res.data.Data;
               this.loading = false;
             } else {

@@ -24,7 +24,10 @@ const mutations = {
   showUserName(state){
     alert(state.cc);
   }
+  
 }
+
+
 
 
 export default new Vuex.Store({

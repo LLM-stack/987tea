@@ -81,7 +81,7 @@
           <div>共选择 <span class="lm-text-red">{{ProductCount}}</span>件商品</div>
           <div>总金额：<span class="lm-text-red">￥{{total}}</span> 元</div>
         </div>
-        <div class="topay" @click="oncePayment">立即付款</div>
+        <div class="topay" :class="{disableTap:isOnce}" @click="oncePayment">立即付款</div>
       </div>
 
     </div>
@@ -109,7 +109,8 @@
         discount:[],//优惠记录信息
         subtract:'0',//优惠折扣价格
         teaBMall:false,
-        teaBPrice:'0'
+        teaBPrice:'0',
+        isOnce:false
       }
     },
     computed: {
@@ -159,7 +160,8 @@
         this.payType=val;
      },
      //提交订单支付
-     oncePayment(){
+     oncePayment(){      
+       this.isOnce=true;
        //定义地址参数
         let str_address={
           AddressId:this.defaultAddress.AdressId,
@@ -180,7 +182,7 @@
           ProductSkus:this.orderDetails,
           ProductOrderId:this.productOrderId,
           OrderAddress:str_address,
-          ExpandId:!!localStorage.getItem("PromotionKey")?localStorage.getItem("PromotionKey"):localStorage.getItem("ExpandId")
+          ExpandId:!!sessionStorage.getItem("PromotionKey")?sessionStorage.getItem("PromotionKey"):sessionStorage.getItem("ExpandId")
         }
       
         if(this.teaBMall){
@@ -199,20 +201,23 @@
           headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
           }).then((res)=>{
             if(!!res)
-              if (res.data.Code == 200) {
+              if (res.data.Code == 200) {                
                 sessionStorage.removeItem("pay");
-                localStorage.removeItem("PromotionKey")//移除推广位id
-                localStorage.removeItem("ExpandId")//移除活动推广位id
-              if(this.payType==0){                
+                sessionStorage.removeItem("PromotionKey")//移除推广位id
+                sessionStorage.removeItem("ExpandId")//移除活动推广位id
+              if(this.payType==0){ 
+                this.isOnce=false;               
                 this.$router.push({path: '/paymentCompleted'})
               }
               if(this.payType==2){
-                this.alipay=res.data.ExData;               
+                this.alipay=res.data.ExData;                             
                 setTimeout(function() {
+                  this.isOnce=false;  
                   document.forms['alipaysubmit'].submit();
                 },0)
               }
               }else {
+                this.isOnce=false;
                 Toast(res.data.Data);
               }
 
@@ -227,21 +232,23 @@
           headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
           }).then((res)=>{
             if(!!res)
-              if (res.data.Code == 200) {
+              if (res.data.Code == 200) {                
                 sessionStorage.removeItem("pay");
                 localStorage.removeItem("PromotionKey")//移除推广位id
                 localStorage.removeItem("ExpandId")//移除活动推广位id
               if(this.payType==0){
-               
+               this.isOnce=false;
                 this.$router.push({path: '/paymentCompleted'})
               }
               if(this.payType==2){
-                this.alipay=res.data.ExData;
+                this.alipay=res.data.ExData;                
                 setTimeout(function() {
+                  this.isOnce=false;
                   document.forms['alipaysubmit'].submit();
                 },0)
               }
               }else {
+                this.isOnce=false;
                 Toast(res.data.Data);
               }
 

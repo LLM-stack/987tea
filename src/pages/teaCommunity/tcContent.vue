@@ -15,6 +15,7 @@
         </div>
       </div>
       <div class="content-p lm-font-sm">
+        <h1 class="lm-text-black lm-font-defult">标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题</h1>
         #主体#内容内容内容内容内容内容内容内容容内容内容内容内容内容内容内容内容内容内容内容内容容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容容内容内容内容内容内容内容内容内容内容内容内容内容
       </div>
       <div class="content-img flex-alig-center">
@@ -120,7 +121,6 @@
         </div>
       </div>
     </transition>
-    <div class="modal" v-if="dialog"></div>
 
     <Mfooter :worldCurrent='true'></Mfooter>
   </div>
@@ -249,7 +249,9 @@
     margin: 0.2rem 0;
     color: #777;
   }
-
+  .content-p > h1{
+    font-weight: 600;
+  }
   .content-reply img {
     margin-right: 0.1rem;
     width: 0.6rem;

@@ -6,9 +6,9 @@
       <router-link to="/Mall">
         <span class="nav-icon nav-icon-shop" :class="{ shopCurrent: shopCurrent }"></span>
       </router-link>
-      <router-link to="/TcHome">
+      <!-- <router-link to="/TcHome">
       <span class="nav-icon nav-icon-world" :class="{ worldCurrent: worldCurrent }"></span>
-      </router-link>
+      </router-link> -->
       <router-link to="/Cart">
         <span class="nav-icon nav-icon-cart" :class="{ cartCurrent: cartCurrent }"></span>
       </router-link>

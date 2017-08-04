@@ -627,7 +627,7 @@
       this.$nextTick(() => {
           if(!!this.$route.query.Expand){
             //存储推广位ID  ?Expand=
-            localStorage.setItem("ExpandId",this.$route.query.Expand );
+            sessionStorage.setItem("ExpandId",this.$route.query.Expand );
           }           
           window.addEventListener('scroll', this.scroll);
           this.getTimelimit();

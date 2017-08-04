@@ -6,7 +6,7 @@
 
     <div class="box">
       <textarea class="box-text" placeholder="在这里写下您给我们的意见或建议！十分感谢您对我们的支持。" maxlength="300" v-model="content"></textarea>
-      <div class="btn" @click="submitSuggest">提交</div>
+      <div class="btn" :class="{disableTap:isOnce}" @click="submitSuggest">提交</div>
     </div>
 
 
@@ -26,12 +26,14 @@
       Mfooter
     },data(){
     	return {
-        content:null
+        content:null, 
+        isOnce:false
       }
     },
     methods: {
 
         submitSuggest(){
+          this.isOnce=true;
           if(!!!this.content){
             Toast('请填写您的意见或建议后再提交！');
             return;
@@ -44,13 +46,15 @@
             headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
           }).then((res)=>{
              if(!!res){
-               if (res.data.Code == 200) {
+               if (res.data.Code == 200) {                 
                   let instance = Toast(res.data.Data);
                   setTimeout(() => {
                     instance.close();
+                    this.isOnce=false;
                     this.$router.replace({ path: '/MyInfo'});
                   }, 1000);
                 } else {
+                   this.isOnce=false;
                   Toast(res.data.Data);
                 }
              }

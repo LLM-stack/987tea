@@ -311,7 +311,7 @@
       this.$nextTick(function (){
         if(!!this.$route.query.PromotionKey){
           //推广位Id ?PromotionKey=
-          localStorage.setItem('PromotionKey',this.$route.query.PromotionKey);
+          sessionStorage.setItem('PromotionKey',this.$route.query.PromotionKey);
         }
         this.timeDown();
       })

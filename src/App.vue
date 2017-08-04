@@ -140,6 +140,9 @@
     margin-top: 1.8rem;
     margin-bottom: 2.4rem;
   }
+  .lm-text-black {
+    color: #000 !important;
+  }
   .lm-text-white {
     color: #fff !important;
   }
@@ -259,7 +262,17 @@
     padding: 0.6rem 0;
     text-align: center;
   }
-
+  /*禁止点击*/
+  .disableTap{
+    pointer-events: none;
+  }
+  /*加载中*/
+  .loading{
+    height: 2.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
   /*垂直居中*/
   .flex-alig-center {
     display: flex;

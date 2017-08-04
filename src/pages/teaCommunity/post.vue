@@ -2,7 +2,7 @@
   <div class="container">
     <Mheader>
       <div slot="title">发贴</div>
-      <div slot="info">发布</div>
+      <div slot="info" :class="{disableTap:posting}" @click="release">发布</div>
     </Mheader>
 
     <div class="title">
@@ -35,6 +35,7 @@
 <script>
   import Mheader from '../../components/Mheader'
   import Mfooter from '../../components/Mfooter'
+  import {Toast} from 'mint-ui'
   // import Dropzone from 'vue2-dropzone'
 
   export default {
@@ -44,12 +45,45 @@
       // Dropzone
     }, data(){
       return {
-        content: ''
+        content: '',
+        posting: false
       }
     },
     methods: {
       showSuccess(file) {
         console.log('上传成功！' + file)
+      },
+      //发布
+      release(){
+        this.posting = true;
+        if (!!!this.content) {
+          Toast('请填写内容后在发布！');
+          return;
+        }
+        ;
+        let cont = new FormData();
+        cont.append("Content", this.content);
+        cont.append("Title", 'fffffff');
+        cont.append("TypeId", '1');
+
+        this.axios({
+          url: this.url + '/api/CM_Theme/CreateTheme',
+          method: 'post',
+          data: cont,
+          headers: {'Authorization': 'BasicAuth ' + localStorage.lut}
+        }).then((res) => {
+          if (!!res && res.data.Code == 200) {
+            let instance = Toast({
+              message: '发布成功',
+              duration: 1500
+            });
+            setTimeout(() => {
+              this.posting = false;
+              instance.close();
+              this.$router.replace({path: '/tcHome'});
+            }, 1500);
+          }
+        })
       }
     },
     computed: {
@@ -105,5 +139,9 @@
     margin-right: 0.2rem;
     width: 0.8rem;
     height: 0.8rem;
+  }
+
+  .icon-success {
+    background-image: url("../../assets/images/teaCommunity/sucess.png");
   }
 </style>

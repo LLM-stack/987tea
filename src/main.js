@@ -8,15 +8,13 @@ import store from './store/index'
 import axios from 'axios'
 import Mint from 'mint-ui'
 import 'mint-ui/lib/style.css'
-import {Toast} from 'mint-ui'
-
 
 
 Vue.use(Mint)
 //Vue.use(axios)
 Vue.prototype.axios = axios
 
-
+ import {Toast} from 'mint-ui'
 //添加一个返回拦截器
 axios.interceptors.response.use(function(response){
     //对返回的数据进行一些处理
@@ -51,17 +49,16 @@ axios.interceptors.response.use(function(response){
 });
 
 
-//内网地址： 'http://192.168.1.110:8088'
+// 内网地址： 'http://192.168.1.110:8088'
 //本地地址： 'http://localhost:55338'  //'http://localhost:8088'
 //正式地址： 'http://api.987tea.com'
 Vue.prototype.url='http://192.168.1.110:8088'
-// Vue.prototype.url='http://localhost:8088'
+// Vue.prototype.url='http://localhost:55338'
 // Vue.prototype.url='http://api.987tea.com'
 
 
 Vue.config.productionTip = false
 
-//axios.defaults.withCredentials=true
 
 /* eslint-disable no-new */
 new Vue({

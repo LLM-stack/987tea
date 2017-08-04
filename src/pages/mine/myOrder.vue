@@ -31,8 +31,8 @@
 
     </div>
 
-    <div class="noorder-box">
-      <div class="noorder" v-show="orderList.length == 0">
+    <div class="noorder-box" v-show="orderList.length == 0">
+      <div class="noorder">
         <img src="../../assets/images/myInfo/order_03.png"/>
         <p>没有相关的订单</p>
       </div>

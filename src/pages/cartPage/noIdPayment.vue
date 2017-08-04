@@ -54,7 +54,7 @@
         <div>共选择 <span class="lm-text-red">{{ProductCount}}</span>件商品</div>
         <div>总金额：￥<span class="lm-text-red">{{totalContent}}</span> 元</div>
       </div>
-      <div class="topay" @click="goToPay">确认下单</div>
+      <div class="topay" :class="{disableTap:isOnce}" @click="goToPay">确认下单</div>
     </div>
   </div>
 </template>
@@ -84,7 +84,8 @@
         subtract:'0',//优惠折扣价格
         isChecked:'',
         payType:0,//支付类型
-        alipay:''//ali支付form表单信息
+        alipay:'',//ali支付form表单信息
+        isOnce:false
       }
     },
     computed: {
@@ -161,6 +162,7 @@
      },
       //去下单
       goToPay(){
+        this.isOnce=true;
         if(!!!this.username){
            Toast("请填写收货人姓名")
            return;
@@ -181,6 +183,7 @@
            Toast("请填写详细地址")
            return;
         }
+              
         //定义地址参数
         let areas=this.address.split(' ');
         let str_address={
@@ -203,10 +206,10 @@
           ProductOrderId:'0',
           OrderAddress:str_address,
           OrderToPrice:this.discount,
-          ExpandId:!!localStorage.getItem("PromotionKey")?localStorage.getItem("PromotionKey"):localStorage.getItem("ExpandId")
+          ExpandId:!!sessionStorage.getItem("PromotionKey")?sessionStorage.getItem("PromotionKey"):sessionStorage.getItem("ExpandId")
         }
          this.axios.post(this.url + '/api/Order/SaveOrder', {strSc:JSON.stringify(sc)}).then((res) => {
-          if (res.data.Code == 200) {
+          if (res.data.Code == 200) {            
              let tPro=JSON.parse(sessionStorage.unPay);//下单的localStorage数据
               let touristProduct=tPro.skus;
               let carPro=JSON.parse(localStorage.tourist)//购物车的localStorage数据
@@ -220,20 +223,23 @@
               })
             localStorage.tourist=JSON.stringify(carPro);//购物车中的商品重新赋值
             sessionStorage.removeItem('unPay');//购物成功后移除订单里的商品
-            localStorage.removeItem("PromotionKey")//移除推广位id
-            localStorage.removeItem("ExpandId")//移除活动推广位id
+            sessionStorage.removeItem("PromotionKey")//移除推广位id
+            sessionStorage.removeItem("ExpandId")//移除活动推广位id
             if(this.payType==0){
+              this.isOnce=false;
                this.$router.push({path: '/paymentCompleted'})
              }
              if(this.payType==2){
                //支付宝支付返回
                this.alipay=res.data.ExData;
                setTimeout(function() {
+                 this.isOnce=false;
                  document.forms['alipaysubmit'].submit();
                },0)
              }
 
           } else {
+            this.isOnce=false;
             Toast(res.data.Data);
           }
         })
