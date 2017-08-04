@@ -120,7 +120,7 @@
           if (product.Count < 1) {
             product.Count = 1;
           }
-        }
+        } 
         
         if(product.ShoppingCarId!=0){
             //用户登录后数量变动保存到数据库

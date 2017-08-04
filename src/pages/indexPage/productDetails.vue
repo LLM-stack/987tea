@@ -167,7 +167,7 @@
     },
     filters: {
       teaB (value) {
-        return ((value) * 0.1).toFixed(2);
+        return ((value) * 5).toFixed(2);
       },
       formatTime(val) {
         let date = new Date(val);

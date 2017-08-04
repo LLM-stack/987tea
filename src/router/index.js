@@ -18,6 +18,7 @@ import PaymentCompleted from '@/pages/cartPage/paymentCompleted'
 import TcHome from '@/pages/teaCommunity/tcHome'
 import TcContent from '@/pages/teaCommunity/tcContent'
 import Post from '@/pages/teaCommunity/post'
+import Tags from '@/pages/teaCommunity/tags'
 
 // 活动页
 import OnSale from '@/pages/activities/onSale'
@@ -94,6 +95,9 @@ export default new Router({
     }, {
       path: '/Post',
       component: Post
+    }, {
+      path: '/Tags',
+      component: Tags
     },
     // 活动页
     {
