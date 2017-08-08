@@ -39,7 +39,7 @@ axios.interceptors.response.use(function(response){
           path: '/login/',
           query: {redirect: router.currentRoute.fullPath}
         })
-      }, 1000);
+      }, 1500);
 
     } else {
       //Toast('网络请求错误');
@@ -52,8 +52,8 @@ axios.interceptors.response.use(function(response){
 // 内网地址： 'http://192.168.1.110:8088'
 //本地地址： 'http://localhost:55338'  //'http://localhost:8088'
 //正式地址： 'http://api.987tea.com'
-Vue.prototype.url='http://192.168.1.110:8088'
-// Vue.prototype.url='http://localhost:55338'
+// Vue.prototype.url='http://192.168.1.110:8088'
+Vue.prototype.url='http://localhost:8088'
 // Vue.prototype.url='http://api.987tea.com'
 
 

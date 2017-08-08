@@ -7,96 +7,69 @@
     <div class="content">
       <div class="user flex-alig-center">
         <div class="user-avater">
-          <img src="../../assets/images/myInfo/toux.jpg"/>
+          <img :src="themeDetail.HeaderImg"/>
         </div>
         <div class="user-name">
-          <div>用户姓名</div>
-          <div class="lm-font-xs lm-text-grey lm-margin-t-xs">用户签名</div>
+          <div>{{themeDetail.UName}}</div>
+          <!-- <div class="lm-font-xs lm-text-grey lm-margin-t-xs">用户签名</div> -->
         </div>
       </div>
       <div class="content-p lm-font-sm">
-        <h1 class="lm-text-black lm-font-defult">标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题</h1>
-        #主体#内容内容内容内容内容内容内容内容容内容内容内容内容内容内容内容内容内容内容内容内容容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容容内容内容内容内容内容内容内容内容内容内容内容内容
+        <h1 class="lm-text-black lm-font-defult">{{themeDetail.Title}}</h1>
+        {{'#'+themeDetail.TTName+'# '+themeDetail.Contents}}
       </div>
-      <div class="content-img flex-alig-center">
-        <div><img src="../../assets/images/myInfo/toux.jpg"/></div>
-        <div><img src="../../assets/images/myInfo/toux.jpg"/></div>
-        <div><img src="../../assets/images/myInfo/toux.jpg"/></div>
-        <div><img src="../../assets/images/myInfo/toux.jpg"/></div>
-        <div><img src="../../assets/images/myInfo/toux.jpg"/></div>
-        <div><img src="../../assets/images/myInfo/toux.jpg"/></div>
+      <div class="content-img flex-alig-center" v-for="(img,idx) in themeImgs" :key="idx">
+        <div><img :src="img"/></div>
       </div>
       <div class="content-reply lm-margin-t-sm lm-padding-t-sm flex-alig-center">
         <div class="re-l flex-alig-center">
           <img src="../../assets/images/teaCommunity/time.png"/>
-          <span>1个月前</span>
+          <span>{{themeDetail.CreateTime |format }}</span>
         </div>
         <div class="re-r flex-alig-center">
           <div class="flex-alig-center lm-margin-l">
             <img src="../../assets/images/teaCommunity/look.png"/>
-            <span>52152</span>
+            <span>{{themeDetail.SeeCount}}</span>
           </div>
           <div class="flex-alig-center lm-margin-l">
             <img src="../../assets/images/teaCommunity/reply.png"/>
-            <span>23</span>
+            <span>{{themeDetail.CommentCount}}</span>
           </div>
           <div class="flex-alig-center lm-margin-l" @click.stop="ding">
             <img v-show="!isding" src="../../assets/images/teaCommunity/ding.png"/>
             <img v-show="isding" src="../../assets/images/teaCommunity/isding.png"/>
-            <span :class="{isding:isding}">156</span>
+            <span :class="{isding:isding}">{{themeDetail.FabulouCount}}</span>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="comment-list lm-margin-t-sm">
+    <div class="comment-list lm-margin-t-sm" v-infinite-scroll="getCommentBack"
+         infinite-scroll-disabled="loading"
+         infinite-scroll-distance="10">
       <div class="title lm-font-sm">评论</div>
-      <div class="comment">
+      <div class="comment" v-for="(cb,index) in commentBackList" :key="index">
         <div class="user flex-alig-center">
           <div class="flex-alig-center">
             <div class="user-avater">
-              <img src="../../assets/images/myInfo/toux.jpg"/>
+              <img :src="cb.uHeaderImg"/>
             </div>
             <div class="user-name">
-              <div>用户姓名</div>
-              <div class="lm-font-xs lm-text-grey lm-margin-t-xs">10分钟前</div>
+              <div>{{cb.uNickname}}</div>
+              <div class="lm-font-xs lm-text-grey lm-margin-t-xs">{{cb.createtime | format}}</div>
             </div>
           </div>
           <div class="toreply flex-alig-center">
-            <span class="lm-font-sm" @click.stop="ding">
+            <!-- <span class="lm-font-sm" @click.stop="ding">
               <img v-show="!isding" src="../../assets/images/teaCommunity/ding.png"/>
               <img v-show="isding" src="../../assets/images/teaCommunity/isding.png"/>
               <span :class="{isding:isding}">156</span>
-            </span>
-            <span><img src="../../assets/images/teaCommunity/reply.png"/></span>
+            </span> -->
+            <span><img src="../../assets/images/teaCommunity/reply.png" @click="reply(1,cb.id,cb.uNickname)"/></span>
           </div>
         </div>
         <div class="content-p lm-font-sm">
-          回复内容回复内容回复内容回复内容复内容回复内容复内容
-        </div>
-      </div>
-      <div class="comment">
-        <div class="user flex-alig-center">
-          <div class="flex-alig-center">
-            <div class="user-avater">
-              <img src="../../assets/images/myInfo/toux.jpg"/>
-            </div>
-            <div class="user-name">
-              <div>用户姓名</div>
-              <div class="lm-font-xs lm-text-grey lm-margin-t-xs">10分钟前</div>
-            </div>
-          </div>
-          <div class="toreply flex-alig-center">
-             <span class="lm-font-sm" @click.stop="ding">
-              <img v-show="!isding" src="../../assets/images/teaCommunity/ding.png"/>
-              <img v-show="isding" src="../../assets/images/teaCommunity/isding.png"/>
-              <span :class="{isding:isding}">156</span>
-            </span>
-            <span><img src="../../assets/images/teaCommunity/reply.png"/></span>
-          </div>
-        </div>
-        <div class="content-p lm-font-sm">
-          <span>回复了 <span class="font-black">谁谁谁：</span></span>回复内容回复内容回复内容
+         <span v-if="!!cb.upUid">回复了 <span class="font-black">{{cb.upUNickname}}：</span></span> {{cb.contents}}
         </div>
       </div>
 
@@ -109,14 +82,14 @@
     <transition name="drop">
       <div class="dialog" v-if="dialog">
         <div class="title">
-          回复贴子
+          回复{{userName}}
         </div>
         <div class="content">
           <textarea class="box-text" placeholder="来说点什么吧" maxlength="2000" v-model="content"></textarea>
           <span class="word-num lm-font-xs">还可以输入{{ wordNum }}个字</span>
         </div>
         <div class="btn-group">
-          <div>回复</div>
+          <div @click="addCommentBack()">回复</div>
           <div @click="reply(0)">取消</div>
         </div>
       </div>
@@ -129,6 +102,8 @@
 <script>
   import Mheader from '../../components/Mheader'
   import Mfooter from '../../components/Mfooter'
+   import {Toast} from 'mint-ui'
+  import {formatDate} from '../js/Date.js'//时间显示格式转换js
 
   export default {
     components: {
@@ -139,25 +114,167 @@
       return {
         isding: false,
         dialog: false,
-        content:''
+        content:'',
+        themeDetail:'',//话题详情实体
+        themeImgs:[],//话题图片
+        commentBackList:[],//评论信息
+        pageIndex:0,//评论页码
+        loading: false,
+        upId:'',//上级回复编号
+        userName:'帖子'//用户姓名
+      }
+    },
+    filters: {
+      format(val) {
+        return formatDate(val);
       }
     },
     methods: {
       ding(){
-        this.isding = !this.isding
+        if(this.isding){
+          this.cancelFabulous();
+          
+        }else{
+          this.addFabulous();
+        }
+        
       },
-      reply(i){
+      reply(i,id,name){
       	if(i){
+          if(!!id && !!name){
+            this.upId=id;
+            this.userName=name;
+          }else{
+            this.upId='';
+            this.userName='帖子';
+          }
           this.dialog = true
         }else {
+          //取消清除输入的未评论的内容
+          this.content='';
           this.dialog = false
         }
+      },
+      //获取话题详情
+      getThemeDetail(){
+        this.$route.params.themeId=1;
+        this.axios({
+          url: this.url + '/api/CM_Theme/GetDetailByThemeId?themeId='+this.$route.params.themeId,
+          method: 'get',
+          headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
+        }).then((res)=>{
+            if(res.data.Code==200){
+               this.themeDetail = res.data.Data;
+               if(this.themeDetail.IsFabulous){
+                 this.isding=true;
+               }
+               if(!!this.themeDetail.Images){
+                  this.themeImgs=this.themeDetail.Images.split(',');
+               }               
+            }
+          })
+      },
+      //获取评论信息
+      getCommentBack(){
+        this.loading = true;
+        this.pageIndex++;
+        this.$route.params.themeId=1;
+          this.axios.get(this.url + '/api/CM_CommentBack/GetCommentBacksByThemeId?id='+this.$route.params.themeId+'&index='+this.pageIndex+'&onlyAuthor=false&desc=true&authorId='+this.themeDetail.Auditor).then((res)=>{
+            if(res.data.Code==200){
+                if(!!res.data.Data){
+                     if (res.data.Data.length > 0) {
+                      for (let i = 0; i < res.data.Data.length; i++) {
+                          this.commentBackList.push(res.data.Data[i])
+                      }
+                      this.loading = false;
+                    }else{
+                      this.loading = true;
+                    }
+                }else{
+                  this.loading = true;
+                } 
+            }
+          })
+      },
+      //添加回复
+      addCommentBack(){
+        if(!!!this.content){
+          Toast("评论的内容不能为空");
+        }       
+         this.axios({
+          url: this.url + '/api/CM_CommentBack/SubmitBack',
+          method: 'post',
+          data:{text:this.content,UpId:this.upId,ThemeId:this.themeDetail.Id},
+          headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
+
+          }).then((res)=>{
+            if(!!res){
+              if (res.data.Code == 200) {
+                Toast(res.data.Data);
+                this.reply(0);
+                this.pageIndex=0;//设置默认从第一页开始加载
+                this.getCommentBack();
+              } else {
+                Toast(res.data.Data);
+              }
+            }
+          })
+      },
+      //增加点赞
+      addFabulous(){
+        this.axios({
+          url: this.url + '/api/CM_Fabulous/Praise',
+          method: 'post',
+          data:{themeId:this.themeDetail.Id},
+          headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
+
+          }).then((res)=>{
+            if(!!res){
+              if (res.data.Code == 200) {
+                this.themeDetail.FabulouCount++;
+                this.isding = !this.isding
+                Toast(res.data.Data);                
+              } else {
+                Toast(res.data.Data);
+              }
+            }
+          })
+      },
+      //取消点赞
+      cancelFabulous(){
+        this.axios({
+          url: this.url + '/api/CM_Fabulous/CancelPraise',
+          method: 'post',
+          data:{themeId:this.themeDetail.Id},
+          headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
+
+        }).then((res)=>{
+          if(!!res){
+            if (res.data.Code == 200) {
+               this.themeDetail.FabulouCount--;
+                this.isding = !this.isding
+              Toast(res.data.Data);                
+            } else {
+              Toast(res.data.Data);
+            }
+          }
+        })
       }
+    },
+     mounted(){
+      this.$nextTick(function(){
+
+      })
+    },
+    created(){
+        this.getThemeDetail();
+        
     },
     computed:{
       wordNum(){
         return 2000 - this.content.length
       }
+
     }
   }
 </script>
@@ -287,15 +404,6 @@
     background-color: #fff;
   }
 
-  .modal {
-    background-color: rgba(0, 0, 0, .5);
-    height: 100vh;
-    width: 100%;
-    position: fixed;
-    top: 0;
-    z-index: 999;
-  }
-
   .dialog .title {
     margin-bottom: 0.5rem;
     text-align: center;
@@ -350,7 +458,7 @@
   }
 
   .content .word-num {
-    color: #ccc;
+    color: #999;
     bottom: -0.4rem;
     right: 0.5rem;
     position: absolute;

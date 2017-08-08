@@ -51,7 +51,7 @@ import Mall from '@/pages/CBmall/mall'
 Vue.use(Router)
 
 export default new Router({
-  // mode: 'history',
+   //mode: 'history',
   // base: '/',
   routes: [
     // 首页
@@ -90,7 +90,7 @@ export default new Router({
       path: '/TcHome',
       component: TcHome
     }, {
-      path: '/TcContent',
+      path: '/TcContent/:themeId',
       component: TcContent
     }, {
       path: '/Post',

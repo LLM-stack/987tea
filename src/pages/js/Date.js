@@ -1,32 +1,35 @@
 export function formatDate(val) { 
-     let time = val.replace("T", " ");
-        let result = time.split(' ')[0];
-        let date = new Date(time.replace('-', '/').replace('-', '/'));
-        let oneminute = 1000 * 60;
-        let onehour = oneminute * 60;
-        let oneday = onehour * 24;
-        let nowdate = new Date();
-        let timeDiff = nowdate.getTime() - date.getTime();
-        let dayDiff = nowdate.getDate() - date.getDate();
-        if (timeDiff < 0) {
-            result = "刚刚";
-        }
-        else if (timeDiff < oneminute * 5) {
-            result = "刚刚";
-        }
-        else if (timeDiff < onehour) {
-            result = Math.floor(timeDiff / oneminute) + "分钟前";
-        }
-        else if (timeDiff < oneday && dayDiff == 0) {
-            result = Math.floor(timeDiff / onehour) + "小时前";
-        }
-        else if (timeDiff < oneday * 2 && dayDiff == 1) {
-            result = "昨天 " + date.Format("hh:mm");
-        }
-        else if (timeDiff < oneday * 3 && dayDiff == 2) {
-            result = "前天 " + date.Format("hh:mm");
-        }
-        return result;
+    if(!!!val){
+        return;
+    }
+    let time = val.replace("T", " ");
+    let result = time.split(' ')[0];
+    let date = new Date(time.replace(/-/g,"/"));
+    let oneminute = 1000 * 60;
+    let onehour = oneminute * 60;
+    let oneday = onehour * 24;
+    let nowdate = new Date();
+    let timeDiff = nowdate.getTime() - date.getTime();
+    let dayDiff = nowdate.getDate() - date.getDate();
+    if (timeDiff < 0) {
+        result = "刚刚";
+    }
+    else if (timeDiff < oneminute * 5) {
+        result = "刚刚";
+    }
+    else if (timeDiff < onehour) {
+        result = Math.floor(timeDiff / oneminute) + "分钟前";
+    }
+    else if (timeDiff < oneday && dayDiff == 0) {
+        result = Math.floor(timeDiff / onehour) + "小时前";
+    }
+    else if (timeDiff < oneday * 2 && dayDiff == 1) {
+        result = "昨天 " + date.Format("hh:mm");
+    }
+    else if (timeDiff < oneday * 3 && dayDiff == 2) {
+        result = "前天 " + date.Format("hh:mm");
+    }
+    return result;
 };
 
 Date.prototype.Format = function (fmt) { //author: meizz

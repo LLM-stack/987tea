@@ -7,12 +7,15 @@ Vue.use(Vuex);
 
 // 定义数据源
 const state = {
-  // 登录状态
-  user_id:"",
-  // 购物车
-  product_num: 0,
+
   //订单的收货地址
   receiveAddress:'',
+  //话题类型标签
+  themeTags:'',
+  //话题标题
+  themeTitle:'',
+  //话题内容
+  themeContent:''
 
 }
 

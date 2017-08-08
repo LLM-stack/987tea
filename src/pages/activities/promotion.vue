@@ -217,21 +217,21 @@
         activeIdx: 0,
         tabs: [
           {
-            tabName: '限时特价'
+            tabName: '限时特价',
+            tabTag:'d009610ae2f74d0fa72e83cffbddf00f',//限时特价标签Id
           },
           {
-            tabName: '爆款特价'
+            tabName: '爆款特价',
+            tabTag:'49039043e6ff4789a7dbddc566b58fa6',//爆款特价标签Id
           },
           {
-            tabName: '精装礼品'
+            tabName: '精装礼品',
+            tabTag:'ca482e57ed0e434f935e47872f69614a',//精装礼品标签Id
           },
           {
             tabName: '更多福利'
           }
-        ],
-        explosionTag:'49039043e6ff4789a7dbddc566b58fa6',//爆款特价标签Id
-        timeTag:'d009610ae2f74d0fa72e83cffbddf00f',//限时特价标签Id
-        hardcoverTag:'ca482e57ed0e434f935e47872f69614a',//精装礼品特价Id
+        ],       
         productSpec: [],//sku集合
         expProducts:[],//爆款特价商品
         timeProducts:[],//限时特价商品
@@ -327,9 +327,9 @@
          if(!!sessionStorage.TimeProducts){
             this.timeProducts=JSON.parse(sessionStorage.TimeProducts);
          }else{
-            this.axios.post(this.url + '/api/Activity/GetActivityProducts', {acId:this.$route.params.id,tagId: this.timeTag}).then((res) => {
+            this.axios.post(this.url + '/api/Activity/GetActivityProducts', {acId:this.$route.params.id,tagId: this.tabs[0].tabTag}).then((res) => {
             if (res.data.Code == 200) {
-              if(res.data.Data==this.timeTag){
+              if(res.data.Data==this.tabs[0].tabTag){
                  sessionStorage.setItem("TimeProducts", JSON.stringify(res.data.ExData)); 
                   this.timeProducts = res.data.ExData;
               }
@@ -348,9 +348,9 @@
         if(!!sessionStorage.ExpProducts){
             this.expProducts=JSON.parse(sessionStorage.ExpProducts);
          }else{
-            this.axios.post(this.url + '/api/Activity/GetExplosionProducts', {acId:this.$route.params.id,tagId: this.explosionTag}).then((res) => {
+            this.axios.post(this.url + '/api/Activity/GetExplosionProducts', {acId:this.$route.params.id,tagId: this.tabs[1].tabTag}).then((res) => {
             if (res.data.Code == 200) {
-              if(res.data.Data==this.explosionTag){
+              if(res.data.Data==this.tabs[1].tabTag){
                   sessionStorage.setItem("ExpProducts", JSON.stringify(res.data.ExData)); 
                   this.expProducts = res.data.ExData;
               }
@@ -369,9 +369,9 @@
         if(!!sessionStorage.HadProducts){
             this.hadProducts=JSON.parse(sessionStorage.HadProducts);
          }else{
-            this.axios.post(this.url + '/api/Activity/GetHardcoverProducts', {acId:this.$route.params.id,tagId: this.hardcoverTag}).then((res) => {
+            this.axios.post(this.url + '/api/Activity/GetHardcoverProducts', {acId:this.$route.params.id,tagId: this.tabs[2].tabTag}).then((res) => {
             if (res.data.Code == 200) {
-              if(res.data.Data==this.hardcoverTag){
+              if(res.data.Data==this.tabs[2].tabTag){
                 sessionStorage.setItem("HadProducts", JSON.stringify(res.data.ExData));
                 this.hadProducts = res.data.ExData;
               }
@@ -621,7 +621,6 @@
     created() {
       this.getBannerImg();
       this.getActivity(); 
-         
      },
     mounted() {
       this.$nextTick(() => {

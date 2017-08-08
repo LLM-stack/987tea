@@ -1,7 +1,12 @@
 <template>
   <div class="container">
-    <Mheader :show='true'>
+    <Mheader>
       <div slot="title">茶圈子</div>
+      <div class="msg" slot="info">
+        <img src="../../assets/images/teaCommunity/msg.png" />
+        <div class="msg-num lm-text-red flex-alig-center">
+        </div>
+      </div>
     </Mheader>
     <div class="banner">
       <mt-swipe :auto="4000" v-if="advList.length>0">
@@ -12,16 +17,16 @@
       </div>
     </div>
     <nav class="nav-bar">
-      <div class="active">最新</div>
-      <div>最热</div>
-      <div v-for="(tt,index) in themeTypeList" :key="tt.Id">{{tt.Name}}</div>
+      <div :class="{active:isNewest}" @click="newestActive">最新</div>
+      <div :class="{active:isHot}" @click="hotActive">最热</div>
+      <div v-for="(tt,index) in themeTypeList" :class="{active:tt.isactive}" @click="tabActive(index)" :key="tt.Id">{{tt.Name}}</div>      
     </nav>
     <div class="forum-box"
          v-infinite-scroll="loadMore"
          infinite-scroll-disabled="loading"
          infinite-scroll-distance="10">
       <div class="content" v-for="(theme,index) in themeList" :key="theme.Id">
-        <router-link to="/tcContent">
+        <router-link :to="{path:'/tcContent/'+ theme.Id}">        
           <div class="user flex-alig-center">
             <div class="user-avater">
               <img :src="theme.HeaderImg"/>
@@ -56,10 +61,10 @@
                 <span>{{theme.CommentCount}}</span>
               </router-link>
             </div>
-            <div class="flex-alig-center lm-margin-l" @click.stop="ding">
-              <img v-show="!isding" src="../../assets/images/teaCommunity/ding.png"/>
-              <img v-show="isding" src="../../assets/images/teaCommunity/isding.png"/>
-              <span :class="{isding:isding}">{{theme.FabulouCount}}</span>
+            <div class="flex-alig-center lm-margin-l" @click.stop="ding(index)">
+              <img v-show="!theme.IsFabulous" src="../../assets/images/teaCommunity/ding.png"/>
+              <img v-show="theme.IsFabulous" src="../../assets/images/teaCommunity/isding.png"/>
+              <span :class="{isding:theme.IsFabulous}">{{theme.FabulouCount}}</span>
             </div>
           </div>
         </div>
@@ -84,7 +89,7 @@
   import Mheader from '../../components/Mheader'
   import Mfooter from '../../components/Mfooter'
   import {Toast} from 'mint-ui'
-  import {formatDate} from '../js/Date.js'
+  import {formatDate} from '../js/Date.js'//时间显示格式转换js
 
   export default {
     components: {
@@ -93,10 +98,13 @@
     },
     data(){
     	return {
-        isding:false,
+        isNewest:true,//是否最新
+        isHot:false,//是否最热
+        isding:false,//是否点赞过
         key:'TeaCircleBarnerImg',//barner图位置key
         advList:[], //barner图集合
         themeTypeList:[],//话题类型集合
+        themeTypeId:0,//当前选中的话题类型id
         pageIndex:0,//当前页码
         loading: false,//是否下拉刷新
         themeList:[]//话题集合
@@ -108,13 +116,62 @@
       }
     },
     methods:{
-    	ding(){
-    		this.isding = !this.isding
+      //点赞
+    	ding(idx){    		
+    		if(!this.themeList[idx].IsFabulous){
+          this.addFabulous(idx);
+        }else if(!!!this.themeList[idx].IsFabulous){
+          this.cancelFabulous(idx);
+        }
+
+      }, 
+      //最新选中
+      newestActive(){
+         this.isHot=false;
+         this.themeTypeList.forEach(function(value,index,array){
+            array[index].isactive= false;
+          });
+          this.isNewest=true;
+          this.pageIndex=1;//当前页码重置为1
+          this.themeList=[];//清空数据集合
+          this.getLatestTopic(1);
+      },
+      //最热选中
+      hotActive(){
+         this.isNewest=false;
+         this.themeTypeList.forEach(function(value,index,array){
+            array[index].isactive= false;
+          });
+          this.isHot=true;
+          this.pageIndex=1;//当前页码重置为1
+          this.themeList=[];//清空数据集合
+          this.getLatestTopic(2);
+      },
+      //话题类型选中
+      tabActive(i) { 
+          this.themeTypeList.forEach(function(value,index,array){
+            array[index].isactive= false;
+          });
+          this.isNewest=false;
+          this.isHot=false;
+          this.pageIndex=1;//当前页码重置为1
+          this.themeList=[];//清空数据集合
+          this.themeTypeId= this.themeTypeList[i].Id;
+          this.themeTypeList[i].isactive = true; 
+          this.getThemeByThemeType();        
       },
       //加载更多
       loadMore(){
+        this.loading=true;
         this.pageIndex++;
-        this.getLatestTopic();
+        if(this.isNewest){
+          this.getLatestTopic(1);
+        } else  if(this.isHot){
+          this.getLatestTopic(3);
+        }else{
+          this.getThemeByThemeType();
+        }
+        
       },
       //获取banner图
       getBannerImg(){
@@ -141,35 +198,102 @@
           this.themeTypeList=JSON.parse(sessionStorage.ThemeType);
         }else{
           this.axios.get(this.url + '/api/CM_Theme/GetThemeType').then((res)=>{
-            if(res.data.Code==200){
-               sessionStorage.setItem("ThemeType", JSON.stringify(res.data.Data));
+             if(res.data.Code==200){               
                this.themeTypeList = res.data.Data;
+               this.themeTypeList.forEach((item,index)=>{
+                 this.$set(item, "isactive", false);            
+              })
+              sessionStorage.setItem("ThemeType", JSON.stringify(this.themeTypeList));
             }
           })
         }
-      },
-      //点击话题类型
-      checkType(){
-
-      },
-      //最新话题
-      getLatestTopic(){
-        this.axios.get(this.url + '/api/CM_Theme/GetThemeList?Index='+this.pageIndex).then((res)=>{
-            if(res.data.Code==200){
-              if(this.pageIndex==1){
-                this.themeList = res.data.Data;
-              }else{
-                if (res.data.Data.length > 0) {
-                    for (let i = 0; i < res.data.Data.length; i++) {
-                        this.themeList.push(res.data.Data[i])
+      },    
+      //最新话题  
+      getLatestTopic(type){
+         this.axios({
+          url: this.url + '/api/CM_Theme/GetThemeList?Index='+this.pageIndex+'&Type='+type,
+          method: 'get',
+          headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
+        }).then((res)=>{
+            if(res.data.Code==200){              
+               if(!!res.data.Data){
+                     if (res.data.Data.length > 0) {
+                      for (let i = 0; i < res.data.Data.length; i++) {
+                          this.themeList.push(res.data.Data[i])
+                      }
+                      this.loading = false;
+                    }else{
+                      this.loading = true;
                     }
-                  }else{
+                }else{
                   this.loading = true;
-                  }
+                } 
+            }
+          })
+      },
+      //根据话题类型获取话题列表
+      getThemeByThemeType(){
+        this.axios({
+          url: this.url + '/api/CM_Theme/GetThemeListByTypeId?tId='+this.themeTypeId+'&sort='+0+'&Index='+this.pageIndex,
+          method: 'get',
+          headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
+        }).then((res)=>{
+            if(res.data.Code==200){              
+               if(!!res.data.Data){
+                     if (res.data.Data.length > 0) {
+                      for (let i = 0; i < res.data.Data.length; i++) {
+                          this.themeList.push(res.data.Data[i])
+                      }
+                      this.loading = false;
+                    }else{
+                      this.loading = true;
+                    }
+                }else{
+                  this.loading = true;
+                } 
+            }
+          })
+      },
+       //增加点赞
+      addFabulous(index){
+        this.axios({
+          url: this.url + '/api/CM_Fabulous/Praise',
+          method: 'post',
+          data:{themeId:this.themeList[index].Id},
+          headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
+
+          }).then((res)=>{
+            if(!!res){
+              if (res.data.Code == 200) {
+               this.themeList[index].FabulouCount++;
+                this.themeList[index].IsFabulous = !this.themeList[index].IsFabulous;
+                Toast(res.data.Data);                
+              } else {
+                Toast(res.data.Data);
               }
             }
           })
       },
+      //取消点赞
+      cancelFabulous(index){
+        this.axios({
+          url: this.url + '/api/CM_Fabulous/CancelPraise',
+          method: 'post',
+          data:{themeId:this.themeList[index].Id},
+          headers:{ 'Authorization': 'BasicAuth '+ localStorage.lut }
+
+        }).then((res)=>{
+          if(!!res){
+            if (res.data.Code == 200) {
+               this.themeList[index].FabulouCount--;
+               this.themeList[index].IsFabulous = !this.themeList[index].IsFabulous;
+              Toast(res.data.Data);                
+            } else {
+              Toast(res.data.Data);
+            }
+          }
+        })
+      }
     },
     mounted(){
       this.$nextTick(function(){
@@ -181,11 +305,28 @@
 </script>
 
 <style scoped>
+  .msg{
+    width: 1rem;
+    height: 0.8rem;
+    position: relative;
+  }
+  .msg .msg-num{
+    position: absolute;
+    top: -0.05rem;
+    left: 0.75rem;
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 50%;
+    background-color: #fff;
+  }
   .isding{
     color: #D81E06;
   }
   .banner {
     height: 6rem;
+  }
+  .banner img{
+    vertical-align: sub;
   }
 
   .nav-bar {
