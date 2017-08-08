@@ -13,6 +13,21 @@
       <span class="word-num lm-font-xs">还可以输入{{ wordNum }}个字</span>
     </div>
 
+
+<div class="flex-alig-center up-img">
+     <div class="imgs" v-show="images.length >0">
+          <ul class="flex-alig-center">
+            <li v-for="(img,idx) in images" :key="idx">
+              <img :src="img"/>
+              <img class="del-img" src="../../assets/images/teaCommunity/del.png"  @click='delImage(idx)'/>
+            </li>
+          </ul>
+     </div>
+    <div class="up-btn" v-show="images.length < 4">
+      <input  type="file"  @change="previewImage"/>
+      <img src="../../assets/images/teaCommunity/upimg.png" />
+    </div>
+</div>
     <!--<dropzone id="myVueDropzone" url="www.com" :vdropzone-success="showSuccess">-->
     <!--&lt;!&ndash; Optional parameters if any! &ndash;&gt;-->
     <!--<input type="hidden" name="token" value="xxx">-->
@@ -23,14 +38,14 @@
         <img src="../../assets/images/teaCommunity/tag.png"/>
         标签
       </span>
-      <span class="lm-margin-r-xs lm-text-grey">{{ isSelect }}</span>
+      <span class="lm-margin-r-xs lm-text-grey">{{ selectValue }}</span>
     </div>
 
     <transition name="drop">
       <div class="dialog" v-if="dialog">
         <div class="btn-group flex-between">
           <div @click="choiceTag(0)">取消</div>
-          <div @click="choiceTag(1)">确定</div>
+          <div @click="choiceTag(2)">确定</div>
         </div>
         <mt-radio
           v-model="isSelect"
@@ -64,307 +79,64 @@
         posting: false,
         dialog: false,
         isSelect: '请选择标签',
-        options: [
-          {
-            label: '#红茶#',
-            value: '#红茶#'
-          },
-          {
-            label: '#绿茶#',
-            value: '#绿茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普sssssw洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普sssssw洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普sssssw洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普sssssw洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普sssssw洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普sssssw洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普sssssw洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普sssssw洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普sssssw洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普sssssw洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普sssssw洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普sssssw洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普sssssw洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普sssssw洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普sssssw洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普sssssw洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普sssssw洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普sssssw洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普sssssw洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普sssssw洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普sssssw洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普sssssw洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普sssssw洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普sssssw洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普sssssw洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普sssssw洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普sssssw洱茶#'
-          },
-          {
-            label: '#普洱茶#',
-            value: '#普sssssw洱茶#'
-          }
-        ],
-        typeId: 1
+        options: [],//标签选项
+        typeId: 0,//话题标签Id
+        images:[],//预览图片集合
+        imgs:[]//file文件集合
       }
     },
     methods: {
-      showSuccess(file) {
-        console.log('上传成功！' + file)
+       //获取话题类型
+      getThemeType(){
+        this.axios.get(this.url + '/api/CM_Theme/GetThemeType').then((res)=>{
+             if(res.data.Code==200){
+              if(!!res.data.Data){
+                res.data.Data.forEach(function(element) {
+                  let op={
+                    label:'#'+element.Name+'#',
+                    value:element.Id.toString()+'&#'+element.Name+'#'
+                  }
+                  this.options.push(op);
+                }, this);
+              }
+            }
+          })
       },
       //选中话题标签
       choiceTag(i){
         if (i) {
+          if(i===2){
+            if(this.isSelect=='请选择标签'){
+              Toast("请选择标签");
+              return;
+            }
+          }
           this.dialog = !this.dialog
         } else {
           this.dialog = false;
           this.isSelect = '请选择标签'
         }
+      },
+      //图片预览
+      previewImage(e){
+        let  files = e.target.files || e.dataTransfer.files;
+        if(!files.length){
+          return false;
+        }
+        for(let i=0;i<files.length;i++){
+          let reader=new FileReader();
+          reader.readAsDataURL(files[i]);
+          reader.onload=f=>{
+            this.images.push(f.target.result);
+          }
+          this.imgs.push(files[i]);
+        }
+
+      },
+      //删除图片
+      delImage(index){
+        this.imgs.splice(index,1);
+        this.images.splice(index,1);
       },
       //发布
       release(){
@@ -378,18 +150,20 @@
             this.posting = false;
           }, 1500);
           return;
-        }
-        ;
+        };
         let cont = new FormData();
         cont.append("Content", this.content);
         cont.append("Title", this.title);
         cont.append("TypeId", this.typeId);
+        this.imgs.forEach((item)=>{
+            cont.append("myFile[]",item)
+        })
 
         this.axios({
           url: this.url + '/api/CM_Theme/CreateTheme',
           method: 'post',
           data: cont,
-          headers: {'Authorization': 'BasicAuth ' + localStorage.lut}
+          headers: {'Content-Type':'multipart/form-data','Authorization': 'BasicAuth ' + localStorage.lut}
         }).then((res) => {
           if (!!res && res.data.Code == 200) {
             let instance = Toast({
@@ -406,25 +180,23 @@
     },
     mounted(){
       this.$nextTick(() => {
-        //话题标题
-        if (!!this.$store.state.themeTitle) {
-          this.title = this.$store.state.themeTitle;
-        }
-        //话题内容
-        if (!!this.$store.state.themeContent) {
-          this.content = this.$store.state.themeContent;
-        }
-        //判断选择的话题标签是否为空
-        if (!!this.$store.state.themeTags) {
-          let tags = this.$store.state.themeTags.split('&');
-          this.typeId = tags[0];
-          this.tagName = tags[1];
-        }
+        this.getThemeType();
       })
     },
     computed: {
       wordNum(){
         return 2000 - this.content.length
+      },
+      //标签选中的计算属性
+      selectValue(){
+        if(this.isSelect=='请选择标签'){
+          return '请选择标签';
+        }else{
+          let values =this.isSelect.split('&');
+          this.typeId=values[0];
+          return values[1];
+        }
+
       }
     }
   }
@@ -482,7 +254,7 @@
     position: fixed;
     bottom: 0;
     left: 0;
-    height: 40%;
+    max-height: 40%;
     overflow: auto;
     z-index: 9999;
     background-color: #fff;
@@ -493,7 +265,56 @@
     text-align: center;
     padding: 0.4rem 0.8rem;
   }
-
+  .up-img{
+    height: 4.6rem;
+    overflow: hidden;
+    border-top: 1px solid #eee;
+    position: relative;
+    background-color: #fff;
+  }
+  .up-img .up-btn{
+    position: relative;
+    margin-left: 0.4rem;
+    width: 3.6rem;
+    height: 3.6rem;
+  }
+  .up-img .up-btn input{
+    width: 3.6rem;
+    height: 3.6rem;
+    opacity: 0;
+    position: absolute;
+    z-index: 99;
+  }
+  .up-img .up-btn img{
+    position: absolute;
+    z-index: 9;
+    top:0;
+    left: 0;
+    width: 3.6rem;
+    height: 3.6rem;
+  }
+  .up-img .imgs >ul >li{
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-left: 0.3rem;
+    width: 3.6rem;
+    height: 3.6rem;
+    border: 1px solid #ccc;
+    border-radius: 0.2rem;
+  }
+  .imgs >ul >li >img:first-child{
+    width: 100%;
+    height: auto;
+  }
+  .imgs >ul >li .del-img{
+    width: 0.8rem;
+    height: 0.8rem;
+    top:-0.3rem;
+    right: -0.3rem;
+    z-index: 999;
+    position: absolute;
+  }
   .drop-enter-active, .drop-leave-active {
     transition: all .4s;
   }

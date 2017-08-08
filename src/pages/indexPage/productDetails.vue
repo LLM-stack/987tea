@@ -559,7 +559,7 @@
 
   .img-box {
     margin-top: 1.8rem;
-    height: 13.6rem;
+    height: 16rem;
   }
 
   .title {
