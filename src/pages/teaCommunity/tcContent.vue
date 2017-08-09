@@ -18,8 +18,8 @@
         <h1 class="lm-text-black lm-font-defult">{{themeDetail.Title}}</h1>
         {{'#'+themeDetail.TTName+'# '+themeDetail.Contents}}
       </div>
-      <div class="content-img flex-alig-center" v-for="(img,idx) in themeImgs" :key="idx">
-        <div><img :src="img"/></div>
+      <div class="content-img flex-alig-center">
+        <div v-for="(img,idx) in themeImgs" :key="idx"><img :src="img"/></div>
       </div>
       <div class="content-reply lm-margin-t-sm lm-padding-t-sm flex-alig-center">
         <div class="re-l flex-alig-center">
@@ -133,11 +133,11 @@
       ding(){
         if(this.isding){
           this.cancelFabulous();
-          
+
         }else{
           this.addFabulous();
         }
-        
+
       },
       reply(i,id,name){
       	if(i){
@@ -157,7 +157,6 @@
       },
       //获取话题详情
       getThemeDetail(){
-        this.$route.params.themeId=1;
         this.axios({
           url: this.url + '/api/CM_Theme/GetDetailByThemeId?themeId='+this.$route.params.themeId,
           method: 'get',
@@ -170,7 +169,7 @@
                }
                if(!!this.themeDetail.Images){
                   this.themeImgs=this.themeDetail.Images.split(',');
-               }               
+               }
             }
           })
       },
@@ -192,7 +191,7 @@
                     }
                 }else{
                   this.loading = true;
-                } 
+                }
             }
           })
       },
@@ -200,7 +199,7 @@
       addCommentBack(){
         if(!!!this.content){
           Toast("评论的内容不能为空");
-        }       
+        }
          this.axios({
           url: this.url + '/api/CM_CommentBack/SubmitBack',
           method: 'post',
@@ -233,7 +232,7 @@
               if (res.data.Code == 200) {
                 this.themeDetail.FabulouCount++;
                 this.isding = !this.isding
-                Toast(res.data.Data);                
+                Toast(res.data.Data);
               } else {
                 Toast(res.data.Data);
               }
@@ -253,7 +252,7 @@
             if (res.data.Code == 200) {
                this.themeDetail.FabulouCount--;
                 this.isding = !this.isding
-              Toast(res.data.Data);                
+              Toast(res.data.Data);
             } else {
               Toast(res.data.Data);
             }
@@ -268,7 +267,7 @@
     },
     created(){
         this.getThemeDetail();
-        
+
     },
     computed:{
       wordNum(){
@@ -313,11 +312,17 @@
   }
 
   .content .content-img > div {
+    display: flex;
+    align-items: center;
     width: 32%;
     margin-top: 0.2rem;
     margin-right: 0.2rem;
+    height: 4.5rem;
+    background-color: #eee;
   }
-
+  .content .content-img > div img{
+    height: auto;
+  }
   .content .content-reply {
     font-size: 0.55rem;
     color: #999;

@@ -12,22 +12,20 @@
       <textarea class="box-text" placeholder="来说点什么吧" maxlength="2000" v-model="content"></textarea>
       <span class="word-num lm-font-xs">还可以输入{{ wordNum }}个字</span>
     </div>
-
-
-<div class="flex-alig-center up-img">
-     <div class="imgs" v-show="images.length >0">
-          <ul class="flex-alig-center">
-            <li v-for="(img,idx) in images" :key="idx">
-              <img :src="img"/>
-              <img class="del-img" src="../../assets/images/teaCommunity/del.png"  @click='delImage(idx)'/>
-            </li>
-          </ul>
-     </div>
-    <div class="up-btn" v-show="images.length < 4">
-      <input  type="file"  @change="previewImage"/>
-      <img src="../../assets/images/teaCommunity/upimg.png" />
+    <div class="flex-alig-center up-img">
+        <div class="imgs" v-show="images.length >0">
+              <ul class="flex-alig-center">
+                <li v-for="(img,idx) in images" :key="idx">
+                  <img :src="img"/>
+                  <img class="del-img" src="../../assets/images/teaCommunity/del.png"  @click='delImage(idx)'/>
+                </li>
+              </ul>
+        </div>
+        <div class="up-btn" v-show="images.length < 4">
+          <input  type="file" id="up_img"  @change="previewImage"/>
+          <img src="../../assets/images/teaCommunity/upimg.png" />
+        </div>
     </div>
-</div>
     <!--<dropzone id="myVueDropzone" url="www.com" :vdropzone-success="showSuccess">-->
     <!--&lt;!&ndash; Optional parameters if any! &ndash;&gt;-->
     <!--<input type="hidden" name="token" value="xxx">-->
@@ -122,8 +120,13 @@
         let  files = e.target.files || e.dataTransfer.files;
         if(!files.length){
           return false;
-        }
-        for(let i=0;i<files.length;i++){
+        } 
+        if(this.images.length>=4){
+          Toast("最多只能上传4张图片");
+          return false;
+        }  
+          
+        for(let i=0;i<files.length;i++){          
           let reader=new FileReader();
           reader.readAsDataURL(files[i]);
           reader.onload=f=>{
@@ -134,7 +137,9 @@
 
       },
       //删除图片
-      delImage(index){
+      delImage(index){  
+        let file=document.getElementById('up_img'); 
+        file.value='';   
         this.imgs.splice(index,1);
         this.images.splice(index,1);
       },
@@ -306,6 +311,7 @@
   .imgs >ul >li >img:first-child{
     width: 100%;
     height: auto;
+    max-height: 3.6rem;
   }
   .imgs >ul >li .del-img{
     width: 0.8rem;
