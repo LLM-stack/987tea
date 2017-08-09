@@ -120,13 +120,13 @@
         let  files = e.target.files || e.dataTransfer.files;
         if(!files.length){
           return false;
-        } 
+        }
         if(this.images.length>=4){
           Toast("最多只能上传4张图片");
           return false;
-        }  
-          
-        for(let i=0;i<files.length;i++){          
+        }
+
+        for(let i=0;i<files.length;i++){
           let reader=new FileReader();
           reader.readAsDataURL(files[i]);
           reader.onload=f=>{
@@ -137,9 +137,9 @@
 
       },
       //删除图片
-      delImage(index){  
-        let file=document.getElementById('up_img'); 
-        file.value='';   
+      delImage(index){
+        let file=document.getElementById('up_img');
+        file.value='';
         this.imgs.splice(index,1);
         this.images.splice(index,1);
       },
@@ -306,7 +306,6 @@
     width: 3.6rem;
     height: 3.6rem;
     border: 1px solid #ccc;
-    border-radius: 0.2rem;
   }
   .imgs >ul >li >img:first-child{
     width: 100%;

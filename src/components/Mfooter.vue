@@ -37,6 +37,7 @@
     width: 100%;
     height: 2rem;
     position: fixed;
+    z-index: 911;
     bottom: 0;
     background-color: #fff;
     display: flex;

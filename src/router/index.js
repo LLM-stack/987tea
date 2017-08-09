@@ -18,7 +18,8 @@ import PaymentCompleted from '@/pages/cartPage/paymentCompleted'
 import TcHome from '@/pages/teaCommunity/tcHome'
 import TcContent from '@/pages/teaCommunity/tcContent'
 import Post from '@/pages/teaCommunity/post'
-import Tags from '@/pages/teaCommunity/tags'
+import MsgContent from '@/pages/teaCommunity/msgContent'
+import Msgs from '@/pages/teaCommunity/msgs'
 
 // 活动页
 import OnSale from '@/pages/activities/onSale'
@@ -96,8 +97,11 @@ export default new Router({
       path: '/Post',
       component: Post
     }, {
-      path: '/Tags',
-      component: Tags
+      path: '/MsgContent',
+      component: MsgContent
+    }, {
+      path: '/Msgs',
+      component: Msgs
     },
     // 活动页
     {

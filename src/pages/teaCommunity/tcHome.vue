@@ -3,9 +3,10 @@
     <Mheader>
       <div slot="title">茶圈子</div>
       <div class="msg" slot="info">
-        <img src="../../assets/images/teaCommunity/msg.png"/>
-        <div class="msg-num lm-text-red flex-alig-center">
-        </div>
+        <router-link to="/Msgs">
+          <img src="../../assets/images/teaCommunity/msg.png"/>
+          <div class="msg-num lm-text-red flex-alig-center"></div>
+        </router-link>
       </div>
     </Mheader>
     <div class="banner">
@@ -46,7 +47,7 @@
           </div>
         </router-link>
         <div class="content-img flex-alig-center" v-show="theme.Imgs.length>0">
-          <div v-for="(img,idx) in theme.Imgs" :key="idx"><img :src="img" @click="enlarge(idx)"/></div>
+          <div v-for="(img,idx) in theme.Imgs" :key="idx"><img :src="img" @click="enlarge(index,idx)"/></div>
         </div>
         <div class="content-reply lm-margin-t-sm lm-padding-t-sm flex-alig-center">
           <div class="re-l flex-alig-center">
@@ -84,14 +85,14 @@
         <img src="../../assets/images/teaCommunity/post.png"/>
       </div>
     </router-link>
-
+    <!-- 查看大图 -->
     <div class="model" @click="closeModel" v-show="model">
-      <mt-swipe :show-indicators="false" :auto="0">
-        <mt-swipe-item v-for="item in bigPic">
+      <mt-swipe :show-indicators="false" :auto="0" :defaultIndex="bigPicIdx" >
+        <mt-swipe-item v-for="(item,index) in bigPic" :key="index">
           <img :src="item" />
         </mt-swipe-item>
       </mt-swipe>
-      <span>1/3</span>
+      <!-- <span>{{(bigPicIdx+1)+'/'+bigPic.length}}</span> -->
     </div>
 
     <Mfooter :worldCurrent='true'></Mfooter>
@@ -102,7 +103,7 @@
   import Mheader from '../../components/Mheader'
   import Mfooter from '../../components/Mfooter'
   import {Toast} from 'mint-ui'
-  import {formatDate} from '../js/Date.js'//时间显示格式转换js
+  import {formatDate} from '../../assets/js/Date.js'//时间显示格式转换js
 
   export default {
     components: {
@@ -112,7 +113,8 @@
     data(){
       return {
         model: false,
-        bigPic:[],
+        bigPic:[],//查看大图的数组
+        bigPicIdx:0,//打开时默认图片索引
         isNewest: true,//是否最新
         isHot: false,//是否最热
         isding: false,//是否点赞过
@@ -133,13 +135,16 @@
     },
     methods: {
       //点击查看大图
-      enlarge(idx){
+      enlarge(index,idx){
+        this.bigPic = this.themeList[index].Imgs;
+        this.bigPicIdx = idx;
         this.model = true;
-        this.bigPic = this.themeList[idx].Imgs;
       },
       //关闭预览大图
       closeModel(){
-        this.model = false
+        this.bigPicIdx = 0;
+        this.bigPic=[];
+        this.model = false;
       },
       //点赞
       ding(idx){
@@ -410,14 +415,15 @@
 
   .content .content-img {
     width: 100%;
-    justify-content: space-between;
   }
 
   .content .content-img > div {
     display: flex;
     align-items: center;
     margin-top: 0.2rem;
+    width: 25%;
     height: 3.5rem;
+    overflow: hidden;
     background-color: #eee;
   }
 
@@ -467,7 +473,9 @@
   }
 
   .model img {
-    margin-top: 9rem;
+    position: absolute;
+    transform: translateY(-50%);
+    top: 50%;
     height: auto;
   }
 </style>

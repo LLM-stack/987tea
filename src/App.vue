@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-
         <router-view></router-view>
 
     <div class="gotop" v-show="top>700" @click="gotop">

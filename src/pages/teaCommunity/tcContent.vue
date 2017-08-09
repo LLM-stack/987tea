@@ -19,7 +19,7 @@
         {{'#'+themeDetail.TTName+'# '+themeDetail.Contents}}
       </div>
       <div class="content-img flex-alig-center">
-        <div v-for="(img,idx) in themeImgs" :key="idx"><img :src="img"/></div>
+        <div v-for="(img,idx) in themeImgs" :key="idx"><img :src="img"  @click="enlarge(idx)"/></div>
       </div>
       <div class="content-reply lm-margin-t-sm lm-padding-t-sm flex-alig-center">
         <div class="re-l flex-alig-center">
@@ -79,6 +79,16 @@
       <div @click="reply(1)">来说两句吧...</div>
     </div>
 
+    <!-- 查看大图 -->
+    <div class="model" @click="closeModel" v-show="model">
+      <mt-swipe :show-indicators="false" :auto="0" :defaultIndex="bigPicIdx" >
+        <mt-swipe-item v-for="(item,index) in bigPic" :key="index">
+          <img :src="item" />
+        </mt-swipe-item>
+      </mt-swipe>
+      <!-- <span>{{(bigPicIdx+1)+'/'+bigPic.length}}</span> -->
+    </div>
+
     <transition name="drop">
       <div class="dialog" v-if="dialog">
         <div class="title">
@@ -95,23 +105,23 @@
       </div>
     </transition>
 
-    <Mfooter :worldCurrent='true'></Mfooter>
   </div>
 </template>
 
 <script>
   import Mheader from '../../components/Mheader'
-  import Mfooter from '../../components/Mfooter'
-   import {Toast} from 'mint-ui'
-  import {formatDate} from '../js/Date.js'//时间显示格式转换js
+  import {Toast} from 'mint-ui'
+  import {formatDate} from '../../assets/js/Date.js'//时间显示格式转换js
 
   export default {
     components: {
-      Mheader,
-      Mfooter
+      Mheader
     },
     data(){
       return {
+        model: false,
+        bigPic:[],//查看大图的数组
+        bigPicIdx:0,//打开时默认图片索引
         isding: false,
         dialog: false,
         content:'',
@@ -138,6 +148,18 @@
           this.addFabulous();
         }
 
+      },
+      //点击查看大图
+      enlarge(idx){
+        this.bigPic = this.themeImgs;
+        this.bigPicIdx = idx;
+        this.model = true;
+      },
+      //关闭预览大图
+      closeModel(){
+        this.bigPicIdx = 0;
+        this.bigPic=[];
+        this.model = false;
       },
       reply(i,id,name){
       	if(i){
@@ -267,13 +289,11 @@
     },
     created(){
         this.getThemeDetail();
-
     },
     computed:{
       wordNum(){
         return 2000 - this.content.length
       }
-
     }
   }
 </script>
@@ -314,13 +334,14 @@
   .content .content-img > div {
     display: flex;
     align-items: center;
-    width: 32%;
     margin-top: 0.2rem;
-    margin-right: 0.2rem;
-    height: 4.5rem;
+    width: 25%;
+    height: 3.5rem;
+    overflow: hidden;
     background-color: #eee;
   }
-  .content .content-img > div img{
+
+  .content-img > div img {
     height: auto;
   }
   .content .content-reply {
@@ -382,9 +403,10 @@
 
   .reply-box {
     position: fixed;
-    bottom: 2rem;
+    bottom: 0;
     width: 100%;
     padding: 0.2rem 0.4rem;
+    border-top: 1px solid #eee;
     background-color: #fff;
   }
 
@@ -468,4 +490,21 @@
     right: 0.5rem;
     position: absolute;
   }
+   .model {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    background-color: rgba(0, 0, 0, 0.9);
+  }
+
+  .model img {
+    position: absolute;
+    transform: translateY(-50%);
+    top: 50%;
+    height: auto;
+  }
+
 </style>
