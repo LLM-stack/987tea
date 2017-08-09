@@ -5,12 +5,12 @@
       <div slot="info" :class="{disableTap:posting}" @click="release">发布</div>
     </Mheader>
 
-    <div class="title">
-      <input type="text" placeholder="标题（选填）" v-model="title">
+    <div class="title ">
+      <input class="lm-font-sm" type="text" placeholder="标题（选填）" v-model="title">
     </div>
     <div class="box">
-      <textarea class="box-text" placeholder="来说点什么吧" maxlength="2000" v-model="content"></textarea>
-      <span class="word-num lm-font-xs">还可以输入{{ wordNum }}个字</span>
+      <textarea class="box-text lm-font-sm" placeholder="来说点什么吧" maxlength="2000" v-model="content"></textarea>
+      <span class="word-num ">还可以输入{{ wordNum }}个字</span>
     </div>
     <div class="flex-alig-center up-img">
         <div class="imgs" v-show="images.length >0">

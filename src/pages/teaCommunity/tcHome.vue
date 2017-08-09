@@ -446,6 +446,7 @@
     margin-right: 0.1rem;
     width: 0.6rem;
     height: 0.6rem;
+    vertical-align: middle;
   }
 
   .post {

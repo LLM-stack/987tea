@@ -44,6 +44,9 @@
       </div>
     </div>
 
+    <div class="no-comment lm-text-grey">
+      暂无评论
+    </div>
     <div class="comment-list lm-margin-t-sm" v-infinite-scroll="getCommentBack"
          infinite-scroll-disabled="loading"
          infinite-scroll-distance="10">
@@ -95,8 +98,8 @@
           回复{{userName}}
         </div>
         <div class="content">
-          <textarea class="box-text" placeholder="来说点什么吧" maxlength="2000" v-model="content"></textarea>
-          <span class="word-num lm-font-xs">还可以输入{{ wordNum }}个字</span>
+          <textarea class="box-text lm-font-sm" placeholder="来说点什么吧" maxlength="2000" v-model="content"></textarea>
+          <span class="word-num ">还可以输入{{ wordNum }}个字</span>
         </div>
         <div class="btn-group">
           <div @click="addCommentBack()">回复</div>
@@ -399,6 +402,7 @@
     margin-right: 0.1rem;
     width: 0.6rem;
     height: 0.6rem;
+    vertical-align: middle;
   }
 
   .reply-box {
@@ -418,7 +422,11 @@
     background-color: #eee;
     margin: 0 auto;
   }
-
+  /*暂无评论*/
+  .no-comment{
+    padding: 2rem 0;
+    text-align: center;
+  }
   /*弹出评论框*/
   .dialog {
     padding: 0.5rem 0.2rem;

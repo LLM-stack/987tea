@@ -415,12 +415,12 @@
 
   .mint-radio-input:checked + .mint-radio-core,
   .mint-checkbox-input:checked + .mint-checkbox-core {
-    border-color: #B4282D;
-    background-color: #B4282D;
+    border-color: #B4282D!important;
+    background-color: #B4282D!important;
   }
 
   .mint-radio-input:checked + .mint-radio-core::after {
-    border-color: #fff;
+    border-color: #fff!important;
     background-color: rgba(0, 0, 0, 0);
     -webkit-transform: rotate(45deg) scale(1);
     transform: rotate(45deg) scale(1);
