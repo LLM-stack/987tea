@@ -5,7 +5,7 @@
       <div class="msg" slot="info">
         <router-link to="/Msgs">
           <img src="../../assets/images/teaCommunity/msg.png"/>
-          <div class="msg-num lm-text-red flex-alig-center"></div>
+          <div v-show="infoCount>0" class="msg-num lm-text-red flex-alig-center"></div>
         </router-link>
       </div>
     </Mheader>
@@ -29,8 +29,7 @@
          v-infinite-scroll="loadMore"
          infinite-scroll-disabled="loading"
          infinite-scroll-distance="10">
-      <div class="content" v-for="(theme,index) in themeList" :key="theme.Id">
-        <router-link :to="{path:'/tcContent/'+ theme.Id}">
+      <div class="content" v-for="(theme,index) in themeList" :key="theme.Id">        
           <div class="user flex-alig-center">
             <div class="user-avater">
               <img :src="theme.HeaderImg"/>
@@ -40,14 +39,15 @@
               <!-- <div class="lm-font-xs lm-text-grey lm-margin-t-xs">用户签名</div> -->
             </div>
           </div>
-
+        <router-link :to="{path:'/tcContent/'+ theme.Id}">
           <div class="content-p lm-font-sm">
             <h1 class="lm-text-black lm-font-defult">{{theme.Title}}</h1>
             {{'#' + theme.TTName + '# ' + theme.Contents}}
           </div>
         </router-link>
-        <div class="content-img flex-alig-center" v-show="theme.Imgs.length>0">
-          <div v-for="(img,idx) in theme.Imgs" :key="idx"><img :src="img" @click="enlarge(index,idx)"/></div>
+         
+        <div class="content-img flex-alig-center" v-show="theme.Imgs.length>0" @click="goToContent(theme.Id)">
+          <div v-for="(img,idx) in theme.Imgs" :key="idx"><img :src="img" @click.stop="enlarge(index,idx)"/></div>
         </div>
         <div class="content-reply lm-margin-t-sm lm-padding-t-sm flex-alig-center">
           <div class="re-l flex-alig-center">
@@ -60,7 +60,7 @@
               <span>{{theme.SeeCount}}</span>
             </div>
             <div class="flex-alig-center lm-margin-l">
-              <router-link to="/tcContent">
+              <router-link :to="{path:'/tcContent/'+ theme.Id}">
                 <img src="../../assets/images/teaCommunity/reply.png"/>
                 <span>{{theme.CommentCount}}</span>
               </router-link>
@@ -80,11 +80,9 @@
       </div>
     </div>
     <!--发帖-->
-    <router-link to="/Post">
-      <div class="post">
+     <div class="post" @click="goToPost">
         <img src="../../assets/images/teaCommunity/post.png"/>
       </div>
-    </router-link>
     <!-- 查看大图 -->
     <div class="model" @click="closeModel" v-show="model">
       <mt-swipe :show-indicators="false" :auto="0" :defaultIndex="bigPicIdx" >
@@ -125,7 +123,8 @@
         pageIndex: 0,//当前页码
         loading: false,//是否下拉刷新
         isLoading: false,//是否显示加载中...
-        themeList: []//话题集合
+        themeList: [],//话题集合
+        infoCount:0//消息数量
       }
     },
     filters: {
@@ -134,6 +133,9 @@
       }
     },
     methods: {
+      goToContent(id){
+        this.$router.push({path: '/tcContent/'+ id})
+      },
       //点击查看大图
       enlarge(index,idx){
         this.bigPic = this.themeList[index].Imgs;
@@ -326,12 +328,57 @@
             }
           }
         })
+      },
+      //获取消息数量
+      getMsgNum(){
+        this.axios({
+          url: this.url + '/api/CM_Information/GetInfoCount',
+          method: 'get',
+          headers: {'Authorization': 'BasicAuth ' + localStorage.lut}
+
+        }).then((res) => {
+          if (!!res) {
+            if (res.data.Code == 200) {
+                this.infoCount=res.data.Data;
+            } 
+          }
+        })
+      },
+      //跳转发帖
+      goToPost(){
+        if (!!localStorage.lut) {
+          //验证localStorage.lut是否在登录状态
+           this.axios.get(this.url + '/api/Login/CheckLogin?str='+localStorage.lut).then((res) => {
+                if (res.data.Code == 200) {
+                  this.$router.push({path: '/Post'})
+                }else{
+                   let instance = Toast('还未登录，请先登录');
+                    setTimeout(() => {
+                      instance.close(); 
+                      this.$router.replace({
+                            path: '/login/',
+                            query: {redirect: this.$router.currentRoute.fullPath}
+                          })
+                    }, 1500);
+                }
+              })
+        }else{
+            let instance = Toast('还未登录，请先登录');
+            setTimeout(() => {
+            instance.close(); 
+            this.$router.replace({
+                  path: '/login/',
+                  query: {redirect: this.$router.currentRoute.fullPath}
+                })
+            }, 1500);
+        }
       }
     },
     mounted(){
       this.$nextTick(function () {
         this.getBannerImg();
         this.getThemeType();
+        this.getMsgNum();
       })
     }
   }

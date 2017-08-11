@@ -4,7 +4,9 @@
       <div slot="title">茶圈子</div>
     </Mheader>
 
-    <div class="content">
+    <div class="content" v-infinite-scroll="loadMore"
+         infinite-scroll-disabled="loading"
+         infinite-scroll-distance="10">
       <div class="user flex-alig-center">
         <div class="user-avater">
           <img :src="themeDetail.HeaderImg"/>
@@ -44,14 +46,10 @@
       </div>
     </div>
 
-    <div class="no-comment lm-text-grey">
-      暂无评论
-    </div>
-    <div class="comment-list lm-margin-t-sm" v-infinite-scroll="getCommentBack"
-         infinite-scroll-disabled="loading"
-         infinite-scroll-distance="10">
+   
+    <div class="comment-list lm-margin-t-sm" v-if="commentBackList.length>0" >
       <div class="title lm-font-sm">评论</div>
-      <div class="comment" v-for="(cb,index) in commentBackList" :key="index">
+      <div class="comment"  v-for="(cb,index) in commentBackList" :key="index" >
         <div class="user flex-alig-center">
           <div class="flex-alig-center">
             <div class="user-avater">
@@ -75,9 +73,15 @@
          <span v-if="!!cb.upUid">回复了 <span class="font-black">{{cb.upUNickname}}：</span></span> {{cb.contents}}
         </div>
       </div>
-
+      <!--加载中。。。-->
+      <div class="loading" v-show="isLoading">
+        <mt-spinner :type="3" color="#999"></mt-spinner>
+        <span class="lm-margin-l-sm lm-text-grey">加载中...</span>
+      </div>
     </div>
-
+      <div class="no-comment lm-text-grey" v-else >
+        暂无评论
+      </div>
     <div class="reply-box">
       <div @click="reply(1)">来说两句吧...</div>
     </div>
@@ -102,7 +106,7 @@
           <span class="word-num ">还可以输入{{ wordNum }}个字</span>
         </div>
         <div class="btn-group">
-          <div @click="addCommentBack()">回复</div>
+          <div :class="{disableTap:posting}" @click="addCommentBack()">回复</div>
           <div @click="reply(0)">取消</div>
         </div>
       </div>
@@ -133,8 +137,10 @@
         commentBackList:[],//评论信息
         pageIndex:0,//评论页码
         loading: false,
+        isLoading:false,
         upId:'',//上级回复编号
-        userName:'帖子'//用户姓名
+        userName:'帖子',//用户姓名
+        posting:false
       }
     },
     filters: {
@@ -151,7 +157,13 @@
           this.addFabulous();
         }
 
-      },
+      }, //加载更多
+      loadMore(){       
+        this.loading = true;
+        this.isLoading = true;
+        this.pageIndex++;    
+        this.getCommentBack();
+      }, 
       //点击查看大图
       enlarge(idx){
         this.bigPic = this.themeImgs;
@@ -196,19 +208,25 @@
                   this.themeImgs=this.themeDetail.Images.split(',');
                }
             }
+            if(res.data.Code==500){
+              let instance = Toast(res.data.Data);
+              this.posting=true;
+              setTimeout(() => {
+                instance.close();
+                this.$router.push({path: '/tcHome'})
+              }, 2000);
+            }
           })
       },
       //获取评论信息
       getCommentBack(){
-        this.loading = true;
-        this.pageIndex++;
-        this.$route.params.themeId=1;
           this.axios.get(this.url + '/api/CM_CommentBack/GetCommentBacksByThemeId?id='+this.$route.params.themeId+'&index='+this.pageIndex+'&onlyAuthor=false&desc=true&authorId='+this.themeDetail.Auditor).then((res)=>{
             if(res.data.Code==200){
                 if(!!res.data.Data){
                      if (res.data.Data.length > 0) {
                       for (let i = 0; i < res.data.Data.length; i++) {
                           this.commentBackList.push(res.data.Data[i])
+                          
                       }
                       this.loading = false;
                     }else{
@@ -217,13 +235,17 @@
                 }else{
                   this.loading = true;
                 }
+                this.isLoading=false;
             }
           })
       },
       //添加回复
       addCommentBack(){
+        this.posting=true;
         if(!!!this.content){
           Toast("评论的内容不能为空");
+          this.posting=false;
+          return ;
         }
          this.axios({
           url: this.url + '/api/CM_CommentBack/SubmitBack',
@@ -233,10 +255,12 @@
 
           }).then((res)=>{
             if(!!res){
+              this.posting=false;
               if (res.data.Code == 200) {
                 Toast(res.data.Data);
                 this.reply(0);
-                this.pageIndex=0;//设置默认从第一页开始加载
+                this.pageIndex=1;//设置默认从第一页开始加载
+                this.commentBackList=[];//先清空原先的评论
                 this.getCommentBack();
               } else {
                 Toast(res.data.Data);
@@ -292,6 +316,11 @@
     },
     created(){
         this.getThemeDetail();
+        if(!!this.$route.query.info){
+          let temp=this.$route.query.info.split('-');
+          this.reply(1,temp[0],temp[1]);
+          
+        }
     },
     computed:{
       wordNum(){
@@ -342,6 +371,7 @@
     height: 3.5rem;
     overflow: hidden;
     background-color: #eee;
+    margin: 0.1rem;
   }
 
   .content-img > div img {
@@ -435,7 +465,7 @@
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 9999;
+    z-index: 922;
     background-color: #fff;
   }
 
@@ -498,7 +528,7 @@
     right: 0.5rem;
     position: absolute;
   }
-   .model {
+  .model {
     position: fixed;
     top: 0;
     left: 0;

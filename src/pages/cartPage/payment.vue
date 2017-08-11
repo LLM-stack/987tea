@@ -241,11 +241,15 @@
                 this.$router.push({path: '/paymentCompleted'})
               }
               if(this.payType==2){
-                this.alipay=res.data.ExData;                
-                setTimeout(function() {
-                  this.isOnce=false;
-                  document.forms['alipaysubmit'].submit();
-                },0)
+                if(res.data.ExData=="0"){
+                  this.$router.push({path: '/paymentCompleted'})
+                }else{
+                  this.alipay=res.data.ExData;                                
+                  setTimeout(function() {
+                    this.isOnce=false;
+                    document.forms['alipaysubmit'].submit();
+                  },0)
+                }                
               }
               }else {
                 this.isOnce=false;

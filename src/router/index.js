@@ -97,7 +97,7 @@ export default new Router({
       path: '/Post',
       component: Post
     }, {
-      path: '/MsgContent',
+      path: '/MsgContent/:typeId',
       component: MsgContent
     }, {
       path: '/Msgs',

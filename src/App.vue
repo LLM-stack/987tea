@@ -395,8 +395,8 @@
   }
 
   body .mint-switch-input:checked + .mint-switch-core {
-    border-color: #e20f0f;
-    background-color: #e20f0f;
+    border-color: #e20f0f!important;
+    background-color: #e20f0f!important;
   }
 
   body .cont .mint-field .mint-cell-wrapper {
@@ -421,28 +421,23 @@
 
   .mint-radio-input:checked + .mint-radio-core::after {
     border-color: #fff!important;
-    background-color: rgba(0, 0, 0, 0);
-    -webkit-transform: rotate(45deg) scale(1);
-    transform: rotate(45deg) scale(1);
+    background-color: rgba(0, 0, 0, 0)!important;
+    transform: rotate(45deg) scale(1)!important;
   }
 
   .mint-radio-core::after {
-    border-radius: 0;
+    border-radius: 0!important;
     border: 2px solid transparent;
     border-left: 0;
     border-top: 0;
     content: " ";
-    top: 3px;
-    left: 6px;
+    top: 3px!important;
+    left: 6px!important;
     position: absolute;
-    width: 4px;
+    width: 4px!important;
     height: 8px;
-    -webkit-transform: rotate(45deg) scale(0);
-    transform: rotate(45deg) scale(0);
-    -webkit-transition: -webkit-transform .2s;
-    transition: -webkit-transform .2s;
+    transform: rotate(45deg) scale(0)!important;
     transition: transform .2s;
-    transition: transform .2s, -webkit-transform .2s;
   }
   .picker-center-highlight{
     height: 78px!important;

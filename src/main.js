@@ -5,6 +5,7 @@ import App from './App'
 import router from './router'
 import store from './store/index'
 
+
 import axios from 'axios'
 import Mint from 'mint-ui'
 import 'mint-ui/lib/style.css'
@@ -30,6 +31,10 @@ axios.interceptors.response.use(function(response){
           //过滤购物车的登录跳转进行处理
           localStorage.removeItem('lut');
   }
+  else if(err.response.config.url.includes('/api/CM_Information/GetInfoCount')){
+          //过滤茶友圈的登录跳转进行处理
+          localStorage.removeItem('lut');
+  }
 
   else if (err.response.status == 401) {
       let instance = Toast('还未登录，请先登录');
@@ -53,7 +58,7 @@ axios.interceptors.response.use(function(response){
 //本地地址： 'http://localhost:55338'  //'http://localhost:8088'
 //正式地址： 'http://api.987tea.com'
 Vue.prototype.url='http://192.168.1.110:8088'
-// Vue.prototype.url='http://localhost:8088'
+// Vue.prototype.url='http://localhost:55338'
 // Vue.prototype.url='http://api.987tea.com'
 //
 

@@ -79,13 +79,15 @@
         <!--<router-link :to="{path: '/'}">-->
           <div class="control-icon">
             <img src="../../assets/images/myInfo/icon.9.png"/>
-            <div>邀请好友</div>
+            <div>入驻我们</div>
           </div>
         <!--</router-link>-->
+        <router-link :to="{path: '/TcHome'}">
         <div class="control-icon" >
           <img src="../../assets/images/myInfo/icon.10.png"/>
           <div>茶友圈</div>
         </div>
+        </router-link>
         <div class="control-icon">
           <img src="../../assets/images/myInfo/icon.11.png"/>
           <div>我的客服</div>

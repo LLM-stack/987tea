@@ -63,13 +63,15 @@
     </div>
     <div class="top-tabs">
       <div>
-        <!--<router-link :to="{path:'/MyCB'}">-->
+        <router-link :to="{path:'/MyCB'}">
           <img src="../../assets/images/myInfo/icon.5.png" alt="">
-        <!--</router-link>-->
+        </router-link>
         <span>茶金币</span>
       </div>
       <div>
+        <router-link :to="{path:'/tcHome'}">
         <img src="../../assets/images/myInfo/icon.10.png" alt="">
+        </router-link>
         <span>茶友圈</span>
       </div>
       <div>
@@ -79,8 +81,8 @@
         <span>物流信息</span>
       </div>
       <div>
-        <img src="../../assets/images/myInfo/icon.11.png" alt="">
-        <span>联系客服</span>
+        <img src="../../assets/images/myInfo/icon.9.png" alt="">
+        <span>入驻我们</span>
       </div>
     </div>
     <div class="box hot-buy">
@@ -112,7 +114,7 @@
         </div>
       </div>
     </div>
-    <!--TODO：社区模块还未完成 先注释
+    <!-- 社区模块 -->
     <div class="box choice">
       <div class="title flex-alig-center">
         <span></span>为您精选
@@ -122,24 +124,24 @@
       </div>
       <div class="box-block flex-between">
         <div class="choice-img">
-          <img src="../../assets/images/goods/987tea_16.png" alt="">
+          <img :src="theme.Imgs[0]" alt="">
         </div>
         <div class="choice-text">
-          <div class="choice-text-title">这些茶，甜的让人念念不忘。</div>
-          <div class="choice-text-p">在众多茶里，以甜占主导地位的，确实不多，幸运的是，小七有幸喝到这几款</div>
+          <div class="choice-text-title">{{theme.Title}}</div>
+          <div class="choice-text-p">{{theme.Contents}}</div>
           <div class="choice-text-bottom flex-alig-center">
             <div class="flex-alig-center lm-margin-r-lg">
               <span></span>
-              77
+              {{theme.FabulouCount}}
             </div>
             <div class="flex-alig-center">
               <span></span>
-              1457
+              {{theme.CommentCount}}
             </div>
           </div>
         </div>
       </div>
-    </div>-->
+    </div>
     <div class="box mode">
       <div class="title flex-alig-center">
         自品好茶 <span></span>
@@ -207,7 +209,8 @@
         flag: false,
         time: new Date(),
         key:'MallIndexBannerImg',//banner位置key
-        advList:[]//广告信息集合
+        advList:[],//广告信息集合
+        theme:''
       }
     },
     mounted () {
@@ -233,7 +236,7 @@
               Toast('网络请求超时');
             })
          }
-        
+
       },
       //获取送礼必备
       getGiftsTea(){
@@ -251,7 +254,7 @@
               Toast('网络请求超时');
             })
          }
-        
+
       },
       //倒计时
       timeDown () {
@@ -302,8 +305,20 @@
               this.advList = res.data.Data;
             }
           })
-        }
-        
+        }        
+      },
+      //获取置顶的帖子
+      getTopTheme(){
+        if(!!sessionStorage.Theme){
+          this.theme=JSON.parse(sessionStorage.Theme);
+        }else{
+          this.axios.get(this.url + '/api/CM_Theme/GetThemeByTop').then((res) => {
+            if (res.data.Code == 200) {
+              sessionStorage.setItem("Theme", JSON.stringify(res.data.Data));
+              this.theme = res.data.Data;
+            }
+          })
+        }        
       }
 
     },
@@ -320,6 +335,7 @@
       this.getBannerImg();
       this.getOwnTea();
       this.getGiftsTea();
+      this.getTopTheme();
     }
   }
 </script>

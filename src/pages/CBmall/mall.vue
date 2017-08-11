@@ -5,7 +5,9 @@
     </Mheader>
 
     <div class="banner">
+       <router-link to="/CBMall">
       <img src="../../assets/images/cbmall/cbshop_02.png"/>
+      </router-link>
       <div class="tabs" id="tabs" :class="{fixed:isfixed}">
         <div class="tab" v-for="(item,index) in tagList" :class="{active:item.isactive}" :key='index' @click="tabActive(index)">{{ item.Name |tagName }}</div>
       </div>
@@ -22,7 +24,7 @@
              :productPrice="item.SalePrice"
       ></Mmode>
       </div>
-      <div class="box mode">
+      <div class="box mode" v-show="recommend.length>0">
         <div class="title flex-alig-center">
           猜你喜欢 <span></span>
         </div>
@@ -130,6 +132,15 @@
       },
        //获取推荐商品
       getRecommendProduct(){
+        if (!!localStorage.lut) {
+          //验证localStorage.lut是否在登录状态
+           this.axios.get(this.url + '/api/Login/CheckLogin?str='+localStorage.lut).then((res) => {
+                if (res.data.Code == 500) {
+                  //验证失败 清除localStorage
+                  localStorage.removeItem('lut');
+                }
+              })
+        }
          if(!!localStorage.lut){
                 this.axios({
                   url: this.url + '/api/Product/GetUserViewProduct',
