@@ -22,7 +22,7 @@
         </ul>
       </div>
       <div class="up-btn" v-show="images.length < 4">
-        <input type="file" id="up_img"  multiple= "multiple" accept="image/*"  @change="previewImage" />
+        <input type="file" id="up_img" accept="image/*" @change="previewImage" />
         <img src="../../assets/images/teaCommunity/upimg.png" />
       </div>
     </div>
@@ -54,7 +54,8 @@
 import Mheader from '../../components/Mheader'
 import Mfooter from '../../components/Mfooter'
 import { Toast } from 'mint-ui'
-import Exif from 'exif-js'  
+import Exif from 'exif-js'
+import { Indicator } from 'mint-ui';
 // import Dropzone from 'vue2-dropzone'
 
 export default {
@@ -87,7 +88,7 @@ export default {
                 label: '#' + element.Name + '#',
                 value: element.Id.toString() + '&#' + element.Name + '#'
               }
-              this.options.push(op);              
+              this.options.push(op);
             }, this);
           }
         }
@@ -110,84 +111,91 @@ export default {
     },
     //图片预览
     previewImage(e) {
-      let files = e.target.files || e.dataTransfer.files;
-      if (!files.length) {
-        return false;
-      }
-      if (this.images.length >= 4) {
-        Toast("最多只能上传4张图片");
-        return false;
-      }
-      if(this.browser()==="iPhone"){
-          this.imgPreview(files[0]);
-      }else {
-        for (let i = 0; i < files.length; i++) {
-          let reader = new FileReader();
-          reader.readAsDataURL(files[i]);
-          reader.onload = f => {           
-            this.images.push(f.target.result);
-          }
-          this.imgs.push(files[i]);
+      Indicator.open({
+        text: '图片上传中...',
+        spinnerType: 'snake'
+      });
+      setTimeout(() => {
+        let files = e.target.files || e.dataTransfer.files;
+        if (!files.length) {
+          return false;
         }
-      }
+        if (this.images.length >= 4) {
+          Toast("最多只能上传4张图片");
+          return false;
+        }
+        if (this.browser() === "iPhone") {
+          this.imgPreview(files[0]);
+        } else {
+          for (let i = 0; i < files.length; i++) {
+            let reader = new FileReader();
+            reader.readAsDataURL(files[i]);
+            reader.onload = f => {
+              this.images.push(f.target.result);
+            }
+            this.imgs.push(files[i]);
+          }
+        }
+        Indicator.close();
+      }, 500)
 
     },
     //将base64的图片转换成file格式
-    convertBase64UrlToBlob(urlData){        
-        var bytes=window.atob(urlData.split(',')[1]);        //去掉url的头，并转换为byte            
-        //处理异常,将ascii码小于0的转换为大于0  
-        var ab = new ArrayBuffer(bytes.length);  
-        var ia = new Uint8Array(ab);  
-        for (var i = 0; i < bytes.length; i++) {  
-            ia[i] = bytes.charCodeAt(i);  
-        }        
-        return new Blob( [ab] , {type : 'image/png'});  
+    convertBase64UrlToBlob(urlData) {
+      var bytes = window.atob(urlData.split(',')[1]);        //去掉url的头，并转换为byte            
+      //处理异常,将ascii码小于0的转换为大于0  
+      var ab = new ArrayBuffer(bytes.length);
+      var ia = new Uint8Array(ab);
+      for (var i = 0; i < bytes.length; i++) {
+        ia[i] = bytes.charCodeAt(i);
+      }
+      return new Blob([ab], { type: 'image/png' });
     },
     //判断客户端
-    browser(){
-      if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)) {         
-          return "iPhone";
-      } else if (/(Android)/i.test(navigator.userAgent)) { 
-          return "Android";
-      }else{
+    browser() {
+      if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)) {
+        return "iPhone";
+      } else if (/(Android)/i.test(navigator.userAgent)) {
+        return "Android";
+      } else {
         return "PC";
       }
     },
     //iphone图片预览
-    imgPreview (file) {  
-      let self = this;  
-      let Orientation;  
+    imgPreview(file) {
+      let self = this;
+      let Orientation;
       //去获取拍照时的信息，解决拍出来的照片旋转问题  
-      Exif.getData(file, function(){  
-          Orientation = Exif.getTag(this, 'Orientation');  
-      });  
+      Exif.getData(file, function () {
+        Orientation = Exif.getTag(this, 'Orientation');
+      });
       // 看支持不支持FileReader  
-      if (!file || !window.FileReader) return;  
-  
-      if (/^image/.test(file.type)) {  
-          // 创建一个reader  
-          let reader = new FileReader();  
-          // 将图片2将转成 base64 格式  
-          reader.readAsDataURL(file);  
-          // 读取成功后的回调  
-          reader.onloadend = function () {  
-            let result = this.result;  
-            let img = new Image();  
-            img.src = result;  
-            //判断图片是否大于100K,是就直接上传，反之压缩图片  
-            if (this.result.length <= (100 * 1024)) {  
-              self.images.push(this.result); 
-              self.imgs.push(self.convertBase64UrlToBlob(this.result)); 
-            }else {  
-              img.onload = function () {  
-                let data = self.compress(img,Orientation);
-                self.images.push(data); 
-                self.imgs.push(self.convertBase64UrlToBlob(data));
-              }  
-            }  
-          }   
-        }  
-      },  
+      if (!file || !window.FileReader) return;
+
+      if (/^image/.test(file.type)) {
+        // 创建一个reader  
+        let reader = new FileReader();
+        // 将图片2将转成 base64 格式  
+        reader.readAsDataURL(file);
+        // 读取成功后的回调  
+        reader.onloadend = function () {
+          let result = this.result;
+          let img = new Image();
+          img.src = result;
+          //判断图片是否大于100K,是就直接上传，反之压缩图片  
+          if (this.result.length <= (100 * 1024)) {
+            self.images.push(this.result);
+            self.imgs.push(self.convertBase64UrlToBlob(this.result));
+          } else {
+            img.onload = function () {
+              let data = self.compress(img, Orientation);
+              self.images.push(data);
+              self.imgs.push(self.convertBase64UrlToBlob(data));
+            }
+          }
+        }
+      }
+    },
     //旋转图片
     rotateImg(img, direction, canvas) {
       //最小与最大旋转方向，图片旋转4次后回到原方向      
@@ -278,14 +286,14 @@ export default {
             ctx.drawImage(tCanvas, i * nw, j * nh, nw, nh);
           }
         }
-      } else {        
+      } else {
         ctx.drawImage(img, 0, 0, width, height);
       }
-       ctx.drawImage(img, 0, 0, width, height);
-     
+      ctx.drawImage(img, 0, 0, width, height);
+
       //修复ios上传图片的时候 被旋转的问题  
       if (!!Orientation && Orientation != 1) {
-        
+
         switch (Orientation) {
           case 6://需要顺时针（向左）90度旋转  
             this.rotateImg(img, 'left', canvas);
@@ -303,7 +311,7 @@ export default {
       let ndata = canvas.toDataURL('image/jpeg', 0.1);
       console.log('压缩前：' + initSize);
       console.log('压缩后：' + ndata.length);
-      console.log('压缩率：' +(100 * (initSize - ndata.length) / initSize) + "%");
+      console.log('压缩率：' + (100 * (initSize - ndata.length) / initSize) + "%");
       tCanvas.width = tCanvas.height = canvas.width = canvas.height = 0;
       return ndata;
     },

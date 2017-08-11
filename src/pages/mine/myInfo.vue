@@ -2,11 +2,11 @@
   <div class="container">
     <Mheader></Mheader>
     <div class="head">
+      <router-link to="/MySet">
       <div class="avatar lm-margin-r-lg">
-        <router-link to="/MySet">
           <img :src="user.HeadImg" alt="">
-        </router-link>
       </div>
+      </router-link>
       <div class="info ">
         <div class="name lm-margin-l-sm">{{user.UserName}}</div>
         <div class="cb lm-margin-t-xs">
@@ -76,13 +76,13 @@
         </router-link>
       </div>
       <div class="server-control ">
-        <!--<router-link :to="{path: '/'}">-->
+        <router-link to="/Apply">
           <div class="control-icon">
             <img src="../../assets/images/myInfo/icon.9.png"/>
             <div>入驻我们</div>
           </div>
-        <!--</router-link>-->
-        <router-link :to="{path: '/TcHome'}">
+        </router-link>
+        <router-link to="/TcHome">
         <div class="control-icon" >
           <img src="../../assets/images/myInfo/icon.10.png"/>
           <div>茶友圈</div>

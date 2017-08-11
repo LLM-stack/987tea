@@ -390,6 +390,9 @@
   }
 
   /*组件样式覆盖*/
+  body .mint-indicator-wrapper{
+     z-index: 999;
+  }
   body .mint-field .mint-cell-wrapper, body .mint-cell-wrapper {
     font-size: 0.6rem;
   }

@@ -28,6 +28,7 @@
 
 <script>
   import Mheader from '../../components/Mheader'
+  import {Toast} from 'mint-ui'
 
   export default {
     components: {
@@ -64,6 +65,32 @@
        
     },
     created(){
+          if (!!localStorage.lut) {
+          //验证localStorage.lut是否在登录状态
+           this.axios.get(this.url + '/api/Login/CheckLogin?str='+localStorage.lut).then((res) => {
+                if (res.data.Code == 200) {
+                 
+                }else{
+                   let instance = Toast('还未登录，请先登录');
+                    setTimeout(() => {
+                      instance.close(); 
+                      this.$router.replace({
+                            path: '/login/',
+                            query: {redirect: this.$router.currentRoute.fullPath}
+                          })
+                    }, 1500);
+                }
+              })
+        }else{
+            let instance = Toast('还未登录，请先登录');
+            setTimeout(() => {
+            instance.close(); 
+            this.$router.replace({
+                  path: '/login/',
+                  query: {redirect: this.$router.currentRoute.fullPath}
+                })
+            }, 1500);
+        }
       this.getInfoNum();
     }
   }

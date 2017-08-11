@@ -1,7 +1,7 @@
 <template>
   <div class="cont">
     <Mheader :show='true'>
-      <div slot="title">注册</div>
+      <div slot="title">注册{{this.$route.params.type}}</div>
     </Mheader>
     <div class="box">
       <div class="register">
@@ -143,7 +143,6 @@
 <script>
   import Mheader from '../../components/Mheader'
   import Mdialog from '../../components/Mdialog'
-  //import { MessageBox } from 'mint-ui';
   import {Toast} from 'mint-ui';
 
   export default {
@@ -249,26 +248,26 @@
           Toast('密码的格式错误');
           return;
         }
-        this.axios.post(this.url + '/api/Login/Register', {
-          phone: this.phone,
-          code: this.number,
-          password: this.password
-        }).then((res) => {
-            if (res.data.Code == 200) {
-              let instance = Toast(res.data.Data);
-              setTimeout(() => {
-                instance.close();
-                this.$router.push({path: '/login'})
-              }, 1000);
+          this.axios.post(this.url + '/api/Login/Register', {
+            phone: this.phone,
+            code: this.number,
+            password: this.password
+          }).then((res) => {
+              if (res.data.Code == 200) {
+                let instance = Toast(res.data.Data);
+                setTimeout(() => {
+                  instance.close();
+                  this.$router.push({path: '/login'})
+                }, 1000);
 
-            } else {
-              Toast(res.data.Data);
+              } else {
+                Toast(res.data.Data);
+              }
             }
-          }
-        ).catch((err) => {
-            Toast('网络请求超时');
-          }
-        )
+          ).catch((err) => {
+              Toast('网络请求超时');
+            }
+          )
       },
       verifyPassword(pwd) {//密码验证
         let pattern = /^[A-Za-z_0-9]{6,16}$/;

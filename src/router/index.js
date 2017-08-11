@@ -49,6 +49,10 @@ import Logistics from '@/pages/mine/logistics'
 import CBmall from '@/pages/CBmall/CBmall'
 import Mall from '@/pages/CBmall/mall'
 
+// 入驻申请
+import Apply from '@/pages/settled/apply'
+
+
 Vue.use(Router)
 
 export default new Router({
@@ -167,6 +171,11 @@ export default new Router({
     }, {
       path: '/Mall',
       component: Mall
+    },
+    // 入驻申请
+    {
+      path:'/Apply',
+      component: Apply
     }
   ]
 })

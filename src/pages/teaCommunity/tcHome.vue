@@ -25,11 +25,12 @@
         {{tt.Name}}
       </div>
     </nav>
+    <div class="clear"></div>
     <div class="forum-box"
          v-infinite-scroll="loadMore"
          infinite-scroll-disabled="loading"
          infinite-scroll-distance="10">
-      <div class="content" v-for="(theme,index) in themeList" :key="theme.Id">        
+      <div class="content" v-for="(theme,index) in themeList" :key="theme.Id">
           <div class="user flex-alig-center">
             <div class="user-avater">
               <img :src="theme.HeaderImg"/>
@@ -45,7 +46,7 @@
             {{'#' + theme.TTName + '# ' + theme.Contents}}
           </div>
         </router-link>
-         
+
         <div class="content-img flex-alig-center" v-show="theme.Imgs.length>0" @click="goToContent(theme.Id)">
           <div v-for="(img,idx) in theme.Imgs" :key="idx"><img :src="img" @click.stop="enlarge(index,idx)"/></div>
         </div>
@@ -133,6 +134,7 @@
       }
     },
     methods: {
+      //查看话题内容
       goToContent(id){
         this.$router.push({path: '/tcContent/'+ id})
       },
@@ -152,7 +154,7 @@
       ding(idx){
         if (!this.themeList[idx].IsFabulous) {
           this.addFabulous(idx);
-        } else if (!!!this.themeList[idx].IsFabulous) {
+        } else if (this.themeList[idx].IsFabulous) {
           this.cancelFabulous(idx);
         }
 
@@ -340,7 +342,7 @@
           if (!!res) {
             if (res.data.Code == 200) {
                 this.infoCount=res.data.Data;
-            } 
+            }
           }
         })
       },
@@ -354,7 +356,7 @@
                 }else{
                    let instance = Toast('还未登录，请先登录');
                     setTimeout(() => {
-                      instance.close(); 
+                      instance.close();
                       this.$router.replace({
                             path: '/login/',
                             query: {redirect: this.$router.currentRoute.fullPath}
@@ -365,7 +367,7 @@
         }else{
             let instance = Toast('还未登录，请先登录');
             setTimeout(() => {
-            instance.close(); 
+            instance.close();
             this.$router.replace({
                   path: '/login/',
                   query: {redirect: this.$router.currentRoute.fullPath}
@@ -414,6 +416,11 @@
   }
 
   .nav-bar {
+    float: left;
+    white-space: nowrap;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    width: 100%;
     display: flex;
     align-items: center;
     padding: 0.4rem 0;
@@ -431,7 +438,12 @@
     padding: 0 0.2rem;
     margin-left: 0.5rem;
   }
-
+  .clear {
+    clear: both;
+    height: 0;
+    line-height: 0;
+    font-size: 0;
+  }
   .content {
     background-color: #fff;
     padding: 0.4rem;
@@ -451,6 +463,7 @@
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
     overflow: hidden;
+    word-break: break-all;
   }
 
   .content-p > h1 {
@@ -493,7 +506,7 @@
     margin-right: 0.1rem;
     width: 0.6rem;
     height: 0.6rem;
-    vertical-align: middle;
+    vertical-align: sub;
   }
 
   .post {
