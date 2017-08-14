@@ -15,7 +15,7 @@
     name: 'app',
     data() {
       return {
-        top: ''
+        top: 0
       }
     },
     methods: {

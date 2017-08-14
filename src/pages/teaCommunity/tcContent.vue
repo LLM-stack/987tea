@@ -358,9 +358,13 @@ export default {
   margin: 0.2rem 0;
   word-break: break-all;
   color: #777;
+  line-height: 0.9rem;
 }
-
-  .content .content-img {
+.content .content-p > h1{
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+}
+.content .content-img {
     width: 100%;
   }
 
@@ -391,7 +395,6 @@ export default {
 }
 
 
-
 /*评论列表*/
 
 .comment-list {
@@ -414,6 +417,7 @@ export default {
 }
 
 .comment .content-p {
+  line-height: 0.9rem;
   padding-left: 2rem;
   margin: 0.2rem 0;
   word-break: break-all;
@@ -461,10 +465,6 @@ export default {
   padding-left: 2rem;
   margin: 0.2rem 0;
   color: #777;
-}
-
-.content-p>h1 {
-  font-weight: 600;
 }
 
 .content-reply img {

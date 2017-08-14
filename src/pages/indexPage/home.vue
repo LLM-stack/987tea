@@ -21,22 +21,7 @@
         <mt-swipe-item v-for="(item,index) in advList" :key="item.Id">
           <img :src="item.Img" alt="" @click="jump(item.AdUrl)">
         </mt-swipe-item>
-        <!--<mt-swipe-item>
-            <img src="../../assets/images/banner/banner1.jpg" alt=""
-                 @click.stop="chkDetail('dae874c59c56448f99c8045753b5cf0f')">
-          </mt-swipe-item>
-          <mt-swipe-item>
-            <img src="../../assets/images/banner/banner2.jpg" alt=""
-                 @click.stop="chkDetail('98a0b370bd49446eae702610a19d004f')">
-          </mt-swipe-item>
-          <mt-swipe-item>
-            <img src="../../assets/images/banner/banner3.jpg" alt=""
-                 @click.stop="chkDetail('4795f6b55ba747919a406b71593080d0')">
-          </mt-swipe-item>
-          <mt-swipe-item>
-            <img src="../../assets/images/banner/banner4.jpg" alt=""
-                 @click.stop="chkDetail('cb77b03361744feb89c21b5abf03a576')">
-          </mt-swipe-item>-->
+
       </mt-swipe>
       <mt-swipe v-else>
         <mt-swipe-item>
@@ -66,26 +51,26 @@
       <div>
         <router-link to="/MyCB">
           <img src="../../assets/images/myInfo/icon.5.png" alt="">
+          <span>茶金币</span>
         </router-link>
-        <span>茶金币</span>
       </div>
       <div>
         <router-link to="/TcHome">
           <img src="../../assets/images/myInfo/icon.10.png" alt="">
+          <span>茶友圈</span>
         </router-link>
-        <span>茶友圈</span>
       </div>
       <div>
         <router-link to="/MyOrder/待收货/3">
           <img src="../../assets/images/myInfo/icon.3.png" alt="">
+          <span>物流信息</span>
         </router-link>
-        <span>物流信息</span>
       </div>
       <div>
         <router-link to="/Apply">
-        <img src="../../assets/images/myInfo/icon.9.png" alt="">
+          <img src="../../assets/images/myInfo/icon.9.png" alt="">
+          <span>入驻我们</span>
         </router-link>
-        <span>入驻我们</span>
       </div>
     </div>
     <div class="box hot-buy">
@@ -132,7 +117,7 @@
       </div>
       <div class="box-block flex-between" @click="toThemeDetail(theme.Id)">
         <div class="choice-img">
-          <img :src="theme.Imgs[0]" alt="">
+          <img :src="themeImg" alt="">
         </div>
         <div class="choice-text">
           <div class="choice-text-title">{{theme.Title}}</div>
@@ -206,14 +191,9 @@ export default {
       time: new Date(),
       key: 'MallIndexBannerImg',//banner位置key
       advList: [],//广告信息集合
-      theme: ''//置顶的话题
+      theme: '',//置顶的话题
+      themeImg: require('../../assets/images/goods/987tea_16.png')//话题第一张图片
     }
-  },
-  mounted() {
-    this.$nextTick(function () {
-      this.timeDown()
-    }
-    )
   },
   methods: {
     //获取自品好茶
@@ -276,8 +256,7 @@ export default {
       if (time >= 10) {
         return time
       } else {
-        // return `0${time}`
-        return time;
+        return `0${time}`
       }
     },
     //跳转详情页
@@ -313,6 +292,9 @@ export default {
           if (res.data.Code == 200) {
             sessionStorage.setItem("Theme", JSON.stringify(res.data.Data));
             this.theme = res.data.Data;
+            if (this.theme.Imgs.length > 0) {
+              this.themeImg = this.theme.imgs[0];
+            }
           }
         })
       }
@@ -444,6 +426,7 @@ header img {
 }
 
 
+
 /*人气热卖*/
 
 .box .title {
@@ -530,6 +513,7 @@ header img {
 }
 
 
+
 /*人气热卖结束*/
 
 
@@ -565,13 +549,25 @@ header img {
 .choice .choice-text .choice-text-title {
   color: #000;
   margin-bottom: 0.4rem;
+  font-size: 0.65rem;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .choice .choice-text .choice-text-p {
-  min-height: 3.6rem;
+  min-height: 2.2rem;
   color: #8D8D8D;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  word-break: break-all;
 }
 
+.choice .choice-text-bottom{
+  margin-top: 1.55rem;
+}
 .choice .choice-text-bottom>div>span {
   width: 0.6rem;
   height: 0.6rem;
@@ -587,6 +583,7 @@ header img {
 .choice .choice-text-bottom>div:last-child span {
   background-image: url("../../assets/images/home/987tea_35.png");
 }
+
 
 
 /*为您精选结束*/

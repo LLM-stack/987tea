@@ -76,7 +76,8 @@
       }
     },
     methods: {
-      sendCode(){//发送短信验证码
+      //发送短信验证码
+      sendCode(){
           if(!!!this.phone){
            Toast('手机号不能为空');
             return;
@@ -96,7 +97,8 @@
              Toast('网络请求超时');
           })
       },
-      timeOut(){//倒计时
+      //倒计时
+      timeOut(){
         let self=this;
         self.fetchCodeMsg = true
         let sec =60;
@@ -113,15 +115,18 @@
           }, i * 1000)
         }
       },
-      verifyPassword(pwd){//密码验证
+      //密码验证
+      verifyPassword(pwd){
           let pattern=/^[A-Za-z_0-9]{6,16}$/;
           return pattern.test(pwd);
       },
-      isPhoneNo(phone) {  //手机号验证
+      //手机号验证
+      isPhoneNo(phone) {  
         var pattern = /^1[34578]\d{9}$/;
         return pattern.test(phone);
       },
-      smsLogin(){//短信登录
+      //短信登录
+      smsLogin(){
           if(!!!this.phone){
           Toast('手机号不能为空');
           return;
@@ -160,6 +165,7 @@
             Toast('网络请求超时');
           })
       },
+      //获取图像验证码
       getVCode(){
 
           this.axios.get(this.url + '/api/Login/CreateVCode', {}).then((res) => {
@@ -172,6 +178,7 @@
           })
 
       },
+      //图形验证码校验
       chkVCode(){
         if(!!!this.imgNumber){
           Toast('请输入图片中的字符');

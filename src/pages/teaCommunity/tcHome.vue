@@ -459,6 +459,7 @@
   .content .content-p {
     margin: 0.2rem 0;
     color: #777;
+    line-height: 0.9rem;
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
@@ -471,6 +472,7 @@
     overflow: hidden;
     white-space: nowrap;
     font-weight: 600;
+    margin-bottom: 0.2rem;
   }
 
   .content .content-img {

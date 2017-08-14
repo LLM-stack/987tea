@@ -3,11 +3,11 @@
     <Mheader :show="true">
       <div slot="title">入驻987茶网</div>
     </Mheader>
-    <div class="cont">
+    <div class="cont" v-if="!isOk">
       <mt-field placeholder="商家登录名" type="text" v-model="loginName"></mt-field>
       <mt-field placeholder="商家登录密码" type="password" v-model="password"></mt-field>
       <mt-field placeholder="商家登录密码确认" type="password" v-model="oncePassword"></mt-field>
-      <mt-field placeholder="姓名" type="text" v-model="username"></mt-field>
+      <mt-field placeholder="商家名称" type="text" v-model="username"></mt-field>
       <mt-field placeholder="联系方式" type="tel" v-model="phoneNum"></mt-field>
       <mt-field placeholder="公司名称" type="text" v-model="companyName"></mt-field>
       <mt-field placeholder="组织机构代码" type="text" v-model="ozCode"></mt-field>
@@ -26,10 +26,10 @@
           <img src="../../assets/images/teaCommunity/upimg.png"/>
         </div>
       </div>
-      <div class="btn" @click="apply">提交申请</div>
+      <div class="btn"  :class="{disableTap:posting}" @click="apply">提交申请</div>
     </div>
 
-      <div class="completed">
+      <div class="completed" v-if="isOk">
         <img src="../../assets/images/cart/completed.png" />
         <div class="lm-margin-t lm-font-defult">入驻申请提交成功！</div>
         <div class="lm-text-grey lm-margin-t">谢谢您的支持，我们会尽快处理您的申请</div>
@@ -59,14 +59,27 @@
         oncePassword: '',
         ozCode: '',
         images: [],
-        imgs: []
+        imgs: [],
+        posting: false,
+        isOk:false
       }
     },
     methods: {
+      //验证两次输入的密码是否一样
+      verificationPwd(){
+        console.log(0);
+          if(this.password!=this.oncePassword){
+            Toast("两次密码输入的不一致");
+          }
+      },
       //提交申请
       apply(){
         if (!!!this.loginName) {
           Toast('商家登录名不能为空');
+          return;
+        }
+        if (!!!this.username) {
+          Toast('商家名称不能为空');
           return;
         }
         if (!!!this.password) {
@@ -101,20 +114,36 @@
           Toast('组织机构代码不能为空');
           return;
         }
-        if (!!!this.imgs) {
+        if (!!!this.images) {
           Toast('请上传营业执照');
           return;
         }
-        this.axios.post(this.url + '/api/Merchants/SubmitMerchantsInfo', {
-          MerchantName: this.username,
-          LoginName: this.loginName,
-          Pwd: this.password,
-          Phone: this.phoneNum,
-          CompanyName: this.companyName,
-          OrganizationCode: this.ozCode,
-          Img: this.imgs
+       
+        let cont = new FormData();
+        cont.append("MerchantName", this.username);
+        cont.append("LoginName", this.loginName);
+        cont.append("Pwd", this.password);
+        cont.append("Phone", this.phoneNum);
+        cont.append("CompanyName", this.companyName);
+        cont.append("OrganizationCode", this.ozCode);
+        this.imgs.forEach((item) => {
+          cont.append("myFile[]", item)
+        })
+
+        this.axios({
+          url: this.url + '/api/Merchants/SubmitMerchantsInfo',
+          method: 'post',
+          data: cont,
+          headers: { 'Content-Type': 'multipart/form-data' }
         }).then((res) => {
-          this.$router.push('/')
+          if (!!res && res.data.Code == 200) {
+            this.isOk=true;
+            this.posting = true;           
+          }else{
+            this.isOk=false;
+            this.posting = false;
+            Toast(res.data.Data);
+          }
         })
       },
       //图片预览
@@ -346,7 +375,6 @@
 
 <style scoped>
   .cont {
-    display: none;
     margin-top: 1.8rem;
     padding: 0 0.4rem 0.8rem 0.4rem;
     background-color: #fff;
