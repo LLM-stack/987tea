@@ -21,7 +21,7 @@
         <mt-swipe-item v-for="(item,index) in advList" :key="item.Id">
           <img :src="item.Img" alt="" @click="jump(item.AdUrl)">
         </mt-swipe-item>
-
+  
       </mt-swipe>
       <mt-swipe v-else>
         <mt-swipe-item>
@@ -51,26 +51,30 @@
       <div>
         <router-link to="/MyCB">
           <img src="../../assets/images/myInfo/icon.5.png" alt="">
-          <span>茶金币</span>
         </router-link>
+        <span>茶金币</span>
+  
       </div>
       <div>
         <router-link to="/TcHome">
           <img src="../../assets/images/myInfo/icon.10.png" alt="">
-          <span>茶友圈</span>
         </router-link>
+        <span>茶友圈</span>
+  
       </div>
       <div>
         <router-link to="/MyOrder/待收货/3">
           <img src="../../assets/images/myInfo/icon.3.png" alt="">
-          <span>物流信息</span>
         </router-link>
+        <span>物流信息</span>
+  
       </div>
       <div>
         <router-link to="/Apply">
           <img src="../../assets/images/myInfo/icon.9.png" alt="">
-          <span>入驻我们</span>
         </router-link>
+        <span>入驻我们</span>
+  
       </div>
     </div>
     <div class="box hot-buy">
@@ -144,7 +148,7 @@
         <Mmode v-for="(item,index) in ownTea" :key="item.ProductId" :index="index" :path="item.ProductId" :imgSrc="item.HeadImg" :productName="item.Name" :productPrice="item.SalePrice"></Mmode>
       </div>
     </div>
-
+  
     <div class="box mode">
       <div class="title flex-alig-center">
         送礼必备
@@ -293,7 +297,7 @@ export default {
             sessionStorage.setItem("Theme", JSON.stringify(res.data.Data));
             this.theme = res.data.Data;
             if (this.theme.Imgs.length > 0) {
-              this.themeImg = this.theme.imgs[0];
+              this.themeImg = this.theme.Imgs[0];
             }
           }
         })
@@ -427,6 +431,7 @@ header img {
 
 
 
+
 /*人气热卖*/
 
 .box .title {
@@ -514,6 +519,7 @@ header img {
 
 
 
+
 /*人气热卖结束*/
 
 
@@ -556,7 +562,7 @@ header img {
 }
 
 .choice .choice-text .choice-text-p {
-  min-height: 2.2rem;
+  min-height: 1.8rem;
   color: #8D8D8D;
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -565,9 +571,10 @@ header img {
   word-break: break-all;
 }
 
-.choice .choice-text-bottom{
+.choice .choice-text-bottom {
   margin-top: 1.55rem;
 }
+
 .choice .choice-text-bottom>div>span {
   width: 0.6rem;
   height: 0.6rem;
@@ -583,6 +590,7 @@ header img {
 .choice .choice-text-bottom>div:last-child span {
   background-image: url("../../assets/images/home/987tea_35.png");
 }
+
 
 
 

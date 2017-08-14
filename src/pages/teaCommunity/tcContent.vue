@@ -16,7 +16,7 @@
       </div>
       <div class="content-p lm-font-sm">
         <h1 class="lm-text-black lm-font-defult">{{themeDetail.Title}}</h1>
-        {{'#'+themeDetail.TTName+'# '+themeDetail.Contents}}
+         {{'#'+themeDetail.TTName+'# '+themeDetail.Contents}} 
       </div>
       <div class="content-img flex-alig-center">
         <div v-for="(img,idx) in themeImgs" :key="idx">

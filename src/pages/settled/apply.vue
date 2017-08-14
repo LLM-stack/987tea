@@ -64,14 +64,7 @@
         isOk:false
       }
     },
-    methods: {
-      //验证两次输入的密码是否一样
-      verificationPwd(){
-        console.log(0);
-          if(this.password!=this.oncePassword){
-            Toast("两次密码输入的不一致");
-          }
-      },
+    methods: {     
       //提交申请
       apply(){
         if (!!!this.loginName) {

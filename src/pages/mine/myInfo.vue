@@ -160,9 +160,13 @@
   .head .avatar {
     width: 4rem;
     height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
   }
 
-  .head .avatar > a > img {
+  .head .avatar img {
     border-radius: 50%;
   }
 
