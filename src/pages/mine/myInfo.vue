@@ -62,7 +62,7 @@
             <div>我的收藏</div>
           </div>
         </router-link>
-        <router-link to="/MyAddress">
+        <router-link to="/MyAddress?isban=myinfo">
         <div class="control-icon">
           <img src="../../assets/images/myInfo/icon.7.png"/>
           <div>地址管理</div>

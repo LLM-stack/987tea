@@ -60,25 +60,16 @@
           } else {
             Toast(res.data.Data);
           }
-        }).catch((err) => {
-          if (err.response.status == 401) {
-            let instance = Toast('还未登录，请先登录');
-            setTimeout(() => {
-              instance.close();
-              this.$router.replace({
-                path: '/login/',
-                query: {redirect: this.$router.currentRoute.fullPath}
-              })
-            }, 1000);
-          } else {
-            Toast('网络请求错误');
-          }
-        });
+        })
       },
       //选中收货地址
       checkAddress(index) {
-       this.$store.state.receiveAddress = this.userAllAddress[index];  
-        this.$router.go(-1);
+        if(!!this.$route.query.isban){
+          return false;
+        }else{
+          this.$store.state.receiveAddress = this.userAllAddress[index];  
+          this.$router.go(-1);
+        }        
       }
     },
     mounted: function () {

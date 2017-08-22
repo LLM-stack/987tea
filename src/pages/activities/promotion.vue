@@ -34,11 +34,11 @@
     <div class="ticket-box">
       <div class="ticket">
         <span class="orange flex-alig-center">满<span class="lm-font-xxxl">100</span></span>
-        <span class="lm-margin-l-sm flex-alig-center">减<span class="yellow lm-font-xxxl">11</span></span>
+        <span class="lm-margin-l-sm flex-alig-center">减<span class="yellow lm-font-xxxl">10</span></span>
       </div>
       <div class="ticket">
         <span class="orange flex-alig-center">满<span class="lm-font-xxxl">200</span></span>
-        <span class="lm-margin-l-sm flex-alig-center">减<span class="yellow lm-font-xxxl">22</span></span>
+        <span class="lm-margin-l-sm flex-alig-center">减<span class="yellow lm-font-xxxl">20</span></span>
       </div>
     </div>
     <div class="title-z">
@@ -55,7 +55,7 @@
     <div class="title" id="id1">
       <div>
         <img src="../../assets/images/activities/activities_03.png"/>
-        <span class="lm-font-lg">限时特价</span>
+        <span class="lm-font-lg">超值特价</span>
         <img src="../../assets/images/activities/activities_05.png"/>
       </div>
       <div class="lm-font-sm lm-text-grey">超值低价 多款茶类任你选</div>
@@ -78,10 +78,10 @@
     <div class="title" id="id2">
       <div>
         <img src="../../assets/images/activities/activities_03.png"/>
-        <span class="lm-font-lg">爆款特价</span>
+        <span class="lm-font-lg">818特价专区</span>
         <img src="../../assets/images/activities/activities_05.png"/>
       </div>
-      <div class="lm-font-sm lm-text-grey">热卖爆款 感恩放价</div>
+      <div class="lm-font-sm lm-text-grey">感恩放价 加量不加价</div>
     </div>
     <div class="pro-list">
       <div class="pro-box" v-for="(exp,index) in expProducts" :class="{'pro-left' : index % 2 !== 0}" :key='index' @click.stop="chkDetail(exp.ProductId)">
@@ -126,15 +126,14 @@
     <div class="title moerfl"  id="id4">
       <div>
         <img src="../../assets/images/activities/avtive_03.png"/>
-        <span class="lm-font-lg">更多福利</span>
+        <span class="lm-font-lg">多重福利</span>
         <img src="../../assets/images/activities/avtive_03.png"/>
       </div>
       <div class="lm-font-sm lm-text-white lm-margin-b-sm">惊喜优惠 礼品多多</div>
-      <ul class="fl-list">
-        <li>买<span class="orange">满98元</span>送<span class="orange">价值68元</span>神秘礼品一份</li>
-        <li>买<span class="orange">满398元</span>送<span class="orange">价值118元</span>精美礼品一份</li>
-        <li>买<span class="orange">满688元</span>送<span class="orange">价值298元</span>精美礼品一份</li>
-      </ul>
+      <div class="QRcode flex-alig-center">
+        <img src="../../assets/images/activities/dcode_03.png" />
+      </div>
+      <div class="lm-font-sm lm-text-white lm-margin-t-xs lm-margin-b">关注微信公众号领取</div>
     </div>
     <div class="lm-text-grey lm-font-xs more-comment">
       <p>闽ICP备14015705号-1</p>
@@ -217,21 +216,21 @@
         activeIdx: 0,
         tabs: [
           {
-            tabName: '限时特价',
-            tabTag:'d009610ae2f74d0fa72e83cffbddf00f',//限时特价标签Id
+            tabName: '超值特价',
+            tabTag:'57b97e21c31e4963a56011720f6e2ea3',//超值特价标签Id
           },
           {
-            tabName: '爆款特价',
-            tabTag:'49039043e6ff4789a7dbddc566b58fa6',//爆款特价标签Id
+            tabName: '818特价专区',
+            tabTag:'e19355ee6b924bc5bb90177de43811da',//818特价专区标签Id
           },
           {
             tabName: '精装礼品',
             tabTag:'ca482e57ed0e434f935e47872f69614a',//精装礼品标签Id
-          },
+           },
           {
-            tabName: '更多福利'
+            tabName: '多重福利'
           }
-        ],       
+        ],
         productSpec: [],//sku集合
         expProducts:[],//爆款特价商品
         timeProducts:[],//限时特价商品
@@ -279,7 +278,7 @@
       },
       //获取活动信息
       getActivity(){
-        if(!!sessionStorage.Activity){      
+        if(!!sessionStorage.Activity){
              this.activity =JSON.parse(sessionStorage.Activity);
              if(!!this.activity){
               let sTime=new Date(this.activity.StartTime);//活动开始时间
@@ -288,7 +287,7 @@
               if(sTime>eTime){
                   this.timeDownText='距离抢购开始还剩';
                   this.activityOverducTime=this.activity.StartTime;
-                  
+
               }else{
                   this.timeDownText='距离抢购结束还剩';
                   this.activityOverducTime=this.activity.EndTime;
@@ -298,7 +297,7 @@
         }else{
           this.axios.get(this.url + '/api/Activity/GetActivityById/'+this.$route.params.id).then((res) => {
           if (res.data.Code == 200) {
-            sessionStorage.setItem("Activity", JSON.stringify(res.data.ExData)); 
+            sessionStorage.setItem("Activity", JSON.stringify(res.data.ExData));
             this.activity = res.data.ExData;
             if(!!this.activity){
               let sTime=new Date(this.activity.StartTime);//活动开始时间
@@ -320,72 +319,57 @@
           Toast('网络请求超时');
         })
         }
-          
+
       },
       //获取限时特价商品
       getTimelimit(){
-         if(!!sessionStorage.TimeProducts){
-            this.timeProducts=JSON.parse(sessionStorage.TimeProducts);
-         }else{
-            this.axios.post(this.url + '/api/Activity/GetActivityProducts', {acId:this.$route.params.id,tagId: this.tabs[0].tabTag}).then((res) => {
+        this.axios.post(this.url + '/api/Activity/GetActivityProducts', {acId:this.$route.params.id,tagId: this.tabs[0].tabTag}).then((res) => {
             if (res.data.Code == 200) {
               if(res.data.Data==this.tabs[0].tabTag){
-                 sessionStorage.setItem("TimeProducts", JSON.stringify(res.data.ExData)); 
+                 sessionStorage.setItem("TimeProducts", JSON.stringify(res.data.ExData));
                   this.timeProducts = res.data.ExData;
               }
-              
+
             } else {
               Toast(res.data.Data);
             }
           }).catch((err) => {
             Toast('网络请求超时');
           })
-         }
-          
       },
       //获取爆款特价商品
       getExplosion(){
-        if(!!sessionStorage.ExpProducts){
-            this.expProducts=JSON.parse(sessionStorage.ExpProducts);
-         }else{
-            this.axios.post(this.url + '/api/Activity/GetExplosionProducts', {acId:this.$route.params.id,tagId: this.tabs[1].tabTag}).then((res) => {
+        this.axios.post(this.url + '/api/Activity/GetExplosionProducts', {acId:this.$route.params.id,tagId: this.tabs[1].tabTag}).then((res) => {
             if (res.data.Code == 200) {
               if(res.data.Data==this.tabs[1].tabTag){
-                  sessionStorage.setItem("ExpProducts", JSON.stringify(res.data.ExData)); 
+                  sessionStorage.setItem("ExpProducts", JSON.stringify(res.data.ExData));
                   this.expProducts = res.data.ExData;
               }
-              
+
             } else {
               Toast(res.data.Data);
             }
           }).catch((err) => {
             Toast('网络请求超时');
           })
-         }
-          
       },
       //获取精装礼品商品
       getHardcover(){
-        if(!!sessionStorage.HadProducts){
-            this.hadProducts=JSON.parse(sessionStorage.HadProducts);
-         }else{
-            this.axios.post(this.url + '/api/Activity/GetHardcoverProducts', {acId:this.$route.params.id,tagId: this.tabs[2].tabTag}).then((res) => {
+         this.axios.post(this.url + '/api/Activity/GetHardcoverProducts', {acId:this.$route.params.id,tagId: this.tabs[2].tabTag}).then((res) => {
             if (res.data.Code == 200) {
               if(res.data.Data==this.tabs[2].tabTag){
                 sessionStorage.setItem("HadProducts", JSON.stringify(res.data.ExData));
                 this.hadProducts = res.data.ExData;
               }
-              
+
             } else {
               Toast(res.data.Data);
             }
           }).catch((err) => {
             Toast('网络请求超时');
           })
-         }
-          
       } ,
-     
+
        //倒计时
       timeDown () {
         if(!!!this.activityOverducTime){
@@ -393,13 +377,13 @@
             this.hour=0;
             this.minute=0;
             this.second=0;
-        }else{         
+        }else{
             let endTime = new Date(this.activityOverducTime.replace(/-/g,"/").replace('T',' '));
-            let nowTime = new Date(this.activityNowTime.replace(/-/g,"/").replace('T',' '))             
+            let nowTime = new Date(this.activityNowTime.replace(/-/g,"/").replace('T',' '))
             let leftTime = parseInt((endTime.getTime()-nowTime.getTime())/1000)
-            setInterval( ()=> { 
+            setInterval( ()=> {
               let d = this.formate(parseInt(leftTime/(24*60*60)))
-              let h = this.formate(parseInt(leftTime/(60*60)%24))              
+              let h = this.formate(parseInt(leftTime/(60*60)%24))
               let m = this.formate(parseInt(leftTime/60%60))
               let s = this.formate(parseInt(leftTime%60))
               if(leftTime <= 0){
@@ -413,7 +397,7 @@
             },1000)
         }
 
-      },      
+      },
       //时间格式
       formate (time) {
           if(time>=10){
@@ -615,19 +599,19 @@
             }
           })
         }
-        
+
       }
     },
     created() {
       this.getBannerImg();
-      this.getActivity(); 
+      this.getActivity();
      },
     mounted() {
       this.$nextTick(() => {
           if(!!this.$route.query.Expand){
             //存储推广位ID  ?Expand=
             sessionStorage.setItem("ExpandId",this.$route.query.Expand );
-          }           
+          }
           window.addEventListener('scroll', this.scroll);
           this.getTimelimit();
           this.getExplosion();
@@ -897,18 +881,12 @@
     background-color: #FE0000;
     color: #fff;
   }
-  .fl-list{
-    color: #666;
-    margin-bottom: 1.2rem;
+  .QRcode{
+    justify-content: center;
   }
-  .fl-list > li{
-    width: 100%;
-    height: 1.68rem;
-    line-height: 1.68rem;
-    padding-left: 2.5rem;
-    background-size: 100% 100%;
-    background-image: url("../../assets/images/activities/avtive_07.png");
-    margin-bottom: 0.5rem;
+  .QRcode > img{
+    width: 7rem!important;
+    height: 7rem;
   }
   /*选择规格*/
   .choice-model {

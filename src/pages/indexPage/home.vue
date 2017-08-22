@@ -21,7 +21,7 @@
         <mt-swipe-item v-for="(item,index) in advList" :key="item.Id">
           <img :src="item.Img" alt="" @click="jump(item.AdUrl)">
         </mt-swipe-item>
-  
+
       </mt-swipe>
       <mt-swipe v-else>
         <mt-swipe-item>
@@ -53,28 +53,28 @@
           <img src="../../assets/images/myInfo/icon.5.png" alt="">
         </router-link>
         <span>茶金币</span>
-  
+
       </div>
       <div>
         <router-link to="/TcHome">
           <img src="../../assets/images/myInfo/icon.10.png" alt="">
         </router-link>
         <span>茶友圈</span>
-  
+
       </div>
       <div>
         <router-link to="/MyOrder/待收货/3">
           <img src="../../assets/images/myInfo/icon.3.png" alt="">
         </router-link>
         <span>物流信息</span>
-  
+
       </div>
       <div>
         <router-link to="/Apply">
           <img src="../../assets/images/myInfo/icon.9.png" alt="">
         </router-link>
         <span>入驻我们</span>
-  
+
       </div>
     </div>
     <div class="box hot-buy">
@@ -148,7 +148,7 @@
         <Mmode v-for="(item,index) in ownTea" :key="item.ProductId" :index="index" :path="item.ProductId" :imgSrc="item.HeadImg" :productName="item.Name" :productPrice="item.SalePrice"></Mmode>
       </div>
     </div>
-  
+
     <div class="box mode">
       <div class="title flex-alig-center">
         送礼必备
@@ -276,23 +276,16 @@ export default {
     },
     //获取banner图
     getBannerImg() {
-      if (!!sessionStorage.HomeAdvList) {
-        this.advList = JSON.parse(sessionStorage.HomeAdvList);
-      } else {
-        this.axios.get(this.url + '/api/Advertising/GetAdvertisingByKey?key=' + this.key).then((res) => {
+      this.axios.get(this.url + '/api/Advertising/GetAdvertisingByKey?key=' + this.key).then((res) => {
           if (res.data.Code == 200) {
             sessionStorage.setItem("HomeAdvList", JSON.stringify(res.data.Data));
             this.advList = res.data.Data;
           }
         })
-      }
     },
     //获取置顶的帖子
     getTopTheme() {
-      if (!!sessionStorage.Theme) {
-        this.theme = JSON.parse(sessionStorage.Theme);
-      } else {
-        this.axios.get(this.url + '/api/CM_Theme/GetThemeByTop').then((res) => {
+      this.axios.get(this.url + '/api/CM_Theme/GetThemeByTop').then((res) => {
           if (res.data.Code == 200) {
             sessionStorage.setItem("Theme", JSON.stringify(res.data.Data));
             this.theme = res.data.Data;
@@ -301,7 +294,6 @@ export default {
             }
           }
         })
-      }
     },
     //跳转话题内容
     toThemeDetail(id) {
@@ -548,6 +540,7 @@ header img {
 
 .choice .choice-img,
 .choice .choice-text {
+  position: relative;
   height: 5.6rem;
   width: 49%;
 }
@@ -572,6 +565,9 @@ header img {
 }
 
 .choice .choice-text-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
   margin-top: 1.55rem;
 }
 

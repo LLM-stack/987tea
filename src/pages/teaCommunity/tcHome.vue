@@ -472,6 +472,7 @@
     overflow: hidden;
     white-space: nowrap;
     font-weight: 600;
+    margin-top: 0.1rem;
     margin-bottom: 0.2rem;
   }
 
@@ -508,7 +509,7 @@
     margin-right: 0.1rem;
     width: 0.6rem;
     height: 0.6rem;
-    vertical-align: sub;
+    vertical-align: text-top;
   }
 
   .post {

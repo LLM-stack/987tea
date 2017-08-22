@@ -161,8 +161,7 @@
         this.payType=val;
      },
       //去下单
-      goToPay(){
-        this.isOnce=true;
+      goToPay(){        
         if(!!!this.username){
            Toast("请填写收货人姓名")
            return;
@@ -183,7 +182,7 @@
            Toast("请填写详细地址")
            return;
         }
-              
+        this.isOnce=true;    
         //定义地址参数
         let areas=this.address.split(' ');
         let str_address={
@@ -268,7 +267,17 @@
             }
 
           } else {
-            Toast(res.data.Data);
+             if(res.data.Data=='目前暂不支持同时购买多件商品，请分开购买'){
+                let instance = Toast(res.data.Data);
+                    setTimeout(() => {
+                      instance.close(); 
+                      this.$router.replace({
+                            path: '/cart'
+                          })
+                    }, 1500);
+            }else{
+              Toast(res.data.Data);
+            }
           }
         })
       },

@@ -56,7 +56,7 @@ import Apply from '@/pages/settled/apply'
 Vue.use(Router)
 
 export default new Router({
-   //mode: 'history',
+   // mode: 'history',
   // base: '/',
   routes: [
     // 首页

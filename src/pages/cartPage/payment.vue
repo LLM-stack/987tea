@@ -291,7 +291,17 @@ export default {
             this.subtract = '-' + this.discount[0].FavPrice;
           }
         } else {
-          Toast(res.data.Data);
+           if(res.data.Data=='目前暂不支持同时购买多件商品，请分开购买'){
+                let instance = Toast(res.data.Data);
+                    setTimeout(() => {
+                      instance.close(); 
+                      this.$router.replace({
+                            path: '/cart'
+                          })
+                    }, 1500);
+            }else{
+              Toast(res.data.Data);
+            }
         }
       })
     },
