@@ -48,7 +48,7 @@
       <div class="mode-box" v-infinite-scroll="loadMore"
          infinite-scroll-disabled="loading"
          infinite-scroll-distance="10">
-        <div class="mode-list" v-for="(item,index) in productList" :class="{'mode-left': index % 2 !== 0}">
+        <div class="mode-list" v-for="(item,index) in productList" :class="{'mode-left': index % 2 !== 0}" :key="index">
           <!--<router-link :to="{path:'/ProductDetails'}">-->
             <div class="mode-img">
               <img :src="item.Img"/>

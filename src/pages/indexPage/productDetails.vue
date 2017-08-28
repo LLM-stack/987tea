@@ -173,7 +173,7 @@ export default {
   },
   filters: {
     teaB(value) {
-      return ((value) * 5).toFixed(2);
+      return parseInt((value) * 5);
     },
     formatTime(val) {
       let date = new Date(val);

@@ -83,30 +83,28 @@
         <span></span>
       </div>
       <!--<router-link :to="{path:'/OnSale'}">-->
-      <div class="box-block box-block-one" @click.stop="chkDetail('0092976dc9b844fd9156e18e1affbf0e')">
-        <div class="box-block-title">折扣好茶推荐</div>
+      <div class="box-block box-block-one" @click="jump(Popular1.AdUrl)" :style="{backgroundImage:'url('+Popular1.Img+')'}">
+        <div class="box-block-title">{{Popular1.AContent}}</div>
         <div class="box-block-time">
-          <span>{{hour}}</span>：
-          <span>{{minute}}</span>：
-          <span>{{second}}</span>
+          <span class="bg-time">{{day}}</span> 天 <span class="bg-time">{{hour}}</span> 时 <span class="bg-time">{{minute}}</span> 分 <span class="bg-time">{{second}}</span> 秒
         </div>
         <!--<div class="rmtime">下一场19:00开始</div>-->
       </div>
       <!--</router-link>-->
-      <div class="flex-between" @click.stop="chkDetail('0c41ebacf33448488c006ca55b5f0b76')">
-        <div class="box-block box-block-two">
-          <div class="xl-title">2017早春碧螺春</div>
-          <div class="buy_one">99元买一送一</div>
+      <div class="flex-between">
+        <div class="box-block box-block-two"@click="jump(Popular2.AdUrl)" :style="{backgroundImage:'url('+Popular2.Img+')'}">
+          <div class="xl-title">{{Popular2.AContent}}</div>
+          <div class="buy_one">{{Popular2.Remark}}</div>
           <div class="hot"></div>
         </div>
-        <div class="box-block-four" @click.stop="chkDetail('1fe433212fd240d998abc63de01bcd37')">
-          <div class="box-block box-block-three">
-            <div class="xl-title">手工紫砂壶</div>
-            <div class="buy_one">99元</div>
+        <div class="box-block-four">
+          <div class="box-block box-block-three" @click.stop="jump(Popular3.AdUrl)" :style="{backgroundImage:'url('+Popular3.Img+')'}">
+            <div class="xl-title">{{Popular3.AContent}}</div>
+            <div class="buy_one">{{Popular3.Remark}}</div>
           </div>
-          <div class="box-block box-block-five" @click.stop="chkDetail('cb77b03361744feb89c21b5abf03a576')">
-            <div class="xl-title">西施壶·紫砂壶</div>
-            <div class="buy_one">298元</div>
+          <div class="box-block box-block-five" @click.stop="jump(Popular4.AdUrl)" :style="{backgroundImage:'url('+Popular4.Img+')'}">
+            <div class="xl-title">{{Popular4.AContent}}</div>
+            <div class="buy_one">{{Popular4.Remark}}</div>
           </div>
         </div>
       </div>
@@ -114,28 +112,16 @@
     <!-- 社区模块 -->
     <div class="box choice">
       <div class="title flex-alig-center">
-        <span></span>为您精选
+        · 茶文化 ·
       </div>
-      <div class="small-title">
-        您的口味，我们都懂
-      </div>
-      <div class="box-block flex-between" @click="toThemeDetail(theme.Id)">
-        <div class="choice-img">
-          <img :src="themeImg" alt="">
+      <div class="box-block flex-between">
+        <div class="selected">
+          <h1>好文精选</h1>
+          <span>原创好文都在这</span>
         </div>
-        <div class="choice-text">
-          <div class="choice-text-title">{{theme.Title}}</div>
-          <div class="choice-text-p">{{theme.Contents}}</div>
-          <div class="choice-text-bottom flex-alig-center">
-            <div class="flex-alig-center lm-margin-r-lg">
-              <span></span>
-              {{theme.FabulouCount}}
-            </div>
-            <div class="flex-alig-center">
-              <span></span>
-              {{theme.CommentCount}}
-            </div>
-          </div>
+        <div class="baike">
+          <h1>茶叶百科</h1>
+          <span>让您喝茶更专业</span>
         </div>
       </div>
     </div>
@@ -192,11 +178,16 @@ export default {
       minute: 0,
       second: 0,
       flag: false,
-      time: new Date(),
+      time: '',//好茶推荐倒计数结束时间
       key: 'MallIndexBannerImg',//banner位置key
+      PopularKey:'PopularSelling',//人气热卖
       advList: [],//广告信息集合
       theme: '',//置顶的话题
-      themeImg: require('../../assets/images/goods/987tea_16.png')//话题第一张图片
+      themeImg: require('../../assets/images/goods/987tea_16.png'),//话题第一张图片
+      Popular1:'',//人气热卖1
+      Popular2:'',//人气热卖2
+      Popular3:'',//人气热卖3
+      Popular4:''//人气热卖4
     }
   },
   methods: {
@@ -236,33 +227,42 @@ export default {
       }
 
     },
-    //倒计时
-    timeDown() {
-      var endTime = this.time
-      endTime.setHours(endTime.getHours() + 3); //给endTime增加3小时
-      setInterval(() => {
-        let nowTime = new Date()
-        let leftTime = parseInt((endTime.getTime() - nowTime.getTime()) / 1000)
-        let d = parseInt(leftTime / (24 * 60 * 60))
-        let h = this.formate(parseInt(leftTime / (60 * 60) % 24))
-        let m = this.formate(parseInt(leftTime / 60 % 60))
-        let s = this.formate(parseInt(leftTime % 60))
-        if (leftTime <= 0) {
-          this.flag = true
+     //倒计时
+      timeDown () {
+        if(!!!this.time){
+            this.day=0;
+            this.hour=0;
+            this.minute=0;
+            this.second=0;
+        }else{
+            let endTime = new Date(this.time.replace(/-/g,"/").replace('T',' '));
+            let nowTime = new Date();
+            let leftTime = parseInt((endTime.getTime()-nowTime.getTime())/1000)
+            setInterval( ()=> {
+              let d = this.formate(parseInt(leftTime/(24*60*60)))
+              let h = this.formate(parseInt(leftTime/(60*60)%24))
+              let m = this.formate(parseInt(leftTime/60%60))
+              let s = this.formate(parseInt(leftTime%60))
+              if(leftTime <= 0){
+                this.flag = true
+              }
+              this.day=d;
+              this.hour=h;
+              this.minute=m;
+              this.second=s;
+              leftTime--;
+            },1000)
         }
-        this.day = d;
-        this.hour = h;
-        this.minute = m;
-        this.second = s;
-      }, 1000)
-    },
-    formate(time) {
-      if (time >= 10) {
-        return time
-      } else {
-        return `0${time}`
-      }
-    },
+
+      },
+      //时间格式
+      formate (time) {
+          if(time>=10){
+              return time
+          }else{
+              return `0${time}`
+          }
+      },
     //跳转详情页
     chkDetail(val) {
       this.$router.push({ path: '/ProductDetails/' + val })
@@ -277,9 +277,33 @@ export default {
     //获取banner图
     getBannerImg() {
       this.axios.get(this.url + '/api/Advertising/GetAdvertisingByKey?key=' + this.key).then((res) => {
-          if (res.data.Code == 200) {
-            sessionStorage.setItem("HomeAdvList", JSON.stringify(res.data.Data));
+          if (res.data.Code == 200) {            
             this.advList = res.data.Data;
+          }
+        })
+    },
+     //获取人气热卖
+    getPopularSelling() {
+      this.axios.get(this.url + '/api/Advertising/GetAdvertisingByKey?key=' + this.PopularKey).then((res) => {
+          if (res.data.Code == 200) {
+            if(!!res.data.Data){
+                res.data.Data.forEach((item,index)=>{
+                    if(index==0){
+                      this.Popular1=item; 
+                      this.time=item.Endtime; 
+                      this.timeDown();             
+                    }
+                    if(index==1){
+                      this.Popular2=item;
+                    }
+                    if(index==2){
+                      this.Popular3=item;
+                    }
+                    if(index==3){
+                      this.Popular4=item;
+                    }
+                })
+            }
           }
         })
     },
@@ -287,7 +311,6 @@ export default {
     getTopTheme() {
       this.axios.get(this.url + '/api/CM_Theme/GetThemeByTop').then((res) => {
           if (res.data.Code == 200) {
-            sessionStorage.setItem("Theme", JSON.stringify(res.data.Data));
             this.theme = res.data.Data;
             if (this.theme.Imgs.length > 0) {
               this.themeImg = this.theme.Imgs[0];
@@ -305,15 +328,16 @@ export default {
       if (!!this.$route.query.PromotionKey) {
         //推广位Id ?PromotionKey=
         sessionStorage.setItem('PromotionKey', this.$route.query.PromotionKey);
-      }
-      this.timeDown();
+      }      
     })
   },
   created() {
     this.getBannerImg();
+    this.getPopularSelling();
     this.getOwnTea();
     this.getGiftsTea();
     this.getTopTheme();
+
   }
 }
 </script>
@@ -508,10 +532,25 @@ header img {
   font-size: 0.6rem;
   color: #B22328;
 }
-
-
-
-
+.box-block .selected h1,
+.box-block .baike h1{
+  font-size: 0.7rem;
+  font-weight: bold;
+}
+.box-block .selected,
+.box-block .baike{
+  padding: 0.4rem;
+  color: #fff;
+  width: 7.4rem;
+  height: 6.8rem;
+  background-size: 100% 100%;
+}
+.box-block .selected{
+  background-image: url("../../assets/images/home/homenew_03.gif");
+}
+.box-block .baike{
+  background-image: url("../../assets/images/home/homenew_05.png");
+}
 /*人气热卖结束*/
 
 
@@ -535,40 +574,7 @@ header img {
 .choice .box-block {
   padding: 0.5rem 0;
   font-size: 0.55rem;
-  border-top: 1px solid #F5F5F5;
-}
-
-.choice .choice-img,
-.choice .choice-text {
-  position: relative;
-  height: 5.6rem;
-  width: 49%;
-}
-
-.choice .choice-text .choice-text-title {
-  color: #000;
-  margin-bottom: 0.4rem;
-  font-size: 0.65rem;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-}
-
-.choice .choice-text .choice-text-p {
-  min-height: 1.8rem;
-  color: #8D8D8D;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-  overflow: hidden;
-  word-break: break-all;
-}
-
-.choice .choice-text-bottom {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  margin-top: 1.55rem;
+  /*border-top: 1px solid #F5F5F5;*/
 }
 
 .choice .choice-text-bottom>div>span {

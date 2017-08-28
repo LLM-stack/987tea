@@ -81,6 +81,7 @@
         ProductCount:0,
         freight:0,
         discount:[],//优惠记录信息
+        chkdiscount:'',//选中的优惠信息
         subtract:'0',//优惠折扣价格
         isChecked:'',
         payType:0,//支付类型
@@ -103,7 +104,7 @@
         if(this.subtract=='0'){
           return this.total;
         }else{
-          return this.orderTotal+this.subtract+'='+this.total
+          return this.orderTotal+this.freight+this.subtract+'='+this.total
         }
       }
     },
@@ -204,7 +205,7 @@
           ProductSkus:this.orderDetails,
           ProductOrderId:'0',
           OrderAddress:str_address,
-          OrderToPrice:this.discount,
+          OrderToPrice:[this.chkdiscount],
           ExpandId:!!sessionStorage.getItem("PromotionKey")?sessionStorage.getItem("PromotionKey"):sessionStorage.getItem("ExpandId")
         }
          this.axios.post(this.url + '/api/Order/SaveOrder', {strSc:JSON.stringify(sc)}).then((res) => {
@@ -283,6 +284,7 @@
       },
        //选中优惠折扣方式
       chkFavInfo(index){
+        this.chkdiscount=this.discount[index];
         this.subtract='-'+this.discount[index].FavPrice;
         this.isChecked = index;
       }

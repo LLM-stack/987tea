@@ -20,7 +20,7 @@
           <div class="dot" :class="{dotCurrt:(index == 0)}"></div>
         </div>
         <div class="line-place" :class="{current:(index == 0)}">
-          {{ item.context }}
+          {{ item.context |formatStr}}
         </div>
       </div>
     </div>
@@ -40,7 +40,17 @@
       return {
         expressCode:'',
         expressName:'',
-        expressList:''
+        expressList:'',
+        company: [
+                { key: "shunfeng",value: "顺丰快递"},
+                { key: "debangwuliu", value: "德邦快递" },
+                { key: "yuantong", value: "圆通快递" },
+                { key: "shentong", value: "申通快递" },
+                { key: "zhongtong", value: "中通快递" },
+                { key: "yunda", value: "韵达快递" },
+                { key: "ems", value:"EMS" },
+                { key: "huitongkuaidi", value: "百世汇通" }
+            ]//快递公司
       }
     },
     filters:{
@@ -49,7 +59,10 @@
       },
       timeB(val){
         return val.substring(0,10)
-      }
+      },
+      formatStr(val) {
+                return val.split('|')[2];
+            }
     },
     mounted: function () {
       this.$nextTick(function () {
@@ -63,7 +76,12 @@
             if (res.data.Code == 200) {
               this.expressCode = res.data.ExData.kdcode;
               let msg = JSON.parse(res.data.ExData.RecParam);
-              this.expressName = msg.lastResult.com;
+              console.log(msg.lastResult.com);
+              this.company.forEach((com)=> {
+                  if (com.key == msg.lastResult.com) {
+                      this.expressName = com.value;
+                  }
+              });
               this.expressList = msg.lastResult.data;
             } else {
               Toast('获取物流信息错误！');

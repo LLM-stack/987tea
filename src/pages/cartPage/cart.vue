@@ -149,7 +149,7 @@
             Toast("已经减到底了");
           }
         }       
-
+      
         
       },
       //总金额计算
@@ -250,6 +250,7 @@
           return;
         } else if(!this.totalNum){
           Toast('还未选择商品');
+           return;
         } else {
           let sc={
             productOrderId:"0",

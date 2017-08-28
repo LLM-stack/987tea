@@ -57,14 +57,14 @@
           </div>
           <div class="re-r flex-alig-center">
             <div class="flex-alig-center lm-margin-l">
-              <img src="../../assets/images/teaCommunity/look.png"/>
-              <span>{{theme.SeeCount}}</span>
-            </div>
-            <div class="flex-alig-center lm-margin-l">
               <router-link :to="{path:'/tcContent/'+ theme.Id}">
-                <img src="../../assets/images/teaCommunity/reply.png"/>
+                <img src="../../assets/images/teaCommunity/share.png"/>
                 <span>{{theme.CommentCount}}</span>
               </router-link>
+            </div>
+            <div class="flex-alig-center lm-margin-l">
+              <img src="../../assets/images/teaCommunity/look.png"/>
+              <span>{{theme.SeeCount}}</span>
             </div>
             <div class="flex-alig-center lm-margin-l" @click.stop="ding(index)">
               <img v-show="!theme.IsFabulous" src="../../assets/images/teaCommunity/ding.png"/>
@@ -81,9 +81,9 @@
       </div>
     </div>
     <!--发帖-->
-     <div class="post" @click="goToPost">
+     <!-- <div class="post" @click="goToPost">
         <img src="../../assets/images/teaCommunity/post.png"/>
-      </div>
+      </div> -->
     <!-- 查看大图 -->
     <div class="model" @click="closeModel" v-show="model">
       <mt-swipe :show-indicators="false" :auto="0" :defaultIndex="bigPicIdx" >

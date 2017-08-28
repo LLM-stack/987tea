@@ -28,7 +28,7 @@
           <img src="../../assets/images/cart/huo.png" />货到付款</div>
         <div class="lm-margin-xl" :class="{active:payType==2}" @click="checkType(2)">
           <img src="../../assets/images/cart/zfb.png" />支付宝</div>
-        <!--<div class="lm-margin-xl" :class="payType==1?'active':''" @click="checkType(1)"><img src="../../assets/images/cart/wx.png" />微信支付</div>-->
+        <!--<div class="lm-margin-xl" :class="{active:payType==1}" @click="checkType(1)"><img src="../../assets/images/cart/wx.png" />微信支付</div>-->
       </div>
     </div>
     <div class="product" v-for="(item,index) in orderDetails" :key='index'>
@@ -114,6 +114,7 @@ export default {
       alipay: '',//ali支付form表单信息
       productOrderId: "0",
       discount: [],//优惠记录信息
+      chkdiscount:'',//选中的优惠信息
       subtract: '0',//优惠折扣价格
       teaBMall: false,
       teaBPrice: '0',
@@ -189,6 +190,7 @@ export default {
         ProductSkus: this.orderDetails,
         ProductOrderId: this.productOrderId,
         OrderAddress: str_address,
+        OrderToPrice:[this.chkdiscount],
         ExpandId: !!sessionStorage.getItem("PromotionKey") ? sessionStorage.getItem("PromotionKey") : sessionStorage.getItem("ExpandId")
       }
 
@@ -307,6 +309,7 @@ export default {
     },
     //选中优惠折扣方式
     chkFavInfo(index) {
+      this.chkdiscount=this.discount[index];
       this.subtract = '-' + this.discount[index].FavPrice;
       this.isChecked = index;
     }
