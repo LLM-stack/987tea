@@ -16,7 +16,8 @@ import PaymentCompleted from '@/pages/cartPage/paymentCompleted'
 
 // 茶圈子
 import TcHome from '@/pages/teaCommunity/tcHome'
-import TcContent from '@/pages/teaCommunity/tcContent'
+// import TcContent from '@/pages/teaCommunity/tcContent'
+import TeaLife from  '@/pages/teaCommunity/teaLife'
 import Post from '@/pages/teaCommunity/post'
 import MsgContent from '@/pages/teaCommunity/msgContent'
 import Msgs from '@/pages/teaCommunity/msgs'
@@ -95,12 +96,14 @@ export default new Router({
       path: '/TcHome',
       component: TcHome
     }, {
-      path: '/TcContent/:themeId',
-      component: TcContent
-    }, {
-      path: '/Post',
-      component: Post
-    }, {
+      path: '/TeaLife',
+      component: TeaLife
+    },
+    //  {
+    //   path: '/Post',
+    //   component: Post
+    // },
+     {
       path: '/MsgContent/:typeId',
       component: MsgContent
     }, {
