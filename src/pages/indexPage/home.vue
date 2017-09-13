@@ -23,9 +23,9 @@
         </mt-swipe-item>
 
       </mt-swipe>
-      <mt-swipe v-else>
+      <mt-swipe v-if="isShowBanner">
         <mt-swipe-item>
-          <img src="../../assets/images/banner/banner1.jpg" alt="" @click.stop="chkDetail('dae874c59c56448f99c8045753b5cf0f')">
+          <img src="../../assets/images/banner/banner1.png" alt="" @click.stop="chkDetail('dae874c59c56448f99c8045753b5cf0f')">
         </mt-swipe-item>
       </mt-swipe>
     </div>
@@ -86,13 +86,16 @@
       <div class="box-block box-block-one" @click="jump(Popular1.AdUrl)" :style="{backgroundImage:'url('+Popular1.Img+')'}">
         <div class="box-block-title">{{Popular1.AContent}}</div>
         <div class="box-block-time">
-          <span class="bg-time">{{day}}</span> 天 <span class="bg-time">{{hour}}</span> 时 <span class="bg-time">{{minute}}</span> 分 <span class="bg-time">{{second}}</span> 秒
+          <span class="bg-time">{{day}}</span> 天
+          <span class="bg-time">{{hour}}</span> 时
+          <span class="bg-time">{{minute}}</span> 分
+          <span class="bg-time">{{second}}</span> 秒
         </div>
         <!--<div class="rmtime">下一场19:00开始</div>-->
       </div>
       <!--</router-link>-->
       <div class="flex-between">
-        <div class="box-block box-block-two"@click="jump(Popular2.AdUrl)" :style="{backgroundImage:'url('+Popular2.Img+')'}">
+        <div class="box-block box-block-two" @click="jump(Popular2.AdUrl)" :style="{backgroundImage:'url('+Popular2.Img+')'}">
           <div class="xl-title">{{Popular2.AContent}}</div>
           <div class="buy_one">{{Popular2.Remark}}</div>
           <div class="hot"></div>
@@ -114,16 +117,18 @@
       <div class="title flex-alig-center">
         · 茶文化 ·
       </div>
-      <div class="box-block flex-between">
-        <div class="selected">
-          <h1>好文精选</h1>
-          <span>原创好文都在这</span>
+      <router-link :to="{path:'/TcHome'}">
+        <div class="box-block flex-between">
+          <div class="selected">
+            <h1>好文精选</h1>
+            <span>原创好文都在这</span>
+          </div>
+          <div class="baike">
+            <h1>茶叶百科</h1>
+            <span>让您喝茶更专业</span>
+          </div>
         </div>
-        <div class="baike">
-          <h1>茶叶百科</h1>
-          <span>让您喝茶更专业</span>
-        </div>
-      </div>
+      </router-link>
     </div>
     <div class="box mode">
       <div class="title flex-alig-center">
@@ -180,14 +185,14 @@ export default {
       flag: false,
       time: '',//好茶推荐倒计数结束时间
       key: 'MallIndexBannerImg',//banner位置key
-      PopularKey:'PopularSelling',//人气热卖
+      isShowBanner:false,
+      PopularKey: 'PopularSelling',//人气热卖
       advList: [],//广告信息集合
       theme: '',//置顶的话题
-      themeImg: require('../../assets/images/goods/987tea_16.png'),//话题第一张图片
-      Popular1:'',//人气热卖1
-      Popular2:'',//人气热卖2
-      Popular3:'',//人气热卖3
-      Popular4:''//人气热卖4
+      Popular1: '',//人气热卖1
+      Popular2: '',//人气热卖2
+      Popular3: '',//人气热卖3
+      Popular4: ''//人气热卖4
     }
   },
   methods: {
@@ -227,42 +232,42 @@ export default {
       }
 
     },
-     //倒计时
-      timeDown () {
-        if(!!!this.time){
-            this.day=0;
-            this.hour=0;
-            this.minute=0;
-            this.second=0;
-        }else{
-            let endTime = new Date(this.time.replace(/-/g,"/").replace('T',' '));
-            let nowTime = new Date();
-            let leftTime = parseInt((endTime.getTime()-nowTime.getTime())/1000)
-            setInterval( ()=> {
-              let d = this.formate(parseInt(leftTime/(24*60*60)))
-              let h = this.formate(parseInt(leftTime/(60*60)%24))
-              let m = this.formate(parseInt(leftTime/60%60))
-              let s = this.formate(parseInt(leftTime%60))
-              if(leftTime <= 0){
-                this.flag = true
-              }
-              this.day=d;
-              this.hour=h;
-              this.minute=m;
-              this.second=s;
-              leftTime--;
-            },1000)
-        }
-
-      },
-      //时间格式
-      formate (time) {
-          if(time>=10){
-              return time
-          }else{
-              return `0${time}`
+    //倒计时
+    timeDown() {
+      if (!!!this.time) {
+        this.day = 0;
+        this.hour = 0;
+        this.minute = 0;
+        this.second = 0;
+      } else {
+        let endTime = new Date(this.time.replace(/-/g, "/").replace('T', ' '));
+        let nowTime = new Date();
+        let leftTime = parseInt((endTime.getTime() - nowTime.getTime()) / 1000)
+        setInterval(() => {
+          let d = this.formate(parseInt(leftTime / (24 * 60 * 60)))
+          let h = this.formate(parseInt(leftTime / (60 * 60) % 24))
+          let m = this.formate(parseInt(leftTime / 60 % 60))
+          let s = this.formate(parseInt(leftTime % 60))
+          if (leftTime <= 0) {
+            this.flag = true
           }
-      },
+          this.day = d;
+          this.hour = h;
+          this.minute = m;
+          this.second = s;
+          leftTime--;
+        }, 1000)
+      }
+
+    },
+    //时间格式
+    formate(time) {
+      if (time >= 10) {
+        return time
+      } else {
+        return `0${time}`
+      }
+    },
     //跳转详情页
     chkDetail(val) {
       this.$router.push({ path: '/ProductDetails/' + val })
@@ -277,46 +282,49 @@ export default {
     //获取banner图
     getBannerImg() {
       this.axios.get(this.url + '/api/Advertising/GetAdvertisingByKey?key=' + this.key).then((res) => {
-          if (res.data.Code == 200) {            
-            this.advList = res.data.Data;
+        if (res.data.Code == 200) {
+          this.advList = res.data.Data;
+          if(this.advList.length<=0){
+            this.isShowBanner=true;
           }
-        })
+        }
+      })
     },
-     //获取人气热卖
+    //获取人气热卖
     getPopularSelling() {
       this.axios.get(this.url + '/api/Advertising/GetAdvertisingByKey?key=' + this.PopularKey).then((res) => {
-          if (res.data.Code == 200) {
-            if(!!res.data.Data){
-                res.data.Data.forEach((item,index)=>{
-                    if(index==0){
-                      this.Popular1=item; 
-                      this.time=item.Endtime; 
-                      this.timeDown();             
-                    }
-                    if(index==1){
-                      this.Popular2=item;
-                    }
-                    if(index==2){
-                      this.Popular3=item;
-                    }
-                    if(index==3){
-                      this.Popular4=item;
-                    }
-                })
-            }
+        if (res.data.Code == 200) {
+          if (!!res.data.Data) {
+            res.data.Data.forEach((item, index) => {
+              if (index == 0) {
+                this.Popular1 = item;
+                this.time = item.Endtime;
+                this.timeDown();
+              }
+              if (index == 1) {
+                this.Popular2 = item;
+              }
+              if (index == 2) {
+                this.Popular3 = item;
+              }
+              if (index == 3) {
+                this.Popular4 = item;
+              }
+            })
           }
-        })
+        }
+      })
     },
     //获取置顶的帖子
     getTopTheme() {
       this.axios.get(this.url + '/api/CM_Theme/GetThemeByTop').then((res) => {
-          if (res.data.Code == 200) {
-            this.theme = res.data.Data;
-            if (this.theme.Imgs.length > 0) {
-              this.themeImg = this.theme.Imgs[0];
-            }
+        if (res.data.Code == 200) {
+          this.theme = res.data.Data;
+          if (this.theme.Imgs.length > 0) {
+            this.themeImg = this.theme.Imgs[0];
           }
-        })
+        }
+      })
     },
     //跳转话题内容
     toThemeDetail(id) {
@@ -324,11 +332,11 @@ export default {
     }
   },
   mounted() {
-    this.$nextTick(function () {
+    this.$nextTick(function() {
       if (!!this.$route.query.PromotionKey) {
         //推广位Id ?PromotionKey=
         sessionStorage.setItem('PromotionKey', this.$route.query.PromotionKey);
-      }      
+      }
     })
   },
   created() {
@@ -336,8 +344,6 @@ export default {
     this.getPopularSelling();
     this.getOwnTea();
     this.getGiftsTea();
-    this.getTopTheme();
-
   }
 }
 </script>
@@ -448,6 +454,8 @@ header img {
 
 
 
+
+
 /*人气热卖*/
 
 .box .title {
@@ -477,7 +485,6 @@ header img {
   margin-bottom: 0.5rem;
   width: 100%;
   height: 5.5rem;
-  background-image: url("../../assets/images/goods/987tea_03.png");
 }
 
 .box-block .box-block-title,
@@ -498,15 +505,6 @@ header img {
 
 .box-block-two {
   height: 10rem;
-  background-image: url("../../assets/images/goods/987tea_06.png");
-}
-
-.box-block-three {
-  background-image: url("../../assets/images/goods/987tea_08.png");
-}
-
-.box-block-five {
-  background-image: url("../../assets/images/goods/987tea_12.png");
 }
 
 .box-block-three,
@@ -532,25 +530,32 @@ header img {
   font-size: 0.6rem;
   color: #B22328;
 }
+
 .box-block .selected h1,
-.box-block .baike h1{
+.box-block .baike h1 {
   font-size: 0.7rem;
   font-weight: bold;
 }
+
 .box-block .selected,
-.box-block .baike{
+.box-block .baike {
   padding: 0.4rem;
   color: #fff;
   width: 7.4rem;
   height: 6.8rem;
   background-size: 100% 100%;
 }
-.box-block .selected{
+
+.box-block .selected {
   background-image: url("../../assets/images/home/homenew_03.gif");
 }
-.box-block .baike{
+
+.box-block .baike {
   background-image: url("../../assets/images/home/homenew_05.png");
 }
+
+
+
 /*人气热卖结束*/
 
 
@@ -592,6 +597,8 @@ header img {
 .choice .choice-text-bottom>div:last-child span {
   background-image: url("../../assets/images/home/987tea_35.png");
 }
+
+
 
 
 

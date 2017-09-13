@@ -6,7 +6,7 @@
     </Mheader>
     <form>
     <div class="avatar">
-      <img :src="user.HeadImg"/>
+      <img :src="!!!user.HeadImg?userHeadImg:user.HeadImg"/>
       <span class="lm-margin-t-xs">点击修改头像</span>
       <input class="upImg" name="file" accept="image/png,image/gif,image/jpeg" type="file" @change="updateHeadImg"/>
     </div>
@@ -96,7 +96,8 @@
     		value: '',
         startYear: new Date(new Date().getFullYear() - 70, 0, 1),
         endYear: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDay()),
-        user:''
+        user:'',
+        userHeadImg:require("../../assets/images/home_03.png")//默认头像
       }
     },
     filters:{
@@ -153,6 +154,22 @@
       },
       //保存用户信息
       saveUserInfo(){
+        if(!!!this.user.UserName){
+          Toast('请填写昵称！');
+          return false;
+        }
+        if(this.user.UserName.length>8){
+          Toast('昵称过长，请控制在8个字以内！');
+          return false;
+        }
+        if(!!!this.user.Sex){
+          Toast('请选择性别！');
+          return false;
+        }
+        if(!!!this.user.Birthday){
+          Toast('请填写生日！');
+          return false;
+        }
           this.axios({
           url: this.url + '/api/User/SaveUserInfo',
           method: 'post',

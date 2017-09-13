@@ -33,42 +33,43 @@
       <div class="content" v-for="(theme,index) in themeList" :key="theme.Id">
           <div class="user flex-alig-center">
             <div class="user-avater">
-              <img :src="theme.HeaderImg"/>
+              <img :src="!!!theme.HeaderImg?userHeadImg:theme.HeaderImg" />
             </div>
             <div class="user-name">
               <div>{{theme.UName}}</div>
               <!-- <div class="lm-font-xs lm-text-grey lm-margin-t-xs">用户签名</div> -->
             </div>
           </div>
-        <router-link :to="{path:'/tcContent/'+ theme.Id}">
+        <router-link :to="{path:'/teaLife/'+ theme.Id}">
           <div class="content-p lm-font-sm">
             <h1 class="lm-text-black lm-font-defult">{{theme.Title}}</h1>
-            {{'#' + theme.TTName + '# ' + theme.Contents}}
+            <div>{{'#' + theme.TTName + '# ' }} <span v-html="theme.Contents"></span></div>
+
           </div>
         </router-link>
 
-        <div class="content-img flex-alig-center" v-show="theme.Imgs.length>0" @click="goToContent(theme.Id)">
+        <!-- <div class="content-img flex-alig-center" v-show="theme.Imgs.length>0" @click="goToContent(theme.Id)">
           <div v-for="(img,idx) in theme.Imgs" :key="idx"><img :src="img" @click.stop="enlarge(index,idx)"/></div>
-        </div>
+        </div> -->
         <div class="content-reply lm-margin-t-sm lm-padding-t-sm flex-alig-center">
           <div class="re-l flex-alig-center">
-            <img src="../../assets/images/teaCommunity/time.png"/>
+            <!--<img src="../../assets/images/teaCommunity/time.png"/>-->
             <span>{{theme.CommentTime | formatTime}}</span>
           </div>
           <div class="re-r flex-alig-center">
             <div class="flex-alig-center lm-margin-l">
-              <router-link :to="{path:'/tcContent/'+ theme.Id}">
-                <img src="../../assets/images/teaCommunity/share.png"/>
-                <span>{{theme.CommentCount}}</span>
-              </router-link>
+              <!-- <router-link :to="{path:'/teaLife/'+ theme.Id}"> -->
+                <!--<img src="../../assets/images/teaCommunity/share.png"/>-->
+                <span>{{theme.ShareCount}}</span>
+              <!-- </router-link> -->
             </div>
             <div class="flex-alig-center lm-margin-l">
-              <img src="../../assets/images/teaCommunity/look.png"/>
+              <!--<img src="../../assets/images/teaCommunity/look.png"/>-->
               <span>{{theme.SeeCount}}</span>
             </div>
             <div class="flex-alig-center lm-margin-l" @click.stop="ding(index)">
-              <img v-show="!theme.IsFabulous" src="../../assets/images/teaCommunity/ding.png"/>
-              <img v-show="theme.IsFabulous" src="../../assets/images/teaCommunity/isding.png"/>
+              <!--<img v-show="!theme.IsFabulous" src="../../assets/images/teaCommunity/ding.png"/>-->
+              <!--<img v-show="theme.IsFabulous" src="../../assets/images/teaCommunity/isding.png"/>-->
               <span :class="{isding:theme.IsFabulous}">{{theme.FabulouCount}}</span>
             </div>
           </div>
@@ -85,14 +86,13 @@
         <img src="../../assets/images/teaCommunity/post.png"/>
       </div> -->
     <!-- 查看大图 -->
-    <div class="model" @click="closeModel" v-show="model">
+    <!-- <div class="model" @click="closeModel" v-show="model">
       <mt-swipe :show-indicators="false" :auto="0" :defaultIndex="bigPicIdx" >
         <mt-swipe-item v-for="(item,index) in bigPic" :key="index">
           <img :src="item" />
         </mt-swipe-item>
       </mt-swipe>
-      <!-- <span>{{(bigPicIdx+1)+'/'+bigPic.length}}</span> -->
-    </div>
+    </div> -->
 
     <Mfooter :worldCurrent='true'></Mfooter>
   </div>
@@ -125,7 +125,8 @@
         loading: false,//是否下拉刷新
         isLoading: false,//是否显示加载中...
         themeList: [],//话题集合
-        infoCount:0//消息数量
+        infoCount:0,//消息数量
+        userHeadImg:require("../../assets/images/home_03.png")//默认头像
       }
     },
     filters: {
@@ -133,10 +134,11 @@
         return formatDate(val);
       }
     },
+
     methods: {
       //查看话题内容
       goToContent(id){
-        this.$router.push({path: '/tcContent/'+ id})
+        this.$router.push({path: '/teaLife/'+ id})
       },
       //点击查看大图
       enlarge(index,idx){
@@ -254,7 +256,8 @@
             if (!!res.data.Data) {
               if (res.data.Data.length > 0) {
                 for (let i = 0; i < res.data.Data.length; i++) {
-                  this.themeList.push(res.data.Data[i]);
+                  let temp=res.data.Data[i];
+                  this.themeList.push(temp)
                 }
                 this.loading = false;
               } else {
@@ -278,7 +281,8 @@
             if (!!res.data.Data) {
               if (res.data.Data.length > 0) {
                 for (let i = 0; i < res.data.Data.length; i++) {
-                  this.themeList.push(res.data.Data[i])
+                  let temp=res.data.Data[i];
+                  this.themeList.push(temp)
                 }
                 this.loading = false;
               } else {
@@ -375,6 +379,7 @@
             }, 1500);
         }
       }
+
     },
     mounted(){
       this.$nextTick(function () {
@@ -416,11 +421,11 @@
   }
 
   .nav-bar {
-    float: left;
+    /*float: left;*/
     white-space: nowrap;
     overflow-x: scroll;
     overflow-y: hidden;
-    width: 100%;
+    /*width: 100%;*/
     display: flex;
     align-items: center;
     padding: 0.4rem 0;
@@ -430,11 +435,11 @@
 
   .nav-bar .active {
     color: #fff;
-    border-radius: 0.1rem;
     background-color: #B4282D;
   }
 
   .nav-bar > div {
+    border-radius: 0.1rem;
     padding: 0 0.2rem;
     margin-left: 0.5rem;
   }
@@ -505,6 +510,27 @@
     justify-content: space-between;
   }
 
+  .content-reply > div span{
+    padding-left: 0.8rem;
+    background-repeat: no-repeat;
+    background-size: 0.7rem 0.7rem;
+    background-position: left center;
+  }
+  .content-reply > .re-l span{
+    background-image: url("../../assets/images/teaCommunity/time.png");
+  }
+  .content-reply > .re-r div:first-child span{
+    background-image: url("../../assets/images/teaCommunity/share.png");
+  }
+  .content-reply > .re-r div:nth-child(2) span{
+    background-image: url("../../assets/images/teaCommunity/look.png");
+  }
+  .content-reply > .re-r div:last-child span{
+    background-image: url("../../assets/images/teaCommunity/ding.png");
+  }
+  .content-reply > .re-r div:last-child .isding{
+    background-image: url("../../assets/images/teaCommunity/isding.png");
+  }
   .content-reply img {
     margin-right: 0.1rem;
     width: 0.6rem;

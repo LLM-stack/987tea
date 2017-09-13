@@ -1,7 +1,7 @@
 <template>
   <div>
     <transition name="drop">
-    <div class="dialog" v-if="dialog">
+    <div class="dialog" v-show="dialog">
       <div class="title"><slot name="title"></slot></div>
       <div class="content"><slot name="content"></slot></div>
       <div class="prompt" v-if="prompt"><slot name="prompt"></slot></div>
@@ -11,7 +11,7 @@
       </div>
     </div>
     </transition>
-    <div class="modal" v-if="dialog" ></div>
+    <div class="modal" v-show="dialog" ></div>
   </div>
 </template>
 
@@ -54,6 +54,7 @@
     font-weight: 600;
   }
   .dialog .content{
+    word-break: break-all;
     color: #777;
     line-height: 1rem;
     font-size: 0.65rem;

@@ -21,14 +21,13 @@
         <!--<span class="lm-text-grey lm-margin-t-sm" slot="count">数量：{{ item.ProductCount}}</span>-->
 
         <span class="lm-text-red" slot="price">{{ item.TotalPrice }}</span>
-        <span slot="cancel" v-if="tabNum == 1" @click="cancelOrder(item.ProductOrderId)">取消订单</span>
-        <span slot="btn" v-if="tabNum==1" @click="goToPay(index)">去付款</span>
-        <span slot="btn" v-else-if="tabNum==2" @click="addOrderUrged(item.ProductOrderId)">去催单</span>
-        <span slot="btn" v-else-if="tabNum==3" @click="logistics(item.LogisticsNo)">查看物流</span>
-        <span slot="btn" v-else-if="tabNum==4" @click="goToEvaluate(item.ProductOrderId)" :class="{already:item.OrderState==3}"><span v-if="item.OrderState==3" >已评价</span><span v-else>去评价</span></span>
+        <span slot="cancel" v-show="item.OrderState==0 && item.PayState!=1" @click="cancelOrder(item.ProductOrderId)">取消订单</span>
+        <span slot="btn" v-if="item.PayState==0 && item.PayType!=0 && item.OrderState==0" @click="goToPay(index)">去付款</span>
+        <span slot="btn" v-else-if="(item.PayType==0&&(item.OrderState==0||item.OrderState==6))||(item.PayType!=0 && item.PayState==1)" @click="addOrderUrged(item.ProductOrderId)">催单</span>
+        <span slot="btn" v-else-if="item.OrderState==2" @click="logistics(item.LogisticsNo)">查看物流</span>
+        <span slot="btn" v-else-if="item.OrderState==3" @click="goToEvaluate(item.ProductOrderId)" :class="{already:item.OrderState==3}"><span v-if="item.OrderState==3" >已评价</span><span v-else>去评价</span></span>
         <span slot="time">{{ item.CreateTime | format }}</span>
       </MorderBox>
-
     </div>
 
     <div class="noorder-box" v-show="orderList.length == 0">
@@ -205,7 +204,7 @@
             receive:receiveArea,
             skus:skus,
             mallType:this.orderList[index].OrderFrom===4?'teaBMall':''
-          }         
+          }
           sessionStorage.setItem("pay", JSON.stringify(sc));
           this.$router.push({path: '/Payment'})
       },

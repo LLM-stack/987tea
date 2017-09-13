@@ -176,9 +176,9 @@ export default {
         Province: this.defaultAddress.Province,
         City: this.defaultAddress.City,
         Area: this.defaultAddress.Area,
-        Detail: this.defaultAddress.Detail,
-        Phone: this.defaultAddress.Mobile,
-        Reciever: this.defaultAddress.ConsigneeName,
+        Detail: this.defaultAddress.Detail.replace(/(^\s+)|(\s+$)/g, ""),
+        Phone: this.defaultAddress.Mobile.replace(/(^\s+)|(\s+$)/g, ""),
+        Reciever: this.defaultAddress.ConsigneeName.replace(/(^\s+)|(\s+$)/g, ""),
       }
       //定义参数
       let sc = {
@@ -190,7 +190,7 @@ export default {
         ProductSkus: this.orderDetails,
         ProductOrderId: this.productOrderId,
         OrderAddress: str_address,
-        OrderToPrice:[this.chkdiscount],
+        OrderToPrice:[!!!this.chkdiscount?undefined:this.chkdiscount],
         ExpandId: !!sessionStorage.getItem("PromotionKey") ? sessionStorage.getItem("PromotionKey") : sessionStorage.getItem("ExpandId")
       }
 
@@ -284,7 +284,12 @@ export default {
         OrderAddress: '',
         OrderToPrice: ''
       }
-      this.axios.post(this.url + '/api/Order/LoadPreOrderFavInfo', { strSc: JSON.stringify(sc) }).then((res) => {
+       this.axios({
+        url: this.url + '/api/Order/LoadPreOrderFavInfo',
+        method: 'post',
+        data: { strSc: JSON.stringify(sc) },
+        headers: { 'Authorization': 'BasicAuth ' + localStorage.lut }
+      }).then((res) => {
         if (res.data.Code == 200) {
           this.discount = res.data.Data;
           if (this.discount.length == 0) {

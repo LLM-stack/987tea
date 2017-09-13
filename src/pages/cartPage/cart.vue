@@ -24,7 +24,7 @@
             <div>￥ <span class="lm-text-red">{{ item.SalePrice }}</span> 元</div>
             <div class="product-num">
               <span @click="changeNum(item,-1)">-</span>
-              <input type="text" v-model="item.Count">
+              <input type="number" v-model="item.Count" @blur="countChange(index)">
               <span @click="changeNum(item,1)">+</span>
             </div>
           </div>
@@ -110,6 +110,23 @@
         } else {
           this.allCheck = false;
         }
+      },
+       //商品数量输入失去焦点判断
+      countChange(index) {
+          var self = this;
+          if (!!!self.productlist[index].Count) {
+              Toast("商品的数量不能为空");
+              self.productlist[index].Count = 1;
+          }
+          if (self.productlist[index].Count <= 0) {
+              Toast("商品的数量不能为0");
+              self.productlist[index].Count = 1;
+          }
+          if (self.productlist[index].Count > 99) {
+              Toast("最多只可以购买99件该商品");
+              self.productlist[index].Count = 99;
+          }
+          
       },
       //商品数量变化
       changeNum(product, way) {

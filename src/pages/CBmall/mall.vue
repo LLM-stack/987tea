@@ -6,7 +6,7 @@
 
     <div class="banner">
       <router-link to="/CBMall">
-        <img src="../../assets/images/cbmall/cbshop_02.png" />
+        <img src="../../assets/images/cbmall/cbmall1112.png" />
       </router-link>
       <div class="tabs" id="tabs" :class="{fixed:isfixed}">
         <div class="tab" v-for="(item,index) in tagList" :class="{active:item.isactive}" :key='index' @click="tabActive(index)">{{ item.Name |tagName }}</div>
@@ -151,7 +151,7 @@ export default {
             this.recommend = res.data.Data;
           }
         })
-      }      
+      }
     }
 
   },

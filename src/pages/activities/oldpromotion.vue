@@ -55,62 +55,33 @@
     <div class="title" id="id1">
       <div>
         <img src="../../assets/images/activities/activities_03.png"/>
-        <span class="lm-font-lg orange">9.9限时特价</span>
+        <span class="lm-font-lg">超值特价</span>
         <img src="../../assets/images/activities/activities_05.png"/>
       </div>
-      <div class="lm-font-sm lm-text-grey">会员劲爆福利、每人限购1份</div>
+      <div class="lm-font-sm lm-text-grey">超值低价 多款茶类任你选</div>
     </div>
-    <div class="nine flex-between" v-for="(t,index) in timeProducts" :key='index'>
-      <div class="nine-img">
-        <img v-lazy="t.HeadImg" />
+    <div class="scroll-bar">
+      <div class="scroll-cont" v-for="(t,index) in timeProducts" :key='index' @click.stop="chkDetail(t.ProductId)">
+        <div class="cont-img">
+          <img v-lazy="t.HeadImg"/>
+          <div class="cont-name">{{t.Name}}</div>
+        </div>
+        <div class="cont-price">
+          <div class="new-price lm-margin-r-sm">￥{{t.SalePrice}}</div>
+          <div class="old-price">￥{{t.Price}}</div>
+        </div>
+        <div class="cont-btn" @click.stop="choice(t.ProductId)">立即抢购</div>
       </div>
-      <div class="nine-cont" >
-        <div class="nine-cont-title">
-          {{t.Name}}
-        </div>
-        <div class="nine-cont-spec">
-          {{t.Remark}}
-        </div>
-        <div class="nine-cont-tags lm-margin-t-xs flex-between">
-          <div class="nine-cont-tag">
-            <div>2017</div>
-            <div>新茶</div>
-          </div>
-          <div class="nine-cont-tag">
-            <div>包邮</div>
-          </div>
-          <div class="nine-cont-tag">
-            <div>限量</div>
-            <div>300份</div>
-          </div>
-        </div>
-        <div class="nine-cont-buy flex-between">
-          <span>￥<span class="lm-font-xxxl">{{t.SalePrice}}</span></span>
-          <div class="nine-btn" @click.stop="tobuy(t.ProductId)">立即抢购></div>
-        </div>
-      </div>
+
     </div>
-    <!--<div class="scroll-bar">-->
-      <!--<div class="scroll-cont" v-for="(t,index) in timeProducts" :key='index' @click.stop="chkDetail(t.ProductId)">-->
-        <!--<div class="cont-img">-->
-          <!--<img v-lazy="t.HeadImg"/>-->
-          <!--<div class="cont-name">{{t.Name}}</div>-->
-        <!--</div>-->
-        <!--<div class="cont-price">-->
-          <!--<div class="new-price lm-margin-r-sm">￥{{t.SalePrice}}</div>-->
-          <!--<div class="old-price">￥{{t.Price}}</div>-->
-        <!--</div>-->
-        <!--<div class="cont-btn" @click.stop="choice(t.ProductId)">立即抢购</div>-->
-      <!--</div>-->
-    <!--</div>-->
     <div class="clear"></div>
     <div class="title" id="id2">
       <div>
         <img src="../../assets/images/activities/activities_03.png"/>
-        <span class="lm-font-lg">会员尊享</span>
+        <span class="lm-font-lg">818特价专区</span>
         <img src="../../assets/images/activities/activities_05.png"/>
       </div>
-      <div class="lm-font-sm lm-text-grey">热卖爆款  会员尊享</div>
+      <div class="lm-font-sm lm-text-grey">感恩放价 加量不加价</div>
     </div>
     <div class="pro-list">
       <div class="pro-box" v-for="(exp,index) in expProducts" :class="{'pro-left' : index % 2 !== 0}" :key='index' @click.stop="chkDetail(exp.ProductId)">
@@ -131,10 +102,10 @@
     <div class="title"  id="id3">
       <div>
         <img src="../../assets/images/activities/activities_03.png"/>
-        <span class="lm-font-lg">中秋送礼精品</span>
+        <span class="lm-font-lg">精装礼品</span>
         <img src="../../assets/images/activities/activities_05.png"/>
       </div>
-      <div class="lm-font-sm lm-text-grey">高端大气  送礼佳品</div>
+      <div class="lm-font-sm lm-text-grey">独具风味 送礼佳品</div>
     </div>
     <div class="pro-list">
       <div class="pro-box" v-for="(had,index) in hadProducts" :class="{'pro-left' : index % 2 !== 0}" :key='index' @click="chkDetail(had.ProductId)">
@@ -186,18 +157,6 @@
 
       </div>
     </transition>
-      <!--红包动图-->
-    <div class="redpack">
-       <router-link to="/CBimg">
-          <img src="../../assets/images/activities/activegif.gif"/>
-       </router-link>
-    </div>
-    <!--购物车-->
-    <div class="cart">
-      <router-link to="/cart">
-        <img src="../../assets/images/activities/cart.png"/>
-      </router-link>
-    </div>
 
     <transition name="drop">
       <div class="choice" v-if="choiceShow">
@@ -267,15 +226,15 @@
         activeIdx: 0,
         tabs: [
           {
-            tabName: '9.9限时特价',
-            tabTag:'cb20282c5d754593a5fc7fab6f582934',//9.9特价标签Id
+            tabName: '超值特价',
+            tabTag:'57b97e21c31e4963a56011720f6e2ea3',//超值特价标签Id
           },
           {
-            tabName: '会员尊享',
-            tabTag:'49039043e6ff4789a7dbddc566b58fa6',//爆款特价标签Id
+            tabName: '818特价专区',
+            tabTag:'e19355ee6b924bc5bb90177de43811da',//818特价专区标签Id
           },
           {
-            tabName: '中秋送礼精品',
+            tabName: '精装礼品',
             tabTag:'ca482e57ed0e434f935e47872f69614a',//精装礼品标签Id
            },
           {
@@ -430,7 +389,7 @@
             this.second=0;
         }else{
             let endTime = new Date(this.activityOverducTime.replace(/-/g,"/").replace('T',' '));
-            let nowTime = new Date(this.activityNowTime.replace(/-/g,"/").replace('T',' ').split('.')[0])
+            let nowTime = new Date(this.activityNowTime.replace(/-/g,"/").replace('T',' '))
             let leftTime = parseInt((endTime.getTime()-nowTime.getTime())/1000)
             setInterval( ()=> {
               let d = this.formate(parseInt(leftTime/(24*60*60)))
@@ -566,81 +525,6 @@
               }
             })
       },
-     //9.9限时购买（登录验证）
-    tobuy(proId){
-        if(!!localStorage.lut){
-            this.axios.get(this.url+'/api/Login/CheckLogin?str='+localStorage.lut).then((res)=>{
-              if(res.data.Code==500){
-                   //验证失败 清除localStorage
-                  localStorage.removeItem('lut');
-                   let instance = Toast('还未登录，请先登录');
-                  setTimeout(() => {
-                    instance.close();
-                     this.$router.replace({
-                      path: '/login/',
-                      query: {redirect: this.$router.currentRoute.fullPath}
-                    })
-                  }, 1000);
-              }else{
-                this.axios.post(this.url + '/api/Product/ProductSpecs', {productId: proId}).then((res) => {
-                  if (res.data.Code == 200) {
-                    let spec = res.data.Data;
-
-                    //  //定义下单参数
-                    let sku = [{
-                      ShoppingCarId: 0,
-                      ProductId: spec[0].ProductId,
-                      ProductSpecId: spec[0].ProductSpecId,
-                      ProductName: spec[0].ProductName,
-                      ProductCount: 1,
-                      ProductImg: spec[0].HeadImg,
-                      ProductSpecPrice: spec[0].SalePrice
-                    }];
-                    let sc = {
-                      productOrderId: "0",
-                      skus: sku
-                    }
-                    sessionStorage.setItem("pay", JSON.stringify(sc));
-                    this.$router.push({ path: '/Payment' })
-                    //登录的用户加入购物车
-                    // this.axios({
-                    //   url: this.url + '/api/ShoppingCar/AddToShoppingCar',
-                    //   method: 'post',
-                    //   data: { productSpecId: spec[0].ProductSpecId, count: 1 },
-                    //   headers: { 'Authorization': 'BasicAuth ' + localStorage.lut }
-
-                    // }).then((res) => {
-                    //   if (!!res) {
-                    //     if (res.data.Code == 200) {
-                    //       Toast(res.data.Data);
-                    //     } else {
-                    //       Toast(res.data.Data);
-                    //     }
-                    //   }
-                    // })
-
-                  } else {
-                    Toast(res.data.Data);
-                  }
-                }).catch((err) => {
-                  Toast('网络请求错误');
-                })
-
-              }
-            })
-
-        }else{
-            let instance = Toast('还未登录，请先登录');
-            setTimeout(() => {
-              instance.close();
-               this.$router.replace({
-                path: '/login/',
-                query: {redirect: this.$router.currentRoute.fullPath}
-              })
-            }, 1000);
-        }
-    },
-
       //选中商品规格
       checkSpec(index) {
         this.checkIndex = index;
@@ -924,68 +808,7 @@
     text-overflow: ellipsis;
     background-color: rgba(0, 0, 0, 0.4);
   }
-  .nine{
-    border-radius: 0.3rem;
-    margin: 0 0.4rem;
-    background-color: #fff;
-    overflow: hidden;
-  }
-  .nine .nine-img{
-    width: 49%;
-    height: 8rem;
-  }
-  .nine .nine-cont{
-    padding: 0 0.4rem;
-    position: relative;
-    width: 51%;
-    height: 8rem;
-  }
-  .nine-cont .nine-cont-title{
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: #FD0101;
-    border-bottom: 2px solid #FD0101;
-    padding: 0.6rem 0 0.2rem;
-  }
-  .nine-cont .nine-cont-spec{
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-size: 0.65rem;
-    padding: 0.2rem 0;
-    min-height: 0.8rem;
-  }
-  .nine-cont .nine-cont-tags{
-    font-size: 0.55rem;
-  }
-  .nine-cont .nine-cont-tags .nine-cont-tag{
-    display: flex;
-    /*justify-items: center;*/
-    flex-direction: column;
-    justify-content: center;
-    width: 2rem;
-    height: 2rem;
-    text-align: center;
-    background-color: #F3F3EB;
-    border-radius: 50%;
-  }
-  .nine-cont .nine-cont-buy{
-    width: 7.1rem;
-    position: absolute;
-    bottom: 0.4rem;
-    left: 0.4rem;
-    color: #FE0000;
-  }
-  .nine-cont .nine-cont-buy .nine-btn{
-    font-size: 0.7rem;
-    border-radius: 4px;
-    padding: 0.2rem 0.3rem;
-    color: #fff;
-    background-color: #FE0000;
-  }
+
   .scroll-cont .cont-price {
     padding: 0.2rem 0;
     display: flex;
@@ -1031,7 +854,7 @@
   }
   .pro-box .pro-img {
     width: 100%;
-    height: 8rem;
+    height: 7rem;
   }
   .pro-box .pro-name{
     font-size: 0.55rem;
@@ -1249,25 +1072,5 @@
     width: 4.6rem;
     border-radius: 0.4rem;
     background-color: #FF5001;
-  }
-  .redpack{
-    top:35%;
-    right: 0;
-    width: 2.5rem;
-    height: 3.5rem;
-    position: fixed;
-    z-index: 99;
-  }
-  .cart{
-    bottom: 6.8rem;
-    right: 0.9rem;
-    width: 1.8rem;
-    height: 1.8rem;
-    background-color: #fff;
-    position: fixed;
-    border: 1px solid #eee;
-    border-radius: 50%;
-    z-index: 99;
-    padding: 0.4rem;
   }
 </style>

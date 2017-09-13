@@ -4,7 +4,7 @@
         <div slot="title">{{title}}</div>
       </Mheader>
       <mt-field label="收货人" placeholder="请输入用户名" v-model="username"></mt-field>
-      <mt-field label="手机号" placeholder="请输入手机号" type="tel" v-model="phone"></mt-field>
+      <mt-field label="手机号" placeholder="请输入手机号" type="tel" v-model="phone" :attr="{maxlength:11}"></mt-field>
       <mt-field label="省市区" placeholder="请选择省市区" v-model="address"></mt-field>
       <div class="linkage-wrap">
         <div class="address-wrap">
@@ -94,23 +94,23 @@
       },
       //添加新地址
       save(){
-        if(!!!this.username){
+        if(!!!this.username.replace(/(^\s+)|(\s+$)/g,"")){
             Toast('请填写收货人姓名');
             return;
         }
-        if(!!!this.phone){
+        if(!!!this.phone.replace(/(^\s+)|(\s+$)/g,"")){
             Toast('请填写收货人手机号');
             return;
         }
-        if(!this.isPhoneNo){
+        if(!this.isPhoneNo(this.phone.replace(/(^\s+)|(\s+$)/g,""))){
            Toast('手机号格式错误');
             return;
         }
-        if(!!!this.address){
+        if(!!!this.address.replace(/(^\s+)|(\s+$)/g,"")){
             Toast('请选择省市区');
             return;
         }
-        if(!!!this.detailAddress){
+        if(!!!this.detailAddress.replace(/(^\s+)|(\s+$)/g,"")){
             Toast('请填写详细的收货地址');
             return;
         }
@@ -122,9 +122,9 @@
           Province:str[0],
           City:str[1],
           Area:str[2],
-          Detail:this.detailAddress,
-          ConsigneeName:this.username,
-          Mobile:this.phone,
+          Detail:this.detailAddress.replace(/(^\s+)|(\s+$)/g, ""),
+          ConsigneeName:this.username.replace(/(^\s+)|(\s+$)/g, ""),
+          Mobile:this.phone.replace(/(^\s+)|(\s+$)/g, ""),
           IsDefault:this.isDefault==true?0:1
         }
         this.axios({

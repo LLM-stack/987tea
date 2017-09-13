@@ -31,7 +31,6 @@
         window.addEventListener('scroll', this.scrollTop)
       })
     }
-
   }
 </script>
 
@@ -117,7 +116,8 @@
   }
 
   /*cnzz*/
-  #cnzz_stat_icon_1262960756 {
+  #cnzz_stat_icon_1262960756,
+  #cnzz_stat_icon_1263920148{
     top: -20px;
     z-index: -999;
     position: fixed;
@@ -127,6 +127,9 @@
   }
 
   /*工具样式*/
+  .font600{
+    font-weight: 600;
+  }
   .container {
     height: 100%;
     position: relative;
@@ -180,7 +183,9 @@
   .lm-font-lg {
     font-size: 0.8rem;
   }
-
+  .lm-font-xxxl {
+    font-size: 1.1rem;
+  }
   .lm-font-xxxl {
     font-size: 1.3rem;
   }
@@ -410,7 +415,10 @@
     margin-top: 0.8rem;
     padding: 0 0.4rem;
   }
-
+  .mint-msgbox-title{
+    padding: 0  0.4rem;
+    word-break: break-all;
+  }
   .mint-checklist-title,
   .mint-radiolist-title {
     margin: 0;

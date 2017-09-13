@@ -23,8 +23,10 @@ import MsgContent from '@/pages/teaCommunity/msgContent'
 import Msgs from '@/pages/teaCommunity/msgs'
 
 // 活动页
-import OnSale from '@/pages/activities/onSale'
+// import OnSale from '@/pages/activities/onSale'
+import CBimg from '@/pages/activities/CBimg'
 import Promotion from '@/pages/activities/promotion'
+import Active815 from '@/pages/activities/Active815'
 
 //登录注册
 import Register from '@/pages/Login&Register/register'
@@ -39,15 +41,16 @@ import MyCB from '@/pages/mine/myCB'
 import MyOrder from '@/pages/mine/myOrder'
 import MyCollection from '@/pages/mine/myCollection'
 import Coupon from '@/pages/mine/coupon'
+import HelpCenter from '@/pages/mine/HelpCenter'
 import MyAddress from '@/pages/mine/myAddress'
 import EditAddress from '@/pages/mine/editAddress'
 import CommentsBox from '@/pages/mine/commentsBox'
 import Preferences from '@/pages/mine/preferences'
 import Logistics from '@/pages/mine/logistics'
 
-
 // 商城
 import CBmall from '@/pages/CBmall/CBmall'
+import CBmall1 from '@/pages/CBmall/CBmall1'
 import Mall from '@/pages/CBmall/mall'
 
 // 入驻申请
@@ -57,8 +60,9 @@ import Apply from '@/pages/settled/apply'
 Vue.use(Router)
 
 export default new Router({
-   // mode: 'history',
-  // base: '/',
+   mode: 'history',
+   hashbang: false,
+  // base: '/vue/',
   routes: [
     // 首页
     {
@@ -96,7 +100,7 @@ export default new Router({
       path: '/TcHome',
       component: TcHome
     }, {
-      path: '/TeaLife',
+      path: '/TeaLife/:themeId',
       component: TeaLife
     },
     //  {
@@ -111,12 +115,20 @@ export default new Router({
       component: Msgs
     },
     // 活动页
-    {
-      path: '/onSale',
-      component: OnSale
-    },{
+    // {
+    //   path: '/onSale',
+    //   component: OnSale
+    // }
+    ,{
       path: '/Promotion/:id',
       component: Promotion
+    },{
+      path: '/CBimg',
+      component: CBimg
+    },
+    {
+      path: '/Active815',
+      component: Active815
     },
     //登录注册
     {
@@ -151,6 +163,9 @@ export default new Router({
     }, {
       path: '/MyAddress',
       component: MyAddress
+    },  {
+      path: '/HelpCenter',
+      component: HelpCenter
     }, {
       path: '/EditAddress/:aId',
       component: EditAddress
@@ -171,6 +186,9 @@ export default new Router({
     {
       path: '/CBmall',
       component: CBmall
+    },{
+      path: '/CBmall1',
+      component: CBmall1
     }, {
       path: '/Mall',
       component: Mall
